@@ -1,0 +1,23 @@
+body {
+	background-color: black;
+	font: 10px Arial, Helvetica, sans-serif;
+}
+
+.container {
+}
+
+.indicator {
+	margin-top: 500px;;
+	margin-left: auto;
+	margin-right: auto;
+	width: 470px;
+	height: 217px;
+}
+
+.off {
+	background-image: url("Images/indicator_off.png");
+}
+
+.fire {
+	background-image: url("Images/indicator_fire.png");
+}

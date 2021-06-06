@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lnag="en-us">
+	<head>
+		<title>Egg</title>
+		<meta charset="utf-8">
+		<link rel="shortcut icon" type="image/png" href="CSS/Images/egg_a11.png"/>
+		<!--link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet"> <!--Geo is the other one-->
+		<!--<link href="CSS/Fonts/font3933.ttf" rel="stylesheet">-->
+		<link rel="stylesheet" type="text/css" href="CSS/main.css">
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="Scripts/main.js"></script>
+		<script>
+			$(function () {
+				Main.CreateInstance({
+					aspectRatio: 2586 / 3793, // Height / Width
+					initialInterval: 400,
+					lives: 6 //todo: turn this int a config instead of a veriable!!
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="content">
+			<span id="score-board"></span>
+			<audio preload="auto" id="chirp-a1">
+				<source src="Audio/1.ogg" type="audio/ogg">
+				Your browser does not support audio.
+			</audio>
+			<audio preload="auto" id="chirp-a2">
+				<source src="Audio/2.ogg" type="audio/ogg">
+			</audio>
+			<audio preload="auto" id="chirp-b1">
+				<source src="Audio/3.ogg" type="audio/ogg">
+			</audio>
+			<audio preload="auto" id="chirp-b2">
+				<source src="Audio/4.ogg" type="audio/ogg">
+			</audio>
+			<img id="rabbit" src="CSS/Images/rabbit.png" style="display: none;" />
+			<img id="rabbit-hand-1" src="CSS/Images/rabbit_hand_1.png" style="display: none;" />
+			<img id="rabbit-hand-2" src="CSS/Images/rabbit_hand_2.png" style="display: none;" />
+			<img id="life-1" src="CSS/Images/life.png" style="display: none;" />
+			<img id="life-2" src="CSS/Images/life.png" style="display: none;" />
+			<img id="life-3" src="CSS/Images/life.png" style="display: none;" />
+			<img id="broken-egg-a" src="CSS/Images/broken_egg_a.png" style="display: none;" />
+			<img id="broken-egg-b" src="CSS/Images/broken_egg_b.png" style="display: none;" />
+			<img id="chick-a1" src="CSS/Images/chick_a1.png" style="display: none;" />
+			<img id="chick-a2" src="CSS/Images/chick_a2.png" style="display: none;" />
+			<img id="chick-a3" src="CSS/Images/chick_a3.png" style="display: none;" />
+			<img id="chick-a4" src="CSS/Images/chick_a4.png" style="display: none;" />
+			<img id="chick-b1" src="CSS/Images/chick_b1.png" style="display: none;" />
+			<img id="chick-b2" src="CSS/Images/chick_b2.png" style="display: none;" />
+			<img id="chick-b3" src="CSS/Images/chick_b3.png" style="display: none;" />
+			<img id="chick-b4" src="CSS/Images/chick_b4.png" style="display: none;" />
+			<img id="egg-a11" src="CSS/Images/egg_a11.png" style="display: none;" />
+			<img id="egg-a12" src="CSS/Images/egg_a12.png" style="display: none;" />
+			<img id="egg-a13" src="CSS/Images/egg_a13.png" style="display: none;" />
+			<img id="egg-a14" src="CSS/Images/egg_a14.png" style="display: none;" />
+			<img id="egg-a15" src="CSS/Images/egg_a15.png" style="display: none;" />
+			<img id="egg-a21" src="CSS/Images/egg_a21.png" style="display: none;" />
+			<img id="egg-a22" src="CSS/Images/egg_a22.png" style="display: none;" />
+			<img id="egg-a23" src="CSS/Images/egg_a23.png" style="display: none;" />
+			<img id="egg-a24" src="CSS/Images/egg_a24.png" style="display: none;" />
+			<img id="egg-a25" src="CSS/Images/egg_a25.png" style="display: none;" />
+			<img id="egg-b11" src="CSS/Images/egg_b11.png" style="display: none;" />
+			<img id="egg-b12" src="CSS/Images/egg_b12.png" style="display: none;" />
+			<img id="egg-b13" src="CSS/Images/egg_b13.png" style="display: none;" />
+			<img id="egg-b14" src="CSS/Images/egg_b14.png" style="display: none;" />
+			<img id="egg-b15" src="CSS/Images/egg_b15.png" style="display: none;" />
+			<img id="egg-b21" src="CSS/Images/egg_b21.png" style="display: none;" />
+			<img id="egg-b22" src="CSS/Images/egg_b22.png" style="display: none;" />
+			<img id="egg-b23" src="CSS/Images/egg_b23.png" style="display: none;" />
+			<img id="egg-b24" src="CSS/Images/egg_b24.png" style="display: none;" />
+			<img id="egg-b25" src="CSS/Images/egg_b25.png" style="display: none;" />
+			<img id="wolf-a1" src="CSS/Images/wolf_a1.png" style="display: none;" />
+			<img id="wolf-a2" src="CSS/Images/wolf_a2.png" style="display: none;" />
+			<img id="wolf-b1" src="CSS/Images/wolf_b1.png" style="display: none;" />
+			<img id="wolf-b2" src="CSS/Images/wolf_b2.png" style="display: none;" />
+			<img id="overlay" src="CSS/Images/background_w_shadow.png" />
+		</div>
+	</body>
+</html>

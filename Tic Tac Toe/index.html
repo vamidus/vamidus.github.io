@@ -1,0 +1,72 @@
+<!doctype html>
+<html lnag="en-us">
+	<head>
+		<title>Tic Tac Toe</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="CSS/main.css">
+		<link rel="shortcut icon" type="image/png" href=""/>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		<script src="Scripts/main.js"></script>
+		<script>
+			$(function () {
+				Main.CreateInstance();
+			});
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row justify-content-sm-center">
+				<form name="setup" class="col-sm-5" style="display: none;">
+					<fieldset class="card card-body">
+						<legend class="col-form-legend">Tic Tac Toe</legend>
+						<input type="hidden" name="winner" value="1">
+						<input type="hidden" name="scores" value="1o1">
+						<div class="form-group row">
+							<label for="width" class="col-sm-9 col-form-label">Width:</label>
+							<div class="col-sm-3"><input type="number" name="width" id="width" class="form-control" min="3" max="16" step="1" value="3"></div>
+						</div>
+						<div class="form-group row">
+							<label for="height" class="col-sm-9 col-form-label">Height:</label>
+							<div class="col-sm-3"><input type="number" name="height" id="height" class="form-control" min="3" max="16" step="1" value="3"></div>
+						</div>
+						<div class="form-group row">
+							<label for="win" class="col-sm-9 col-form-label">In a row to win:</label>
+							<div class="col-sm-3"><input type="number" name="win" id="win" class="form-control" min="3" max="16" step="1" value="3"></div>
+						</div>
+						<div class="form-group row">
+							<label for="players" class="col-sm-9 col-form-label">Number of players:</label>
+							<div class="col-sm-3"><input type="number" name="players" id="players" class="form-control" min="2" max="6" step="1" value="2"></div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-12 text-right">
+								<button type="reset" value="reset" class="btn btn-outline-secondary align-self-end">Reset</button>
+								<button type="submit" value="submit" class="btn btn-outline-primary align-self-end">Submit</button>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				<div id="scoreboard" class="col-sm-8 justify-content-sm-center" style="display: none;"></div>
+				<div id="field" class="col-sm-8 justify-content-sm-center" style="display: none;"></div>
+				<div id="winner" class="col-sm-4 alert alert-success fade" role="alert" style="display: none;">
+					<h4 class="alert-heading">Well done!</h4>
+					<p>You won! Try <a href="javascript:location.reload();">again</a>!</p>
+					<p>Wanna try a <a href="javascript:location.href='index.html';">different configuration</a>?</p>
+				</div>
+				<div id="draw" class="col-sm-4 alert alert-warning fade" role="alert" style="display: none;">
+					<h4 class="alert-heading">Good try!</h4>
+					<p>It's a draw! Try <a href="javascript:location.reload();">again</a>!</p>
+					<p>Wanna try a <a href="javascript:location.href='index.html';">different configuration</a>?</p>
+				</div>
+				<div id="loser" class="col-sm-4 alert alert-danger fade" role="alert" style="display: none;">
+					<h4 class="alert-heading">Oh no!</h4>
+					<p>You lost! Try <a href="javascript:location.reload();">again</a>!</p>
+					<p>Wanna try a <a href="javascript:location.href='index.html';">different configuration</a>?</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

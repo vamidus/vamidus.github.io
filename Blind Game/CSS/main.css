@@ -1,0 +1,14 @@
+html {
+	height: 100%;
+}
+
+body {
+	background-color: silver;
+	font: 10px Arial, Helvetica, sans-serif;
+	height: 100%;
+}
+
+.container {
+	border: 1px dotted green;
+	xxheight: 1000px;
+}

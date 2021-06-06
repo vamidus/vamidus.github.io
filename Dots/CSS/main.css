@@ -1,0 +1,83 @@
+body {
+	background-color: silver;
+	font: 10px Arial, Helvetica, sans-serif;
+}
+
+#container {
+	display: inline-block;	
+	background-color: white;
+	border: 3px outset #eee;
+	padding: 32px;
+	margin: 32px;
+}
+
+#container table {
+	border-collapse: collapse;
+}
+
+#container table td {
+	background-image: url("Images/gridlines.gif");
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 32px;
+	height: 32px;
+}
+
+#container table td:hover {
+	background-image: radial-gradient(circle at center, rgba(192,64,192,.5) -10%, rgba(0,0,0,0) 26%), url("Images/gridlines.gif");
+	background-size: 128px, 128px;
+	width: 32px;
+	height: 32px;
+}
+
+#container table td.dot-of-player-0 {
+	background-image: url("Images/0.png"), url("Images/gridlines.gif");
+	background-size: 92px, 128px;
+}
+
+#container table td.dot-of-player-1  {
+	background-image: url("Images/1.png"), url("Images/gridlines.gif");
+	background-size: 92px, 128px;
+}
+
+#container table td.property-of-player-0 {
+	background-image: url("Images/0-property.png"), url("Images/gridlines.gif");
+	background-size: 128px, 128px;
+}
+
+#container table td.property-of-player-1  {
+	background-image: url("Images/1-property.png"), url("Images/gridlines.gif");
+	background-size: 128px, 128px;
+}
+
+#container table td.dot-of-player-0.property-of-player-0 {
+	background-image: url("Images/0-property.png"), url("Images/0.png"), url("Images/gridlines.gif");
+	background-size: 128px, 92px, 128px;
+}
+
+#container table td.dot-of-player-1.property-of-player-1 {
+	background-image: url("Images/1-property.png"), url("Images/1.png"), url("Images/gridlines.gif");
+	background-size: 128px, 92px, 128px, 128px;
+	
+}
+
+#container table td.dot-of-player-0.property-of-player-1 {
+	background-image: url("Images/1-property.png"), url("Images/0.png"), url("Images/gridlines.gif");
+	background-size: 128px, 92px, 128px;
+}
+
+#container table td.dot-of-player-1.property-of-player-0 {
+	background-image: url("Images/0-property.png"), url("Images/1.png"), url("Images/gridlines.gif");
+	background-size: 128px, 92px, 128px, 128px;
+	
+}
+
+#container table td.dot-of-player-0:hover {
+	background-image: radial-gradient(circle at center, rgba(192,64,192,.5) -10%, rgba(0,0,0,0) 26%), url("Images/0.png"), url("Images/gridlines.gif");
+	background-size: 128px, 92px, 128px;
+}
+
+#container table td.dot-of-player-1:hover {
+	background-image: radial-gradient(circle at center, rgba(192,64,192,.5) -10%, rgba(0,0,0,0) 26%), url("Images/1.png"), url("Images/gridlines.gif");
+	background-size: 128px, 92px, 128px;
+}
