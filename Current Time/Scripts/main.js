@@ -36,11 +36,7 @@ Main.prototype = {
 	clockIntervalHandler: function (e) {
 		var me = this;
 		var t = new Date();
-		var hh = t.getHours() ? "0" + t.getHours() : t.getHours();
-		var mm = t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes();
-		var ss = t.getSeconds() < 10 ? "0" + t.getSeconds() : t.getSeconds();
-		var isAm = t.getHours() < 12; //is 12 am 00 am??
-		me.$container.text(hh + ":" + mm + ":" + ss + (isAm ? ' AM' : ' PM'));
+		me.$container.text(t.toLocaleTimeString());
 	}
 };
 
