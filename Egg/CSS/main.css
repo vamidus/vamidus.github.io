@@ -1,0 +1,253 @@
+@font-face {
+	font-family: 'SVGFont 1';
+	src: url('Fonts/Untitled1.woff2');
+}
+
+body {
+	font-family: 'SVGFont 1', monospace;
+	overflow: hidden;
+}
+
+#content {
+	position: absolute;
+	background-image: url("Images/bl.jpg");
+	background-size: cover;
+}
+
+#score-board {
+	position: absolute;
+	left: 30%;
+	width: 50%;
+	font-size: 18vh;
+	text-align: right;
+}
+
+#content img {
+	position: absolute;
+}
+
+#rabbit {
+	top: 1%;
+	left: 12.6%;
+	width: 20.6%;
+}
+
+#rabbit-hand-1 {
+	top: 3.1%;
+	left: 30.2%;
+	width: 13%
+}
+
+#rabbit-hand-2 {
+	top: 20.8%;
+	left: 28.7%;
+	width: 15.1%
+}
+
+#life-1 {
+	top: 25.2%;
+	left: 53.2%;
+	width: 7.1%;
+}
+
+#life-2 {
+	top: 25.2%;
+	left: 60.8%;
+	width: 7.1%;
+}
+
+#life-3 {
+	top: 25.2%;
+	left: 68.3%;
+	width: 7.1%;
+}
+
+#broken-egg-a {
+	top: 82.5%;
+	left: 19.4%;
+	width: 15.6%;
+}
+
+#broken-egg-b {
+	top: 82.8%;
+	left: 64%;
+	width: 16.7%;
+}
+
+#chick-a1 {
+	top: 69.1%;
+	left: 16.8%;
+	width: 7.8%;
+}
+
+#chick-a2 {
+	top: 76.8%;
+	left: 13.3%;
+	width: 6.1%;
+}
+
+#chick-a3 {
+	top: 77.3%;
+	left: 8.7%;
+	width: 6.1%;
+}
+
+#chick-a4 {
+	top: 77.4%;
+	left: 2%;
+	width: 6.9%;
+}
+
+#chick-b1 {
+	top: 70.5%;
+	left: 75.3%;
+	width: 9%;
+}
+
+#chick-b2 {
+	top: 77.3%;
+	left: 82.1%;
+	width: 5%;
+}
+
+#chick-b3 {
+	top: 77.1%;
+	left: 87.1%;
+	width: 5%;
+}
+
+#chick-b4 {
+	top: 76.8%;
+	left: 92.3%;
+	width: 5.2%;
+}
+
+#egg-a11 {
+	top: 29.8%;
+	left: 9.5%;
+	width: 4.9%;
+}
+
+#egg-a12 {
+	top: 33.4%;
+	left: 12.2%;
+	width: 5.6%;
+}
+
+#egg-a13 {
+	top: 36.1%;
+	left: 16.1%;
+	width: 4%;
+}
+
+#egg-a14 {
+	top: 39.1%;
+	left: 18.7%;
+	width: 5.5%;
+}
+
+#egg-a15 {
+	top: 43.2%;
+	left: 21.8%;
+	width: 4.8%;
+}
+
+#egg-a21 {
+	top: 51.4%;
+	left: 9%;
+	width: 4%;
+}
+
+#egg-a22 {
+	top: 54.8%;
+	left: 11.9%;
+	width: 4.7%;
+}
+
+#egg-a23 {
+	top: 58.5%;
+	left: 15.3%;
+	width: 5.3%;
+}
+
+#egg-a24 {
+	top: 60.6%;
+	left: 19.2%;
+	width: 4%;
+}
+
+#egg-a25 {
+	top: 64.6%;
+	left: 21.5%;
+	width: 5.3%;
+}
+
+#egg-b11 {
+	top: 29.8%;
+	left: 88.6%;
+	width: 4.5%;
+}
+
+#egg-b12 {
+	top: 32.2%;
+	left: 85.4%;
+	width: 3.9%;
+}
+
+#egg-b13 {
+	top: 35.8%;
+	left: 81.6%;
+	width: 4.8%;
+}
+
+#egg-b14 {
+	top: 39.5%;
+	left: 77.7%;
+	width: 5.5%;
+}
+
+#egg-b15 {
+	top: 43.7%;
+	left: 75.3%;
+	width: 4%;
+}
+
+#egg-b21 {
+	top: 51.7%;
+	left: 88.1%;
+	width: 4.3%;
+}
+
+#egg-b22 {
+	top: 54.6%;
+	left: 84.7%;
+	width: 4%;
+}
+
+#egg-b23 {
+	top: 58.2%;
+	left: 80.8%;
+	width: 5.5%;
+}
+
+#egg-b24 {
+	top: 61%;
+	left: 77.8%;
+	width: 4.5%;
+}
+
+#egg-b25 {
+	top: 65.6%;
+	left: 74.5%;
+	width: 4.8%;
+}
+
+#wolf-a1, 
+#wolf-a2,
+#wolf-b1,
+#wolf-b2,
+#overlay {	
+	top: 0px;
+	left: 0px;
+	width: 100%;
+}

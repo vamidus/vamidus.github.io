@@ -1,0 +1,77 @@
+body {
+	padding: 5em;
+}
+
+legend {
+	width: auto;
+	padding: .5em;
+	cursor: default;
+}
+
+#field table {
+	margin: auto;
+}
+
+#field table.legend {
+	margin-top: 1em;
+}
+
+#field tr:first-of-type td {
+	border-top: none;
+}
+
+#field tr:last-of-type td {
+	border-bottom: none;
+}
+
+#field td {
+	width: 48px;
+	height: 48px;
+	border: 3px solid black;
+}
+
+#field tr td:first-of-type {
+	border-left: none;
+}
+
+#field tr td:last-of-type {
+	border-right: none;
+}
+
+#field td[player="0"] {
+	background-color: red;
+}
+
+#field td[player="1"] {
+	background-color: blue;
+}
+
+#field td[player="2"] {
+	background-color: yellow;
+}
+
+#field td[player="3"] {
+	background-color: lime;
+}
+
+#field td[player="4"] {
+	background-color: aqua;
+}
+
+#field td[player="5"] {
+	background-color: fuchsia;
+}
+
+#field table.legend tr td {
+	border: none;
+}
+
+#field table.legend tr td:first-child {
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.alert {
+	position: fixed;
+	bottom: 0;
+}

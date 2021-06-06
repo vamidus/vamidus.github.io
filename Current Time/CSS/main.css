@@ -1,0 +1,18 @@
+@font-face {
+	font-family: 'Untitled1';
+	src: url('Fonts/Untitled1.woff2');
+}
+
+body {
+	font-family: 'Untitled1', monospace;
+	xfont-style: italic;
+	background-color: black;
+	color: lime;
+}
+
+.container {
+	padding-top: 22%;
+	text-align: center;
+	font-size: 1300%;
+	transform: scale(.9, 1);
+}

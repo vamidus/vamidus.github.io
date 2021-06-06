@@ -1,0 +1,23 @@
+body {
+	background-color: white;
+	font: 1.3em Arial, Helvetica, sans-serif;
+	padding: 32px;
+}
+
+div.container {
+	display: none;
+	background-color: #eee;
+	border: 3px inset silver;
+	margin: auto;
+}
+
+div.container div.tile {
+	position: absolute;
+	border: 3px outset silver;
+	background-color: white;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	text-align: center;
+	padding-top: .85em;
+	font-weight: bolder;
+}
