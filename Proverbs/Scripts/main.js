@@ -56,7 +56,9 @@ var Main = function () {
 		'You can’t fit a round peg in a cat without breaking any eggs.',
 		'You can’t make an omelet without skinning the cat.',
 		'You can’t teach an old dog new ways to skin the cat.',
-		'You can’t unscramble a scrambled egg without proper authorization.'];
+		'You can’t unscramble a scrambled egg without proper authorization.',
+		'Let sleeping dogs lie with the fishes.'
+	];
 
 	// Variables
 
