@@ -93,7 +93,7 @@ Main.prototype = {
 	renderProverb: function () {
 		var id = this.getId();
 		this.$container.html(
-			"<p>My mother always told me: <br /><i>\"" 
+			"<p>As the saying goes, <br /><i>\"" 
 			+ this.proverbs[id]
 			+ "\"</i></p>");
 	},
