@@ -12,6 +12,7 @@ var Main = function () {
 	// Selectors
 	this.$container = null;
 	this.$field = null;
+	this.$stats = null;
 }
 
 Main.prototype = {
@@ -32,6 +33,7 @@ Main.prototype = {
 
 	setupElementSelectors: function () {
 		this.$container = $("#container");
+		this.$stats = $("#stats");
 	},
 
 	setupField: function () {
@@ -123,7 +125,7 @@ Main.prototype = {
 				this.clearLookedByPlayer();
 			}
 			else {
-				this.anotherGo = false;
+				this.anotherGo = true;
 				this.updateField();
 				result = true;
 			}
@@ -133,7 +135,7 @@ Main.prototype = {
 				this.clearLookedByPlayer();
 			}
 			else {
-				this.anotherGo = false;
+				this.anotherGo = true;
 				this.updateField();
 				result = true;
 			}
@@ -143,7 +145,7 @@ Main.prototype = {
 				this.clearLookedByPlayer();
 			}
 			else {
-				this.anotherGo = false;
+				this.anotherGo = true;
 				this.updateField();
 				result = true;
 			}
@@ -153,7 +155,7 @@ Main.prototype = {
 				this.clearLookedByPlayer();
 			}
 			else {
-				this.anotherGo = false;
+				this.anotherGo = true;
 				this.updateField();
 				result = true;
 			}
@@ -167,9 +169,6 @@ Main.prototype = {
 		}
 		if (this.field[y][x].dot_of_player === player && (this.field[y][x].property_of_player === null || this.field[y][x].property_of_player === player)) {
 			return false;
-		}
-		if (this.field[y][x].dot_of_player !== player && (this.field[y][x].property_of_player === null || this.field[y][x].property_of_player !== player)) {
-			this.anotherGo = true;
 		}
 		if (y === 0 || y === this.fieldHeight - 1 || x === 0 || x === this.fieldWidth - 1) {
 			return true;
@@ -211,7 +210,12 @@ Main.prototype = {
 
 	nextPlayer: function () {
 		this.currentPlayer = (this.currentPlayer + 1 === this.numberOfPlayers) ? 0 : this.currentPlayer + 1;
-		console.log("current player: " + this.currentPlayer + " " + (this.currentPlayer == 0 ? "(red)" : "(blue)"));
+		//console.log("current player: " + this.currentPlayer + " " + (this.currentPlayer == 0 ? "(red)" : "(blue)"));
+		this.updateStats();
+	},
+	
+	updateStats: function () {
+		this.$stats.text("current player: " + this.currentPlayer + " " + (this.currentPlayer == 0 ? "(red)" : "(blue)"));
 	}
 };
 

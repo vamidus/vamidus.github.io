@@ -101,6 +101,7 @@ var Main = function () {
 	this.fieldHeight = 0;
 	this.fieldWidth = 0;
 	this.animationSpeed = 200;
+	this.animationSpeedShuffle = 10;
 
 	// Variables
 	this.currentLevel = 1;
@@ -209,60 +210,55 @@ Main.prototype = {
 				"width": (this.fieldWidth * this.cellWidth + 6) + "px"
 			})
 			.show();
-		var offsetTop = this.$container[0].offsetTop + 3;
-		var offsetLeft = this.$container[0].offsetLeft + 3;
-		var offsetHeight = this.$container[0].offsetHeight - 30;
-		var offsetWidth = this.$container[0].offsetWidth - 30
-		var i = 0;
 		for (var y = 0; y < this.fieldHeight; y++) {
 			for (var x = 0; x < this.fieldWidth; x++) {
 				if (level.field[y][x].cellType !== null) {
-					var originalX = level.field[y][x].x;
-					var originalY = level.field[y][x].y;
-					var css = {};
-					if (level.backgroundImage === null) {
-						i = originalY * this.fieldWidth + originalX + 1;
-						var $tile = this.$tileTemplate
-							.clone()
-							.attr("x", x)
-							.attr("y", y)
-							.attr("class", level.field[y][x].cellType.toLowerCase())
-							.css({
-								"top": (y * this.cellHeight + offsetTop) + "px",
-								"left": (x * this.cellWidth + offsetLeft) + "px",
-								"height": (this.cellHeight) + "px",
-								"width": (this.cellWidth) + "px"})
-							.text(i)
-							.appendTo(this.$container);
-					}
-					else {
-						var $tile = this.$tileTemplate
-							.clone()
-							.attr("x", x)
-							.attr("y", y)
-							.attr("class", level.field[y][x].cellType.toLowerCase())
-							.css({
-								"top": (y * this.cellHeight + offsetTop) + "px",
-								"left": (x * this.cellWidth + offsetLeft) + "px",
-								"height": (this.cellHeight) + "px",
-								"width": (this.cellWidth) + "px",
-								"background-image": level.backgroundImage,
-								"background-size": offsetWidth + "px " + offsetHeight + "px",
-								"background-position": (100 / (this.fieldWidth - 1) * originalX) + "% " + (100 / (this.fieldHeight - 1) * originalY) + "%"})
-							.appendTo(this.$container);
-					}
+					this.renderTile(level, x, y);
 				}
 			}
 		}
 	},
 
+	renderTile: function (level, x, y) {
+		var offsetTop = this.$container[0].offsetTop + 3;
+		var offsetLeft = this.$container[0].offsetLeft + 3;
+		var offsetHeight = this.$container[0].offsetHeight - 30;
+		var offsetWidth = this.$container[0].offsetWidth - 30
+		var originalX = level.field[y][x].x;
+		var originalY = level.field[y][x].y;
+		var i = originalY * this.fieldWidth + originalX + 1; // only used without background
+		var $tile = this.$tileTemplate
+			.clone()
+			.attr("x", x)
+			.attr("y", y)
+			.attr("class", level.field[y][x].cellType.toLowerCase())
+			.css({
+				"top": (y * this.cellHeight + offsetTop) + "px",
+				"left": (x * this.cellWidth + offsetLeft) + "px",
+				"height": (this.cellHeight) + "px",
+				"width": (this.cellWidth) + "px",
+				...(level.backgroundImage && {
+					"background-image": level.backgroundImage,
+					"background-size": offsetWidth + "px " + offsetHeight + "px",
+				"background-position": (100 / (this.fieldWidth - 1) * originalX) + "% " + (100 / (this.fieldHeight - 1) * originalY) + "%"})})
+			.text(level.backgroundImage === null 
+						? i === 6 
+							? "6." 
+							: i === 9 
+								? "9." 
+								: i 
+						: "")
+			.appendTo(this.$container);
+	},
+
 	scrambleField: function () {
 		var animationSpeed = this.animationSpeed;
-		this.animationSpeed = 50;
-		var scrambleIterations = this.fieldWidth * this.fieldHeight * 2;
+		this.animationSpeed = this.animationSpeedShuffle;
+		var scrambleIterations = this.fieldWidth * this.fieldHeight * 2 * 10;
 		for (var i = 0; i < scrambleIterations; i++) {
 			var scrambled = false;
 			var noCell = this.getNoCell();
+			if (!noCell) return;
 			do {
 				switch(Math.floor(Math.random() * 4)) {
 					case 0:
@@ -294,16 +290,36 @@ Main.prototype = {
 		this.animationSpeed = animationSpeed;
 	},
 
+	scrambleField_createsUnsolveableFields: function () {
+		var animationSpeed = this.animationSpeed;
+		this.animationSpeed = this.animationSpeedShuffle;
+		var scrambleIterations = this.fieldWidth * this.fieldHeight * 2;
+		for (var i = 0; i < scrambleIterations; i++) {
+			var noCell = this.getNoCell();
+			if (!noCell) return;
+			var targetCell = this.getRandomCell();
+			this.swapTiles(targetCell.x, targetCell.y, noCell.x, noCell.y);
+		}
+		this.animationSpeed = animationSpeed;
+	},
+
 	getNoCell: function () {
 		var level = this.levels[this.currentLevel].field;
 		for (var y = 0; y < this.fieldHeight; y++) {
 			for (var x = 0; x < this.fieldWidth; x++) {
 				if (level[y][x].cellType === null) {
-					return {"x": x, "y": y};
+					return {x, y};
 				}
 			}
 		}
-		return {"x": null, "y": null};
+		return {"x": null, "y": null}; // this better never happen!
+	},
+
+	getRandomCell: function () {
+		var level = this.levels[this.currentLevel].field;
+		var y = Math.floor(Math.random() * this.fieldWidth);
+		var x = Math.floor(Math.random() * this.fieldHeight);
+		return {x, y};
 	},
 
 	puzzleSolved: function () {
