@@ -12,12 +12,27 @@ div.container {
 }
 
 div.container div.tile {
+	color: #c33;
+	text-shadow: -1px -1px 1px #811, 1px 1px 1px #f99;
 	position: absolute;
 	border: 3px outset silver;
+	border-radius: 7px;
 	background-color: white;
 	background-repeat: no-repeat;
 	cursor: pointer;
 	text-align: center;
 	padding-top: .85em;
 	font-weight: bolder;
+}
+
+div.container div.tile::after {
+	display: block;
+	position: relative;
+	top: -1.6em;
+	left: .4em;
+	width: 2em;
+	height: 2em;
+	content: " ";
+	border: 2px inset silver;
+	border-radius: 21px;
 }
