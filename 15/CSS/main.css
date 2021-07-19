@@ -1,23 +1,23 @@
 body {
-	background-color: white;
+	background-color: #eee;
 	font: 1.3em Arial, Helvetica, sans-serif;
 	padding: 32px;
 }
 
 div.container {
 	display: none;
-	background-color: #eee;
+	background-color: #ddd;
 	border: 3px inset silver;
 	margin: auto;
 }
 
 div.container div.tile {
 	color: #c33;
-	text-shadow: -1px -1px 1px #811, 1px 1px 1px #f99;
+	text-shadow: -1px -1px 0px rgba(105, 0, 0, 0.5), 1px 1px 0px rgba(255, 245, 245, 0.7);
 	position: absolute;
 	border: 3px outset silver;
 	border-radius: 7px;
-	background-color: white;
+	background-color: #eed;
 	background-repeat: no-repeat;
 	cursor: pointer;
 	text-align: center;
