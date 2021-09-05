@@ -1,0 +1,209 @@
+<html>
+<head>
+<title>maze v1</title>
+<script type="text/javascript">
+  var oBoard;
+  var soBoardId = "mazecontainer";
+  var myBoardXMax = 0;
+  var myBoardYMax = 0;
+  var startX = 0;
+  var startY = 0;
+  var endX = 0;
+  var endY = 0;
+  function addEvent(obj, evType, fn) {
+    if (obj.addEventListener){
+      obj.addEventListener(evType, fn, false);
+      return true;
+    } else if (obj.attachEvent){
+      var r = obj.attachEvent("on" + evType, fn);
+      return r;
+    } else {
+      return false;
+    }
+  }
+  function removeEvent(obj, type, fn) {
+    if (obj.detachEvent) {
+      obj.detachEvent('on'+type, obj[type+fn]);
+      obj[type+fn] = null;
+    } else {
+      obj.removeEventListener(type, fn, false);
+    }
+  }
+  function init() {
+    oBoard = document.getElementById(soBoardId);
+    myBoardXMax = Math.floor((oBoard.clientWidth - 20) / 32);
+    myBoardYMax = Math.floor((oBoard.clientHeight - 20) / 32);
+    if (oBoard) {
+      var newTable = document.createElement("TABLE");
+      newTable.className = "maze";
+      newTable.cellSpacing = "0";
+      oBoard.appendChild(newTable);
+      var newTBody = document.createElement("TBODY");
+      newTable.appendChild(newTBody);
+      for (var t2 = 0; t2 <= myBoardYMax; t2 ++) {
+        var newRow = document.createElement("TR");
+        newTBody.appendChild(newRow);
+        for (var t1 = 0; t1 <= myBoardXMax; t1 ++) {
+          var newCell = document.createElement("TD");
+          newCell.id = "c_" + t2 + "_" + t1;
+          newCell.className = "cell";
+          newRow.appendChild(newCell);
+        }
+      }
+      startY = Math.floor(Math.random()*myBoardYMax);
+      startX = Math.floor(Math.random()*myBoardXMax);
+      var newCell = document.getElementById("c_" + startY + "_" + startX);
+      if (newCell) {
+        newCell.className += " start me";
+        processCell(startX, startY);
+        endY = Math.floor(Math.random()*myBoardYMax);
+        endX = Math.floor(Math.random()*myBoardXMax);
+        var tEnd = document.getElementById("c_" + endY + "_" + endX);
+        tEnd.className += " end";
+        addEvent(window,"keydown",function(event){doStuff(event)});
+        window.focus();
+      }
+    }
+  }
+  
+  function processCell(xme, yme) {
+    var me = document.getElementById("c_" + yme + "_" + xme);
+    if (me) {
+      me.className += " processed";
+      var vX = [-1, 1, 0, 0];
+      var vY = [0, 0, -1, 1];
+      var vH = ["left", "right", "top", "bottom"];
+      var sV = "~";
+      for (var i = 0; i <= 3; i ++) {
+        do {
+          var v = Math.floor(Math.random()*vX.length);
+        } while (sV.indexOf("~" + v + "~") >= 0);
+        sV += v + "~";
+        var xhim = xme + vX[v] * 1;
+        var yhim = yme + vY[v] * 1;
+        var him = document.getElementById("c_" + yhim + "_" + xhim);
+        if (him && him.className.indexOf("processed") < 0) {
+          if (v == 1) v = 0;
+          else if (v == 0) v = 1;
+          else if (v == 2) v = 3;
+          else if (v == 3) v = 2;
+          var vHhim = vH[v];
+          him.className += (" no_" + vHhim);
+          if (v == 1) v = 0;
+          else if (v == 0) v = 1;
+          else if (v == 2) v = 3;
+          else if (v == 3) v = 2;
+          var vHme = vH[v];
+          me.className += (" no_" + vHme);
+          processCell(xhim, yhim);
+        }
+      }
+    }
+  }
+  function doStuff(e) {
+    var keyCode = ("which" in e) ? e.which : e.keyCode;
+    if (keyCode == 38) {
+      var me = _checkMe(startX, startY - 1);
+      if (me && me.className.indexOf("no_bottom") >= 0) {
+        startY--;
+        me.className += " me";
+        var me = _checkMe(startX, startY + 1);
+        me.className = me.className.replace("me","");
+      }
+    } else if (keyCode == 37) {
+      var me = _checkMe(startX - 1, startY);
+      if (me && me.className.indexOf("no_right") >= 0) {
+        startX--;
+        me.className += " me";
+        var me = _checkMe(startX + 1, startY);
+        me.className = me.className.replace("me","");
+      }
+    } else if (keyCode == 40) {
+      var me = _checkMe(startX, startY + 1);
+      if (me && me.className.indexOf("no_top") >= 0) {
+        startY++;
+        me.className += " me";
+        var me = _checkMe(startX, startY - 1);
+        me.className = me.className.replace("me","");
+      }
+    } else if (keyCode == 39) {
+      var me = _checkMe(startX + 1, startY);
+      if (me && me.className.indexOf("no_left") >= 0) {
+        startX++;
+        me.className += " me";
+        var me = _checkMe(startX - 1, startY);
+        me.className = me.className.replace("me","");
+      }
+    }
+    var me = _checkMe(startX, startY);
+    if (me.className.indexOf("end") >= 0) {
+      alert("The End!");
+      //removeEvent(window,"keydown",doStuff(event));; doesnt work
+      location.reloead();
+    }
+  }
+  function _checkMe(mex, mey) {
+    var me = document.getElementById("c_" + (mey) + "_" + mex);
+    if (me) {
+      return me;
+    } else {
+      return false;
+    }
+  }
+</script>
+<style type="text/css">
+  body {
+    padding: 5px;
+    margin: 5px;
+    xoverflow: hidden;
+    background-color: black;
+  }
+  #mazecontainer {
+    height: 100%;
+    margin: 0px;
+  }
+  .maze {
+    border-collapse: collapse;
+    background-image: url('images/bggrass.jpg');
+  }
+  .cell {
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    xborder-image: url('images/brickwall.jpg');
+    xborder: 2px solid black;
+    width: 32px;
+    height: 32px;
+  }
+  .no_top {
+    border-top: none;
+  }
+  .no_bottom {
+    border-bottom: none;
+  }
+  .no_left {
+    border-left: none;
+  }
+  .no_right {
+    border-right: none;
+  }
+  .start {
+    xbackground-color: #9f9;
+  }
+  .end {
+    background-image: url('images/treasure.png');
+    background-size: 100% 100%;
+  }
+  .me {
+    background-image: url('images/newmario.gif');
+    background-size: 100% 100%;
+  }
+  .processed {
+    xbackground-color: silver;
+  }
+</style>
+</head>
+<body onload="init();">
+  <div id="mazecontainer"></div>
+</body>
+</html>
