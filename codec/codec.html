@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>ASCII CODEC</title>
+<style type="text/css">
+  body {
+    font: menu;
+    background: menu;
+  }
+  #decoded, #encoded {
+    padding: 2px;
+    width: 99%;
+    height: 200px;
+    vertical-align: top;
+    background: #000080;
+    color: #FF0;
+  }
+  #dict, #separ {
+    padding: 2px;
+    width: 99%;
+    background: #000080;
+    color: #FF0;
+  }
+</style>
+<script type="text/javascript">
+
+  var separ = "", dict = "", wordLen = 0;
+  var oldEnc = "", oldDec = "";
+
+  function updateAll() {
+    updateSepar();
+    if (document.getElementById("dict").value.length > 1) { 
+      updateDict();
+      wordLen = getWordLen();
+    } else {
+      dict = "";
+      wordLen = 0;
+    }
+    if (oldEnc != document.getElementById("encoded").value) {
+      oldEnc = document.getElementById("encoded").value;
+      if (wordLen > 0) updateDecoded();
+      oldDec = document.getElementById("decoded").value;
+    } else if (oldDec != document.getElementById("decoded").value){
+      oldDec = document.getElementById("decoded").value;
+      if (wordLen > 0) updateEncoded();
+      oldEnc = document.getElementById("encoded").value;
+    }
+  }
+
+  function updateSepar() {
+    separ = document.getElementById("separ").value;
+  }
+
+  function updateDict() {
+    dict = document.getElementById("dict").value;
+  }
+
+  function getWordLen() {
+    var t = myEncode(65025); //todo: set this number to topmost utf character
+    return t.length;
+  }
+
+  function updateDecoded() {
+    var t = "";
+    var srcText = document.getElementById("encoded").value;
+    var re = new RegExp("[^" + dict + "]+", "gm");
+    srcText = srcText.replace(re, "");
+    for (var i = 0; i < srcText.length; i += wordLen) {
+      var myVal = 0;
+      for (var ii = 0; ii < wordLen; ii++) {
+        myVal += dict.indexOf(srcText.substr(i, wordLen).charAt(ii)) * Math.pow(dict.length, wordLen - 1 - ii);
+      }
+      t += String.fromCharCode(myVal);
+    }
+    document.getElementById("decoded").value = t;
+  }
+
+  function updateEncoded() {
+    var encField = document.getElementById("encoded");
+    var srcText = document.getElementById("decoded").value;
+    var t = ""
+    encField.value = "";
+    for (var i = 0; i < srcText.length; i++) {
+      t += pad(myEncode(srcText.charCodeAt(i))) + myEncode(srcText.charCodeAt(i)) + separ;
+    }
+    encField.value = t;
+  }
+
+  function myEncode(myInt) {
+    var v = myInt, rema, t = "";
+    do {
+      rema = v % dict.length;
+      v = Math.floor(v / dict.length);
+      t = dict.charAt(rema) + t;
+    } while (v >= dict.length);
+    return dict.charAt(v) + t;
+  }
+
+  function pad(s) {
+    var t="";
+    for (var i=0; i<wordLen-s.length; i++) t += dict.charAt(0);
+    return t;
+  }
+
+</script>
+</head>
+<body onkeyup="updateAll();">
+  <h3>ASCII/UTF CODEC</h3>
+  <p>Encodes/decodes ASCII/UTF text using various numeric systems including binary, trinary, octal, hexadecimal and custom.<br />Enter Dictionary (i.e. 0123456789ABCDEF for hex) and optional separator. Then enter either Encoded or Decoded data.</p>
+  <p>Dictionary:<br /><input type="text" id="dict" /></p>
+  <p>Separator:<br /><input type="text" id="separ" /></p>
+  <p>Decoded:<br /><textarea id="decoded" ></textarea></p>
+  <p>Encoded:<br /><textarea id="encoded" ></textarea></p>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>One-time Pad</title>
+<style type="text/css">
+  body {
+    font: menu;
+    background: menu;
+  }
+  .myTextField {
+    padding: 2px;
+    width: 99%;
+    height: 300px;
+    background: #000080;
+    color: #FF0;
+  }
+  .myInputField {
+    padding: 2px;
+    background: #000080;
+    color: #FF0;
+  }
+</style>
+<script type="text/javascript">
+  function getRnd() {
+    document.getElementById("rotSeed").value = "generating..."
+    var iMax = document.getElementById("rotText").value.length
+    var sSeed = "";
+    for (var i = 0; i < iMax; i++) {
+      sSeed += String.fromCharCode(Math.floor(Math.random()*65536));
+      //sSeed += String.fromCharCode(Math.floor(Math.random()*36)+36);
+    }
+    document.getElementById("rotSeed").value = sSeed;
+  }
+  function rotText() {
+    var myRetVal = "", mySeed = "", iSeedCounter = 0;
+    var myText = document.getElementById("rotText").value;
+    for (var i = 0; i < myText.length; i++) {
+      iSeedCounter = i % document.getElementById("rotSeed").value.length;
+      mySeed = document.getElementById("rotSeed").value.charCodeAt(iSeedCounter);
+      myRetVal += String.fromCharCode(myText.charCodeAt(i)^mySeed);
+    }
+    document.getElementById("rotText").value = myRetVal;
+  }
+</script>
+</head>
+<body>
+<h3>One Time Pad</h3>
+<p>Each byte of text will be combined with corresponding byte of provided pad using the exclusive or (XOR) operation.</p>
+<p>
+Pad: <a href="#" onclick="getRnd();return false;">(randomize)</a><br />
+<textarea id="rotSeed" class="myTextField">
+
+</textarea>
+</p>
+<p>Text:<br />
+<textarea id="rotText" class="myTextField">
+In cryptography, the one-time pad (OTP) is an encryption algorithm where the plaintext is combined with a random key or "pad" that is as long as the plaintext and used only once. A modular addition is used to combine the plaintext with the pad. (For binary data, the operation XOR amounts to the same thing.)
+</textarea>
+</p>
+<p><input type="button" value="Pad" onclick="rotText();return false;" /></p>
+</body>
+</html>
