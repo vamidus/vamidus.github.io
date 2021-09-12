@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>XOR</title>
+<style type="text/css">
+  body {
+    font: menu;
+    background: menu;
+  }
+  #rotText {
+    padding: 2px;
+    width: 99%;
+    height: 400px;
+    background: #000080;
+    color: #FF0;
+  }
+  #rotSeed {
+    padding: 2px;
+    background: #000080;
+    color: #FF0;
+  }
+</style>
+<script type="text/javascript">
+  function getRnd() {
+    document.getElementById("rotSeed").value = Math.floor(Math.random()*65536);
+  }
+  function rotText() {
+    var myRetVal = ""
+    var mySeed = document.getElementById("rotSeed").value;
+    if (mySeed != 0) {
+      var myText = document.getElementById("rotText").value;
+      for (var i = 0; i < myText.length; i++) {
+        myRetVal += String.fromCharCode(myText.charCodeAt(i)^mySeed);
+      }
+      document.getElementById("rotText").value = myRetVal;
+    }
+  }
+</script>
+</head>
+<body>
+<h3>XOR CODEC</h3>
+<p>Each byte of text will be combined with provided seed number using the exclusive or (XOR) operation.</p>
+<p>Seed: <a href="#" onclick="getRnd();return false;">(randomize)</a><br /><input type="text" id="rotSeed" value="42" /></p>
+<p>Text:<br />
+<textarea id="rotText">
+memfrob()
+The GNU C library (a set of standard routines available for use in computer programming) contains a function memfrob() which has a similar purpose to ROT13, although it is intended for use with arbitrary binary data. The function operates (humorously termed "frobnicates") by combining each byte with the binary pattern 00101010 (42 decimal) using the exclusive or (XOR) operation. This effects a simple XOR cipher. Like ROT13, memfrob() is self-reciprocal; it is also just about as insecure (that is, just as trivial to decrypt if the key is not known).
+
+http://en.wikipedia.org/wiki/ROT13
+</textarea>
+</p>
+<p><input type="button" value="XOR" onclick="rotText();" /></p>
+</body>
+</html>
