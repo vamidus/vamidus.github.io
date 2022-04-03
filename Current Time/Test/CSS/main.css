@@ -1,0 +1,18 @@
+@font-face {
+	font-family: 'Untitled1';
+	src: url('../../CSS/Fonts/Untitled1.woff2');
+}
+
+body {
+	font-family: 'Untitled1', monospace;
+	background-color: silver;
+	color: black;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.italic {
+	font-style: italic;
+}
