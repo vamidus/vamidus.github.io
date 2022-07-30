@@ -1,0 +1,13 @@
+body {
+	background-image: url('Images/camo3.png');
+	background-size: 33.3%;
+	font: 10px Arial, Helvetica, sans-serif;
+}
+
+.container {
+	display: inline-block;
+	background-color: white;
+	border: 3px outset #eee;
+	padding: 32px;
+	margin: 32px;
+}
