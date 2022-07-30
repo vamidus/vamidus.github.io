@@ -1,0 +1,21 @@
+
+
+ABbCcOoDEePpFf
+
+A a1, and any other class including no class
+B a2, a2 .rot-180
+b a2 .rot-090, a2 .rot270
+C a3 - no other class
+c a3 .rot-090
+O a3 .rot-180
+o a3 .rot-270
+D a4, and any other class including no class
+E a5 - no other class
+e a5 .rot-090
+P a5 .rot-180
+p a5 .rot-270
+F a6, a6 .rot-180
+f a6 .rot-090, a6 .rot-270
+
+oCDCbcECEc
+We st

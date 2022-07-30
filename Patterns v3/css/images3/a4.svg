@@ -1,0 +1,9 @@
+<svg height="132" width="132" xviewBox="2 2 128 128" xmlns="http://www.w3.org/2000/svg">
+  <rect class="debug" x="2" y="2" width="128" height="128"
+    xstroke="red" stroke-width=".2" stroke-dasharray=".3,.3" fill="none" />
+  <path d="M 0 32 q 32 0 32 -32" stroke="black" stroke-width="4" fill="none" />
+  <path d="M 132 32 q -32 0 -32 -32" stroke="black" stroke-width="4" fill="none" />
+  <path d="M 0 100 q 32 0 32 32" stroke="black" stroke-width="4" fill="none" />
+  <path d="M 132 100 q -32 0 -32 32" stroke="black" stroke-width="4" fill="none" />
+  <circle class="test" cx="66" cy="66" r="32" stroke="black" stroke-width="4" fill="none" />
+</svg>
