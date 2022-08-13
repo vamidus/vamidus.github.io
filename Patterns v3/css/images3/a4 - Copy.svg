@@ -1,0 +1,7 @@
+<svg height="100" width="100" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 0 30 q 30 0 30 -30" stroke="black" stroke-width="1" fill="none" />
+  <path d="M 100 30 q -30 0 -30 -30" stroke="black" stroke-width="1" fill="none" />
+  <path d="M 0 70 q 30 0 30 30" stroke="black" stroke-width="1" fill="none" />
+  <path d="M 100 70 q -30 0 -30 30" stroke="black" stroke-width="1" fill="none" />
+  <circle cx="50" cy="50" r="20" stroke="black" stroke-width="1" fill="none" />
+</svg>

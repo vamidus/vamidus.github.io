@@ -1,0 +1,33 @@
+<svg height="128" width="128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="95%" x2="0%" y2="25%">
+      <stop offset="0%" style="stop-color:#e65032;stop-opacity:0" />
+      <stop offset="100%" style="stop-color:#e65032;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <xrect width="128" height="128" style="stroke-width: 1; stroke: black; fill: none" />
+  <path d="M64 64 C 32 -16, 96 -16, 64 64" stroke="none" fill="url(#grad1)" transform='rotate(0 64 64)'>
+    <animate id="animation1" attributeName="opacity" from="1" to="0.1" dur=".8s" begin="0s" repeatCount="indefinite" />
+  </path>
+  <path d="M64 64 C 32 -16, 96 -16, 64 64" stroke="none" fill="url(#grad1)" transform='rotate(45 64 64)'>
+    <animate id="animation2" attributeName="opacity" from="1" to="0.1" dur=".8s" begin="0.1s" repeatCount="indefinite" />
+  </path>
+  <path d="M64 64 C 32 -16, 96 -16, 64 64" stroke="none" fill="url(#grad1)" transform='rotate(90 64 64)'>
+    <animate id="animation3" attributeName="opacity" from="1" to="0.1" dur=".8s" begin="0.2s" repeatCount="indefinite" />
+  </path>
+  <path d="M64 64 C 32 -16, 96 -16, 64 64" stroke="none" fill="url(#grad1)" transform='rotate(135 64 64)'>
+    <animate id="animation4" attributeName="opacity" from="1" to="0.1" dur=".8s" begin="0.3s" repeatCount="indefinite" />
+  </path>
+  <path d="M64 64 C 32 -16, 96 -16, 64 64" stroke="none" fill="url(#grad1)" transform='rotate(180 64 64)'>
+    <animate id="animation5" attributeName="opacity" from="1" to="0.1" dur=".8s" begin="0.4s" repeatCount="indefinite" />
+  </path>
+  <path d="M64 64 C 32 -16, 96 -16, 64 64" stroke="none" fill="url(#grad1)" transform='rotate(225 64 64)'>
+    <animate id="animation6" attributeName="opacity" from="1" to="0.1" dur=".8s" begin="0.5s" repeatCount="indefinite" />
+  </path>
+  <path d="M64 64 C 32 -16, 96 -16, 64 64" stroke="none" fill="url(#grad1)" transform='rotate(270 64 64)'>
+    <animate id="animation7" attributeName="opacity" from="1" to="0.1" dur=".8s" begin="0.6s" repeatCount="indefinite" />
+  </path>
+  <path d="M64 64 C 32 -16, 96 -16, 64 64" stroke="none" fill="url(#grad1)" transform='rotate(315 64 64)'>
+    <animate id="animation8" attributeName="opacity" from="1" to="0.1" dur=".8s" begin="0.7s" repeatCount="indefinite" />
+  </path>
+</svg>

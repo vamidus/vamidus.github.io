@@ -1,0 +1,139 @@
+/* start - main */
+
+body, html {
+	height: 100%;
+	margin: 0px;
+	overflow: hidden;
+	xbackground-color: darkslate;
+}
+
+#container {
+	border-collapse: collapse;
+	border-spacing: 0;
+	background-color: darkslate;
+	opacity: .5;
+	filter: blur(2px);
+}
+
+#container td {
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+#container .flip-x {
+	transform: scaleX(-1);
+}
+
+#container .flip-y {
+	transform: scaleY(-1);
+}
+
+#container .flip-x.flip-y {
+	transform: scaleX(-1) scaleY(-1);
+}
+
+#container .rot-090 {
+	transform: rotate(90deg);
+}
+
+#container .rot-180 {
+	transform: rotate(180deg);
+}
+
+#container .rot-270 {
+	transform: rotate(270deg);
+}
+
+#container .rot-090.flip-x {
+	transform: scaleX(-1) rotate(90deg);
+}
+
+#container .rot-180.flip-x {
+	transform: scaleX(-1) rotate(180deg);
+}
+
+#container .rot-270.flip-x {
+	transform: scaleX(-1) rotate(270deg);
+}
+
+#container .rot-090.flip-y {
+	transform: scaleY(-1) rotate(90deg);
+}
+
+#container .rot-180.flip-y {
+	transform: scaleY(-1) rotate(180deg);
+}
+
+#container .rot-270.flip-y {
+	transform: scaleY(-1) rotate(270deg);
+}
+
+#container .rot-090.flip-x.flip-y {
+	transform: scaleX(-1) scaleY(-1) rotate(90deg);
+}
+
+#container .rot-180.flip-x.flip-y {
+	transform: scaleX(-1) scaleY(-1) rotate(180deg);
+}
+
+#container .rot-270.flip-x.flip-y {
+	transform: scaleX(-1) scaleY(-1) rotate(270deg);
+}
+
+/* end - main */
+
+/* start - empty */
+
+#container .a1 {
+	background-image: url("images1/a1.gif");
+}
+
+#container .a2 {
+	background-image: url("images1/a2.gif");
+}
+
+#container .a3 {
+	background-image: url("images1/a3.gif");
+}
+
+#container .a4 {
+	background-image: url("images1/a4.gif");
+}
+
+#container .a5 {
+	background-image: url("images1/a5.gif");
+}
+
+#container .a6 {
+	background-image: url("images1/a6.gif");
+}
+
+/* end - empty */
+
+/* start - black */
+
+#container .b1 {
+	background-image: url("images2/a1.gif");
+}
+
+#container .b2 {
+	background-image: url("images2/a2.gif");
+}
+
+#container .b3 {
+	background-image: url("images2/a3.gif");
+}
+
+#container .b4 {
+	background-image: url("images2/a4.gif");
+}
+
+#container .b5 {
+	background-image: url("images2/a5.gif");
+}
+
+#container .b6 {
+	background-image: url("images2/a6.gif");
+}
+
+/* end - black */
