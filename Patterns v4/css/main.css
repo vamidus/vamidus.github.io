@@ -11,7 +11,7 @@ body, html {
 	border-collapse: collapse;
 	border-spacing: 0;
 	background-color: darkslate;
-	opacity: .5;
+	xopacity: .5;
 	filter: blur(1px);
 }
 
