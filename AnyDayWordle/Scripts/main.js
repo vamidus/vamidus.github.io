@@ -47,7 +47,6 @@ Main.prototype = {
 	},
 
 	renderWordle: function (date) {
-      console.log.$wordle;
 		var msSinceWordleBegin = date.setHours(0, 0, 0, 0) - this.wordleBeginDate.setHours(0, 0, 0, 0);
 		this.$wordle.empty().text(this.wordleArray[Math.round(msSinceWordleBegin / this.day)]);
 	},
