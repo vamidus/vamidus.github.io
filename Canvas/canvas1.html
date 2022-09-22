@@ -1,0 +1,70 @@
+<html>
+<head>
+  <script type="text/javascript">
+    var myCanvas;
+    var boxMaxWidth = 200;
+    var boxMaxHeight = 150;
+    
+    function addEvent(obj, evType, fn){
+      if (obj.addEventListener){
+        obj.addEventListener(evType, fn, false);
+        return true;
+      } else if (obj.attachEvent){
+        var r = obj.attachEvent("on" + evType, fn);
+        return r;
+      } else {
+        return false;
+      }
+    }
+    
+    function doStuff(e) {
+      var baseColorR = Math.floor(Math.random() * 140) + 100;
+      var baseColorG = Math.floor(Math.random() * 170) + 60;
+      var baseColorB = Math.floor(Math.random() * 250) + 4;
+      document.getElementById('myBody').bgColor = 'rgb(' + baseColorR + ',' + baseColorG + ',' + baseColorB + ')';
+      var context = myCanvas.getContext('2d');
+      context.clearRect(0,0,myCanvas.clientWidth,myCanvas.clientHeight);
+      for (var i = 0; i < 600; i++) {
+        var nW = Math.floor(Math.random() * boxMaxWidth);
+        var nH = Math.floor(Math.random() * boxMaxHeight);
+        var nX = Math.floor(Math.random() * (myCanvas.clientWidth - nW));
+        var nY = Math.floor(Math.random() * (myCanvas.clientHeight - nH));
+        var nR = Math.floor(Math.random() * baseColorR);
+        var nG = Math.floor(Math.random() * baseColorG);
+        var nB = Math.floor(Math.random() * baseColorB);
+        var nA = Math.random();
+        //context.shadowOffsetX = 0;
+        //context.shadowOffsetY = 0;
+        //context.shadowBlur = i;
+        //context.shadowColor = 'rgba(' + nR/2 + ',' + nG/2 + ',' + nB/2 + ',' + nA + ')';
+        context.fillStyle = 'rgba(' + nR + ',' + nG + ',' + nB + ',' + nA + ')';
+        context.fillRect(nX, nY, nW, nH);
+        context.strokeRect(nX, nY, nW, nH);
+      }
+      //context.translate(myCanvas.clientWidth/2, myCanvas.clientHeight/2);
+      //context.rotate(1 * Math.PI / 180);
+      //context.restore();
+    }
+    
+    function initStuff() {
+      var myBody = document.getElementById('myBody');
+      myCanvas = document.createElement('canvas');
+      myCanvas.width=myBody.clientWidth;
+      myCanvas.height=myBody.clientHeight;
+      myCanvas.id = 'myCanvas';
+      myBody.appendChild(myCanvas);
+    }
+    
+    addEvent(window, "load", function(event){initStuff()});
+    addEvent(window, "click", function(event){doStuff(event)});
+    
+  </script>
+  <style type="text/css">
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+<body id='myBody'>
+</body>
+</html>
