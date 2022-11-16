@@ -6,7 +6,7 @@ var tileClass = "b"; // tile class to use
 var tileClassSize = 6; // number of tiles
 var orientationClasses = ["rot-090", "rot-180", "rot-270"]; // all orientation classes
 var flipClasses = ["flip-x", "flip-y"]; // all flip classes
-var pattern = 1; // pattern logic to use
+var pattern = 2; // pattern logic to use
 
 // settings - end
 
