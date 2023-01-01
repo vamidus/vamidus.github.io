@@ -1,0 +1,47 @@
+body {
+	background-color: black;
+	font: 10px Arial, Helvetica, sans-serif;
+	height: 1024px;
+	margin: 32px;
+	overflow: hidden;
+}
+
+div.container {
+	background-image: url('./Images/blips.png');
+	height: 1024px;
+	position: relative;
+	width: 1024px;
+}
+
+div.container:after {
+	-webkit-animation: spin 1s infinite;
+	animation: spin 5s infinite;
+	animation-timing-function: linear;
+	background-image: url('./Images/radar.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+	content: '';
+	height: 100%;
+	position: absolute;
+	width: 100%;
+}
+
+@-webkit-keyframes spin {
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
