@@ -1,9 +1,6 @@
 body {
 	background-color: black;
-	font: 10px Arial, Helvetica, sans-serif;
-	height: 1024px;
 	margin: 32px;
-	overflow: hidden;
 }
 
 div.container {
@@ -14,7 +11,7 @@ div.container {
 }
 
 div.container:after {
-	-webkit-animation: spin 1s infinite;
+	-webkit-animation: spin 5s infinite;
 	animation: spin 5s infinite;
 	animation-timing-function: linear;
 	background-image: url('./Images/radar.png');
