@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <title>LZ-String Compression Test</title>
+        <script language="javascript" src="./Scripts/lz-string.min.js"></script>
+        <style>
+            pre {
+                border: 1px solid grey;
+                padding: 12px;
+                overflow: auto;
+                width: 1170px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>LZ-String Compression/Decompression Demo</h1>
+        <div class="container">
+            <textarea id="source" cols="160" rows="25">
+    LZ-String is losely based on LZW.
+    https://pieroxy.net/blog/pages/lz-string/index.html
+
+    Lempel-Ziv-Welch (LZW) is a universal lossless data compression algorithm created by Abraham Lempel, Jacob Ziv, and Terry Welch. It was published by Welch in 1984 as an improved implementation of the LZ78 algorithm published by Lempel and Ziv in 1978. The algorithm is simple to implement and has the potential for very high throughput in hardware implementations. It is the algorithm of the Unix file compression utility compress and is used in the GIF image format.
+    https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch
+            </textarea>
+            <p id="source-len"></p>
+            <p>
+                <button id="compress">Compress</button>
+            </p>
+            <pre id="compressed-result"></pre>
+            <p id="compressed-result-len"></p>
+            <p>
+                <button id="decompress">Decompress</button>
+            </p>
+            <textarea id="decompressed-result" cols="160" rows="25"></textarea>
+        </div>
+        <script>
+            const compress = document.getElementById("compress");
+            const decompress = document.getElementById("decompress");
+            const compressed_result = document.getElementById("compressed-result");
+            const compressed_result_len = document.getElementById("compressed-result-len");
+            const decompressed_result = document.getElementById("decompressed-result");
+            const source = document.getElementById("source");
+            const source_len = document.getElementById("source-len");
+
+            compress.addEventListener("click", compress_onclick);
+            decompress.addEventListener("click", decompress_onclick);
+
+            function compress_onclick() {
+                let source_character_count = source.value.length;
+                compressed_result.innerText = LZString.compress(source.value);
+                let compressed_result_character_count = compressed_result.innerText.length;
+                source_len.innerText = source_character_count + " characters";
+                compressed_result_len.innerText = compressed_result_character_count + " characters (" + Math.floor((10000 * compressed_result_character_count) / source_character_count) / 100 + "% compression)";
+            }
+
+            function decompress_onclick() {
+                decompressed_result.value = LZString.decompress(compressed_result.innerHTML);
+            }
+        </script>
+    </body>
+</html>
