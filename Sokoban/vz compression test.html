@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <title>VZ-COMPRESS Test</title>
+        <script language="javascript" src="./Scripts/vz-compress.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <section>
+                <h1>VZ-COMPRESS v1.0<br />Compression/Decompression Demo</h1>
+                <p>
+                    This will compress text by turning leters that repeat more than <span id="character-repeat-threshold">2</span> (2 is the recommended default value, but can be changed to 1) times into that letter followed by the number of repetitions. Example:
+                    <pre>compress("AaABbCccC");</pre>
+                    returns*
+                    <pre>"A3BBC4"</pre>
+                </p>            
+                <p>
+                    This can be reversed by turning numbers that follow a letter into a sequence of that letter. Example:
+                    <pre>decompress("A3BBC4");</pre>
+                    returns*
+                    <pre>"AAABBCCCC"</pre>
+                </p>            
+                <p>
+                    Restrictions: 
+                    <ol>
+                        <li>Numbers are not allowed, as they break the decompression logic (duh!)</li>
+                        <li>This process also upper-cases the text!</li>
+                    </ol>
+                </p>
+                <p>Hastily threwn together by Vadym Zakrevskyy one Friday night, 2/24/2023</p>            
+                <p>
+                    LEGAL/LICENSING: Do whatever you want with VZ-COMPRESS, but I can't be held responsible for what this thing does! Use at your own risk!!! Example:<br />
+                    If this thing compresses your dog, I am not to blame: you should have used a better algorithm to drive your pet gizmo!
+                </p>
+            </section>
+            <textarea id="source" cols="160" rows="6">FFFFFFFFFWWWWFFFFFFFFFFFFFFFFFFFFFFFFFWFFWFFFFFFFFFFFFFFFFFFFFFFFFFWFFWWWWWWWWFFFFFFFFFFFFWWWWWWWFFWFFFFFFWFFFFFFFFFFFFWFFFWFWFWFWFWFFFWWFFFFFFFFFFFWFCFFFFFCFFWWFFCFWFFFFFFFFFFWWWFCWFWFFWFWFFFFFWWWWWWWWWFFWFFCFFWFFCWFWFCCFWFFFWFWFFWFWWFWFFFWFFFFFWWWFFFFCFWFWFFWFWFFWCFFFWFWWWFFWFFWFCCWFWFFWFWFFFFCWWFCFFWFFFWWFCFFWFWFWWWWWWCFCFWFFFFWWFFWFFFCFFFFPPWWFFWFFFFWWWFWFCFCFWWWFFWWWPGWWFFFFFWWFFCCFSFFCFFFFFWWPPPPWWFFWWFFWWFFFCFFWCWFFWWPPPPGPWWWFWFFCFFWFWFCWWFFWWPPPPGPWWWWWFWWFFCFFWFCFWFFWPPPPGPWWWFFWFFFFCFWWWWFFFWFPPPPGPWWWFFFFWFFFWFFWFFWFFWFFPPGPWWWFFFFFFWWWWWWWWFFWWWWWWWWWWWFFFFFFFF</textarea>
+            <p id="source-len">&nbsp;</p>
+            <p><button id="compress">Compress</button></p>
+            <textarea id="compressed-result" cols="160" rows="6"></textarea>
+            <p id="compressed-result-len">&nbsp;</p>
+            <p><button id="decompress">Decompress</button></p>
+            <textarea id="decompressed-result" cols="160" rows="6"></textarea>
+        </div>
+        <script>
+            const lblCharacterRepeatThreshold = document.getElementById("character-repeat-threshold");
+            const btnCompress = document.getElementById("compress");
+            const btnDecompress = document.getElementById("decompress");
+            const compressed_result = document.getElementById("compressed-result");
+            const compressed_result_len = document.getElementById("compressed-result-len");
+            const decompressed_result = document.getElementById("decompressed-result");
+            const source = document.getElementById("source");
+            const source_len = document.getElementById("source-len");
+
+            lblCharacterRepeatThreshold.innerText = characterRepeatThreshold;
+
+            btnCompress.addEventListener("click", compress_onclick);
+            btnDecompress.addEventListener("click", decompress_onclick);
+
+            function compress_onclick() {
+                let source_character_count = source.value.length;
+                compressed_result.value = compress(source.value);
+                let compressed_result_character_count = compressed_result.value.length;
+                source_len.innerText = source_character_count + " characters";
+                compressed_result_len.innerText = compressed_result_character_count + " characters (" + Math.floor((10000 * compressed_result_character_count) / source_character_count) / 100 + "% of the original)";
+            }
+
+            function decompress_onclick() {
+                decompressed_result.value = decompress(compressed_result.value);
+            }
+        </script>
+    </body>
+</html>
