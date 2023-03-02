@@ -124,24 +124,19 @@ body {
 	vertical-align: top;
 }
 
-/* TODO: fix this */
-/* .mobile-controls {
-	display: block;
+.mobile-controls {
+	display: none;
 }
 
-@media (min-width: 600px) {
+@media (orientation: portrait) {
 	.mobile-controls {
-		display: none;
+		align-items: center;
+		border: 5px double silver;
+		display: flex;
+		justify-content: center;
+		margin: 2px;
+		padding: 1em;
 	}
-} */
-
-.mobile-controls {
-	align-items: center;
-	border: 5px double silver;
-	display: flex;
-	justify-content: center;
-	margin: 2px;
-	padding: 1em;
 }
 
 .mobile-controls .mobile-buttons-container {
