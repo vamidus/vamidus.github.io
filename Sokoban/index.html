@@ -7,7 +7,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
 		<link rel="shortcut icon" type="image/png" href="./CSS/Images/favicon.png"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/vader/jquery-ui.css">
+		<!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/vader/jquery-ui.css"> -->
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/dark-hive/jquery-ui.css">
 		<link rel="stylesheet" type="text/css" href="./CSS/main.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -86,82 +87,120 @@
 	</head>
 	<body class="pixel-theme">
 		<div class="meta-data">
-			<select class="form-select" id="level-select" title="Select a different level"></select>
-			<button class="btn btn-light" id="button-custom" title="Load custom level" type="button">…</button>
 			<label>Steps: <span id="current-number-of-steps">0</span></label>
 			<label>Best: <span id="best-number-of-steps">0</span></label>
-			<button class="btn btn-danger" id="button-delete" title="Delete all cookies" type="button">🗑</button>
-			<button class="btn btn-warning" id="button-restart" title="Restart current level" type="button">↻</button>
-			<button class="btn btn-info" id="button-help" title="Help" type="button">🛈</button>
+			<button class="btn btn-dark" id="button-help" title="Menu" type="button">☰</button>
 		</div>
 		<div class="level-container">
 			<div class="level" id="level-element"></div>
-			<div id="help-dialog" title="Help" style="display:none;">
-				<table>
-					<tbody>
-						<tr>
-							<td>
-								<div class="level-cell worker-b"></div>
-							</td>
-							<td>
-								<h5>You</h5>
-								<p>Warehouse keeper, charged with moving crates to designated storage areas.</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="level-cell floor"></div>
-							</td>
-							<td>
-								<h5>Floor</h5>
-								<p>You can walk, and push crates over this surface.</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="level-cell wall"></div>
-							</td>
-							<td>
-								<h5>Wall</h5>
-								<p>An impenetrable barrier.</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="level-cell crate"></div>
-							</td>
-							<td>
-								<h5>Crate</h5>
-								<p>A container filled with extremely valueable goods. Containers are heavy, but can be pushed around if you put your weight behind them. Crates belong in designated storage areas.</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="level-cell pallet"></div>
-							</td>
-							<td>
-								<h5>Designated Storage Area</h5>
-								<p>This is where crates need to go, but you can take a crate out of a designated area temporarily too. Just remember to return it there before you go.</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="level-cell pallet crate"></div>
-							</td>
-							<td>
-								<h5>Crate in Designated Storage Area</h5>
-								<p>Finally, a crate found its place in the universe. All is well.</p>
-							</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>
-								Use <strong>Arrow Keys</strong> to move.<br />
-								Press <strong>Space Bar</strong> to restart level.
-							</td>
-						</tr>
-					</tbody>
-				</table>
+			<div id="help-dialog" title="Menu" style="display:none;">
+				<div id="help-tabs">
+					<ul>
+						<li><a href="#tab-pane-legend">Legend</a></li>
+						<li><a href="#tab-pane-utilities">Utilities</a></li>
+					</ul>
+					<div id="tab-pane-legend">
+						<table>
+							<tbody>
+								<tr>
+									<td>
+										<div class="level-cell worker-b"></div>
+									</td>
+									<td>
+										<h5>You</h5>
+										<p>Warehouse keeper, charged with moving crates to designated storage areas.</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="level-cell floor"></div>
+									</td>
+									<td>
+										<h5>Floor</h5>
+										<p>You can walk, and push crates over this surface.</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="level-cell wall"></div>
+									</td>
+									<td>
+										<h5>Wall</h5>
+										<p>An impenetrable barrier.</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="level-cell crate"></div>
+									</td>
+									<td>
+										<h5>Crate</h5>
+										<p>A container filled with extremely valueable goods. Containers are heavy, but can be pushed around if you put your weight behind them. Crates belong in designated storage areas.</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="level-cell pallet"></div>
+									</td>
+									<td>
+										<h5>Designated Storage Area</h5>
+										<p>This is where crates need to go, but you can take a crate out of a designated area temporarily too. Just remember to return it there before you go.</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="level-cell pallet crate"></div>
+									</td>
+									<td>
+										<h5>Crate in Designated Storage Area</h5>
+										<p>Finally, a crate found its place in the universe. All is well.</p>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td>
+										Use <strong>Arrow Keys</strong> to move.<br />
+										Press <strong>Space Bar</strong> to restart level.
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div id="tab-pane-utilities">
+						<table>
+							<tbody>
+								<tr>
+									<td><select class="form-select" id="level-select" title="Select a different level"></select></td>
+									<td>
+										<h5>Load a core level</h5>
+										<p>Select any one of 60 core levels!</p>
+									</td>
+								</tr>
+								<tr>
+									<td><button class="btn btn-light" id="button-custom" title="Load custom level" type="button">…</button></td>
+									<td>
+										<h5>Load a custom level</h5>
+										<p>You can paste a JSON object in the prompt and play a custom level! Hint: you can send those to your friends!</p>
+									</td>
+								</tr>
+								<tr>
+									<td><button class="btn btn-warning" id="button-restart" title="Restart current level" type="button">↻</button></td>
+									<td>
+										<h5>Restart current level</h5>
+										<p>Are you stuck? Not to worry! Just restart the current level! You could also press Sace Bar to do that.</p>
+									</td>
+								</tr>
+								<tr>
+									<td><button class="btn btn-danger" id="button-delete" title="Delete all cookies" type="button">🗑</button></td>
+									<td>
+										<h5>Clear cookies</h5>
+										<p>Delete all cookies saved by this app. All your best scores will be lost!</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 			<div id="win-dialog" title="You Won!" style="display:none;">
 				<p class="step-message"></p>
@@ -172,18 +211,18 @@
 			<div class="mobile-buttons-container">
 				<div class="row">
 					<div class="col-4 offset-4">
-						<button class="btn btn-secondary" id="button-top" type="button">⇧</button>
+						<button class="btn btn-dark" id="button-top" type="button">⇧</button>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-4">
-						<button class="btn btn-secondary" id="button-left" type="button">⇦</button>
+						<button class="btn btn-dark" id="button-left" type="button">⇦</button>
 					</div>
 					<div class="col-4">
-						<button class="btn btn-secondary" id="button-bottom" type="button">⇩</button>
+						<button class="btn btn-dark" id="button-bottom" type="button">⇩</button>
 					</div>
 					<div class="col-4">
-						<button class="btn btn-secondary" id="button-right" type="button">⇨</button>
+						<button class="btn btn-dark" id="button-right" type="button">⇨</button>
 					</div>	
 				</div>	
 			</div>

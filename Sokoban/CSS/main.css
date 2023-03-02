@@ -35,12 +35,6 @@ body {
 	padding: 0 1em 1em 1em;
 }
 
-.meta-data select.form-select {
-	display: inline;
-	margin-top: 1em;
-	width: max-content;
-}
-
 .meta-data label {
 	background-color: grey;
 	border: 1px solid grey;
@@ -99,7 +93,7 @@ body {
 	font-family: 'IBM VGA 8x16', monospace;
 }
 
-.ibm-font .ui-dialog-title{
+.ibm-font .ui-dialog-title {
 	font-weight: normal;
 }
 
@@ -122,6 +116,15 @@ body {
 	image-rendering: pixelated;
 	padding: 8px;
 	vertical-align: top;
+}
+
+#help-dialog .level-cell {
+	margin-top: 3px;
+	transform: scale(2);
+}
+
+#help-dialog .ui-widget select {
+	font-family: 'IBM VGA 8x16', monospace;
 }
 
 .mobile-controls {
@@ -150,11 +153,6 @@ body {
 .mobile-controls .mobile-buttons-container button#button-right { 
 	position: relative;
 	left: -5px;
-}
-
-#help-dialog .level-cell {
-	margin-top: 3px;
-	transform: scale(2);
 }
 
 .pixel-theme .level-cell {
