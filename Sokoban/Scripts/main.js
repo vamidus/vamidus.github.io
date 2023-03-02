@@ -34,6 +34,7 @@ let Main = function () {
 	this.$button_bottom = null;
 	this.$best_number_of_steps = null;
 	this.$current_number_of_steps = null;
+	this.$help_tabs = null;
 	this.$level_element = null;
 	this.$level_select = null;
 	this.$win_dialog = null;
@@ -50,14 +51,17 @@ Main.prototype = {
 	},
 
 	setup: function () {
-		this.setupElementSelectors();
-		this.setupLevelSelect();
-		this.setupEventHandlers();
-		this.getCookies();
-		this.consumeCookies();
-		this.setupLevel();
-		if (this.show_help_on_startup) this.$button_help.click();
-		this.updateLevelElement();
+		let me = this;
+		me.setupElementSelectors();
+		me.setupLevelSelect();
+		me.setupEventHandlers();
+		me.getCookies();
+		me.getHighestCompletedLevel();
+		me.getLevelStepsBest();
+		me.setupLevel();
+		me.updateLevelElement();
+		me.setupHelpTabs();
+		if (me.show_help_on_startup) me.$button_help.click();
 	},
 
 	setupElementSelectors: function () {
@@ -71,6 +75,7 @@ Main.prototype = {
 		this.$button_bottom = $("#button-bottom");
 		this.$best_number_of_steps = $("#best-number-of-steps");
 		this.$current_number_of_steps = $("#current-number-of-steps");
+		this.$help_tabs = $("#help-tabs");
 		this.$level_element = $("#level-element");
 		this.$level_select = $("#level-select");
 		this.$win_dialog = $("#win-dialog");
@@ -87,6 +92,11 @@ Main.prototype = {
 				.text(level.name);
 			newOption.appendTo(me.$level_select);
 		}
+	},
+
+	setupHelpTabs: function () {
+		let me = this;
+		me.$help_tabs.tabs();
 	},
 
 	setupEventHandlers: function () {
@@ -123,7 +133,25 @@ Main.prototype = {
 		return null;
 	},
 
-	consumeCookies: function () {
+	getHighestCompletedLevel: function () {
+		let me = this;
+		let completedLevelIds = [];
+		for (let i1 = 0; i1 < me.completed_levels.length; i1++) {
+			for (let i2 = 0; i2 < me.level_array.length; i2++) {
+				if (me.completed_levels[i1].md5 === md5(me.level_array[i2].hash)) {
+					completedLevelIds.push(i2);
+					break;
+				}
+			}
+		}
+		let highestCompletedLevel = Math.max.apply(Math, completedLevelIds);
+		if (highestCompletedLevel > -Infinity && highestCompletedLevel < me.level_array.length) {
+			me.level_id = highestCompletedLevel + 1;
+			me.$level_select.val(me.level_id);
+		} 
+	},
+
+	getLevelStepsBest: function () {
 		let me = this;
 		let current_md5 = (me.custom_level !== null) // this logic is to operate on compressed hashes only
 			? md5(me.custom_level.hash)
@@ -185,7 +213,7 @@ Main.prototype = {
 			me.custom_level = JSON.parse(level);
 			me.level_steps_current = -1;
 			me.getCookies();
-			me.consumeCookies();
+			me.getLevelStepsBest();
 			me.updateNumberOfSteps();
 			me.setupLevel();
 			me.updateLevelElement();
@@ -217,7 +245,7 @@ Main.prototype = {
 			buttons: [
 				{
 					text: "Ok",
-					title: "Close Help",
+					title: "Close Menu",
 					click: function () {
 						$(this).dialog("close");
 					}
@@ -243,7 +271,7 @@ Main.prototype = {
 		let me = this;
 		me.level_steps_current = -1;
 		me.getCookies();
-		me.consumeCookies();
+		me.getLevelStepsBest();
 		me.setupLevel();
 		me.updateLevelElement();
 		me.$button_restart.blur();
@@ -424,7 +452,7 @@ Main.prototype = {
 						me.$level_select.val(me.level_id);
 						me.level_steps_current = -1;
 						me.getCookies();
-						me.consumeCookies();
+						me.getLevelStepsBest();
 						me.updateNumberOfSteps();
 						me.setupLevel();
 						me.updateLevelElement();
