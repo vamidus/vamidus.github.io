@@ -33,6 +33,7 @@ let Main = function () {
 	this.$button_right = null;
 	this.$button_bottom = null;
 	this.$best_number_of_steps = null;
+	this.$current_level = null;
 	this.$current_number_of_steps = null;
 	this.$help_tabs = null;
 	this.$level_element = null;
@@ -74,6 +75,7 @@ Main.prototype = {
 		this.$button_right = $("#button-right");
 		this.$button_bottom = $("#button-bottom");
 		this.$best_number_of_steps = $("#best-number-of-steps");
+		this.$current_level = $("#current-level");
 		this.$current_number_of_steps = $("#current-number-of-steps");
 		this.$help_tabs = $("#help-tabs");
 		this.$level_element = $("#level-element");
@@ -227,6 +229,7 @@ Main.prototype = {
 			let me = this;
 			me.setCookie("completedLevels", "", -1);
 			me.setCookie("showHelpOnStartup", "", -1);
+			$("#checkbox-show-help")[0].checked = true;
 			me.$button_restart.click()
 			me.$level_select.blur();
 			me.$button_delete.blur();
@@ -237,6 +240,7 @@ Main.prototype = {
 	handleHelpClick: function () {
 		let me = this;
 		me.ignore_keyboard = true;
+		let dialog_width = Math.min(me.$level_element.parent().width(), 535);
 		$("#help-dialog").dialog({
 			beforeClose: function () {
 				me.updateShowHelpSetting();
@@ -257,7 +261,7 @@ Main.prototype = {
 					.prependTo(pane);
 			},
 			dialogClass: 'ibm-font',
-			width: 535
+			width: dialog_width
 		});
 	},
 
@@ -384,6 +388,7 @@ Main.prototype = {
 			me.level_width = me.level_array[me.level_id].width;
 			me.level_height = me.level_array[me.level_id].height;
 		}
+		me.$current_level.text(me.level_name);
 		for (let y = 0; y < me.level_height; y++) {
 			let newRow = [];
 			for (let x = 0; x < me.level_width; x++) {
@@ -436,6 +441,7 @@ Main.prototype = {
 		let me = this;
 		if (me.checkForWin()) {
 			me.ignore_keyboard = true;
+			let dialog_width = Math.min(me.$level_element.parent().width(), 535);
 			me.$win_dialog
 				.dialog({
 					beforeClose: function () {
@@ -482,7 +488,7 @@ Main.prototype = {
 					},
 					modal: true,
 					title: `Congratulations! You have completed ${me.level_name}!`,
-					width: 535
+					width: dialog_width
 				}
 			);
 		}

@@ -86,10 +86,19 @@
 		</script>
 	</head>
 	<body class="pixel-theme">
-		<div class="meta-data">
-			<label>Steps: <span id="current-number-of-steps">0</span></label>
-			<label>Best: <span id="best-number-of-steps">0</span></label>
-			<button class="btn btn-dark" id="button-help" title="Menu" type="button">☰</button>
+		<div class="container-fluid meta-data">
+			<div class="row">
+				<div class="col-4">
+					<button class="btn btn-dark" id="button-help" title="Menu" type="button">[<span>☰</span>]</button>
+				</div>
+				<div class="col-4 level-name-container">
+					<label>[Sokoban - <span id="current-level">Loading...</span>]</label>
+				</div>
+				<div class="col-4 steps-container">
+					<label>[Steps: <span id="current-number-of-steps">0</span>]</label>
+					<label>[Best: <span id="best-number-of-steps">0</span>]</label>
+				</div>
+			</div>
 		</div>
 		<div class="level-container">
 			<div class="level" id="level-element"></div>
@@ -173,7 +182,7 @@
 									<td><select class="form-select" id="level-select" title="Select a different level"></select></td>
 									<td>
 										<h5>Load a core level</h5>
-										<p>Select any one of 60 core levels!</p>
+										<p>Select any one of 60 core levels, each trickier than the one before!</p>
 									</td>
 								</tr>
 								<tr>

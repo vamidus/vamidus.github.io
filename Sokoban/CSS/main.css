@@ -24,28 +24,42 @@ body {
 }
 
 .meta-data {
-	border: 5px double silver;
-	color: black;
-	display: flex;
+	color: silver;
 	font-family: 'IBM VGA 8x16', monospace;
 	font-size: 16px;
-	flex-wrap: wrap;
-	justify-content: space-around;   
-	margin: 2px;
-	padding: 0 1em 1em 1em;
+	position: absolute;
+	width: 100%;
+	z-index: 1;
+}
+
+.meta-data .level-name-container {
+	text-align: center;
+}
+
+.meta-data .level-name-container label {
+	width: max-content;
+}
+
+.meta-data .steps-container {
+	padding-right: 27px;
+	text-align: right;
+}
+
+.meta-data #button-help {
+	background-color: black;
+	border: none;
+	margin: -4px 0px 0px 16px;
+	padding: 0px;
 }
 
 .meta-data label {
-	background-color: grey;
-	border: 1px solid grey;
-	border-radius: .375rem;
-	margin-top: 1em;
-	padding: 10px;
+	background-color: black;
+	color: white;
 }
 
-.meta-data label span {
+.meta-data span {
+	color: yellow;
 	display: inline-block;
-	min-width: 48px;
 }
 
 .meta-data button {
@@ -58,7 +72,7 @@ body {
 	display: flex;
 	flex: 1 1 auto;
 	justify-content: center;
-	margin: 2px;
+	margin: 4px;
 	padding: 1em;
 }
 
@@ -79,7 +93,7 @@ body {
 
 .ibm-font strong {
 	font-weight: normal;
-	color: rgb(184, 112, 19);
+	color: yellow;
 }
 
 .ibm-font.ui-widget.ui-widget-content {
@@ -87,6 +101,7 @@ body {
 	border-radius: 0;
 	font-family: 'IBM VGA 8x16', monospace;
 	font-size: 16px;
+	margin: 4px;
 }
 
 .ibm-font .ui-widget {
@@ -125,6 +140,7 @@ body {
 
 #help-dialog .ui-widget select {
 	font-family: 'IBM VGA 8x16', monospace;
+	width: fit-content;
 }
 
 .mobile-controls {
@@ -137,7 +153,7 @@ body {
 		border: 5px double silver;
 		display: flex;
 		justify-content: center;
-		margin: 2px;
+		margin: 4px;
 		padding: 1em;
 	}
 }
@@ -147,6 +163,7 @@ body {
 }
 
 .mobile-controls .mobile-buttons-container button { 
+	color: yellow;
 	margin: 3px;
 }
 
