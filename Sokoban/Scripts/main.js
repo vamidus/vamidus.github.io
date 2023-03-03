@@ -12,9 +12,10 @@ let Main = function () {
 	this.level = [];
 	this.level_id = 0;
 	this.level_hash = ''; // decompressed hash
+	this.level_history = [];
 	this.level_name = '';
 	this.level_steps_best = 0;
-	this.level_steps_current = -1;
+	this.level_steps_current = 0;
 
 	this.level_width = 0;
 	this.level_height = 0;
@@ -32,6 +33,7 @@ let Main = function () {
 	this.$button_restart = null;
 	this.$button_right = null;
 	this.$button_bottom = null;
+	this.$button_undo = null;
 	this.$best_number_of_steps = null;
 	this.$current_level = null;
 	this.$current_number_of_steps = null;
@@ -74,6 +76,7 @@ Main.prototype = {
 		this.$button_restart = $("#button-restart");
 		this.$button_right = $("#button-right");
 		this.$button_bottom = $("#button-bottom");
+		this.$button_undo = $("#button-undo");
 		this.$best_number_of_steps = $("#best-number-of-steps");
 		this.$current_level = $("#current-level");
 		this.$current_number_of_steps = $("#current-number-of-steps");
@@ -103,7 +106,7 @@ Main.prototype = {
 
 	setupEventHandlers: function () {
 		let me = this;
-		$("body").on("keydown", me.handleKeyPress.bind(me));
+		$(document).on("keydown", me.handleKeyPress.bind(me));
 		$(window).on("resize", me.scaleLevel.bind(me));
 		me.$button_custom.on("click", me.handleCustomClick.bind(me));
 		me.$button_delete.on("click", me.handleDeleteClick.bind(me));
@@ -113,6 +116,7 @@ Main.prototype = {
 		me.$button_restart.on("click", me.handleRestartClick.bind(me));
 		me.$button_right.on("click", me.handleRightClick.bind(me));
 		me.$button_bottom.on("click", me.handleBottomClick.bind(me));
+		me.$button_undo.on("click", me.handleUndoClick.bind(me));
 		me.$level_select.on("change", me.handleLevelSelectChange.bind(me));
 	},
 
@@ -204,6 +208,11 @@ Main.prototype = {
 				case 40: // Down arrow key
 					me.$button_bottom.click();
 					break;
+				case 90: // Ctrl + Z
+					if (e.ctrlKey) {
+						me.$button_undo.click();
+					}
+					break;
 			}
 		}
 	},
@@ -213,7 +222,7 @@ Main.prototype = {
 		let level = prompt("Please paste the level {object} below and press [Ok]", "{\"name\":\"Level 1\",\"height\":\"3\",\"width\":\"30\",\"hash\":\"W31SCF25PW31\"}");
 		if (level !== null && level !== "") {
 			me.custom_level = JSON.parse(level);
-			me.level_steps_current = -1;
+			me.level_steps_current = 0;
 			me.getCookies();
 			me.getLevelStepsBest();
 			me.updateNumberOfSteps();
@@ -260,6 +269,7 @@ Main.prototype = {
 				$(`<div class='form-check form-switch'><input ${(me.show_help_on_startup === true ? "checked" : "")} class='form-check-input' id='checkbox-show-help' type='checkbox' value='' /><label class='form-check-label' for='checkbox-show-help'>Show this on startup</label></div>`)
 					.prependTo(pane);
 			},
+			modal: true,
 			dialogClass: 'ibm-font',
 			width: dialog_width
 		});
@@ -273,13 +283,25 @@ Main.prototype = {
 
 	handleRestartClick: function () {
 		let me = this;
-		me.level_steps_current = -1;
+		me.level_steps_current = 0;
+		me.worker_orientation = "b";
 		me.getCookies();
 		me.getLevelStepsBest();
 		me.setupLevel();
 		me.updateLevelElement();
+		me.updateNumberOfSteps();
 		me.$button_restart.blur();
 		me.$level_element.focus();
+	},
+
+	handleUndoClick: function () {
+		let me = this;
+		if (me.level_history.length === 0) return;
+		let historyLevel = me.level_history.pop();
+		me.level.splice(0, historyLevel.length, ...historyLevel);
+		me.updateLevelElement();
+		me.level_steps_current--;
+		me.updateNumberOfSteps();
 	},
 
 	handleLeftClick: function () {
@@ -291,6 +313,7 @@ Main.prototype = {
 			if (me.worker_x - 2 < 0) return;
 			if (!me.level[me.worker_y][me.worker_x - 2].cell.isCrate
 				&& me.canMoveOver(me.level[me.worker_y][me.worker_x - 2].cell.type)) {
+				me.updateHistory();
 				me.level[me.worker_y][me.worker_x].cell.isWorker = false;
 				me.level[me.worker_y][me.worker_x - 1].cell.isWorker = true;
 				me.level[me.worker_y][me.worker_x - 1].cell.isCrate = false;
@@ -298,6 +321,7 @@ Main.prototype = {
 				me.updateLevelElement();
 			}
 		} else if (me.canMoveOver(me.level[me.worker_y][me.worker_x - 1].cell.type)) {
+			me.updateHistory();
 			me.level[me.worker_y][me.worker_x].cell.isWorker = false;
 			me.level[me.worker_y][me.worker_x - 1].cell.isWorker = true;
 			me.updateLevelElement();
@@ -313,6 +337,7 @@ Main.prototype = {
 			if (me.worker_y - 2 < 0) return;
 			if (!me.level[me.worker_y - 2][me.worker_x].cell.isCrate
 				&& me.canMoveOver(me.level[me.worker_y - 2][me.worker_x].cell.type)) {
+				me.updateHistory();
 				me.level[me.worker_y][me.worker_x].cell.isWorker = false;
 				me.level[me.worker_y - 1][me.worker_x].cell.isWorker = true;
 				me.level[me.worker_y - 1][me.worker_x].cell.isCrate = false;
@@ -320,6 +345,7 @@ Main.prototype = {
 				me.updateLevelElement();
 			}
 		} else if (me.canMoveOver(me.level[me.worker_y - 1][me.worker_x].cell.type)) {
+			me.updateHistory();
 			me.level[me.worker_y][me.worker_x].cell.isWorker = false;
 			me.level[me.worker_y - 1][me.worker_x].cell.isWorker = true;
 			me.updateLevelElement();
@@ -335,6 +361,7 @@ Main.prototype = {
 			if (me.worker_x + 2 >= me.level_width) return;
 			if (!me.level[me.worker_y][me.worker_x + 2].cell.isCrate
 				&& me.canMoveOver(me.level[me.worker_y][me.worker_x + 2].cell.type)) {
+				me.updateHistory();
 				me.level[me.worker_y][me.worker_x].cell.isWorker = false;
 				me.level[me.worker_y][me.worker_x + 1].cell.isWorker = true;
 				me.level[me.worker_y][me.worker_x + 1].cell.isCrate = false;
@@ -342,6 +369,7 @@ Main.prototype = {
 				me.updateLevelElement();
 			}
 		} else if (me.canMoveOver(me.level[me.worker_y][me.worker_x + 1].cell.type)) {
+			me.updateHistory();
 			me.level[me.worker_y][me.worker_x].cell.isWorker = false;
 			me.level[me.worker_y][me.worker_x + 1].cell.isWorker = true;
 			me.updateLevelElement();
@@ -357,6 +385,7 @@ Main.prototype = {
 			if (me.worker_y + 2 >= me.level_height) return;
 			if (!me.level[me.worker_y + 2][me.worker_x].cell.isCrate
 				&& me.canMoveOver(me.level[me.worker_y + 2][me.worker_x].cell.type)) {
+				me.updateHistory();
 				me.level[me.worker_y][me.worker_x].cell.isWorker = false;
 				me.level[me.worker_y + 1][me.worker_x].cell.isWorker = true;
 				me.level[me.worker_y + 1][me.worker_x].cell.isCrate = false;
@@ -364,6 +393,7 @@ Main.prototype = {
 				me.updateLevelElement();
 			}
 		} else if (me.canMoveOver(me.level[me.worker_y + 1][me.worker_x].cell.type)) {
+			me.updateHistory();
 			me.level[me.worker_y][me.worker_x].cell.isWorker = false;
 			me.level[me.worker_y + 1][me.worker_x].cell.isWorker = true;
 			me.updateLevelElement();
@@ -374,9 +404,17 @@ Main.prototype = {
 		return ['floor', 'pallet', 'start', 'finish'].indexOf(targetType) > -1;
 	},
 
+	updateHistory: function () {
+		let me = this;
+		me.level_history.push(JSON.parse(JSON.stringify(me.level))); // TODO: fix deep array copy hack
+		me.level_steps_current++;
+		me.updateNumberOfSteps();
+	},
+
 	setupLevel: function () {
 		let me = this;
 		me.level = [];
+		me.level_history = [];
 		if (me.custom_level !== null) {
 			me.level_hash = decompress(me.custom_level.hash);
 			me.level_name = me.custom_level.name;
@@ -456,7 +494,7 @@ Main.prototype = {
 							}
 						}
 						me.$level_select.val(me.level_id);
-						me.level_steps_current = -1;
+						me.level_steps_current = 0;
 						me.getCookies();
 						me.getLevelStepsBest();
 						me.updateNumberOfSteps();
@@ -465,8 +503,8 @@ Main.prototype = {
 					},
 					buttons: [
 						{
-							modal: true,
 							text: 'Ok',
+							title: 'Close and continue',
 							click: function () {
 								$(this).dialog("close");
 							}
@@ -556,9 +594,7 @@ Main.prototype = {
 	},
 
 	updateLevelElement: function () {
-		let me = this;
-		me.level_steps_current++;
-		me.updateNumberOfSteps();
+		let me = this;		
 		me.$level_element
 			.empty()
 			.css({
