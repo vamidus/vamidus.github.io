@@ -146,6 +146,11 @@ body {
 	width: fit-content;
 }
 
+#help-dialog .ui-widget button {
+	font-family: 'IBM VGA 8x16', monospace;
+	width: 114px;
+}
+
 .mobile-controls {
 	display: none;
 }
