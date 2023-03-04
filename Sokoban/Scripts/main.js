@@ -7,6 +7,14 @@ let Main = function () {
 	this.completed_levels = [];
 	this.custom_level = null;
 
+	this.animationId = null;
+	this.path_step_index = 0
+	this.destination_node = { // used by pathfinding
+		path: '',
+		x: null,
+		y: null
+	}
+
 	this.ignore_keyboard = false;
 
 	this.level = [];
@@ -111,12 +119,13 @@ Main.prototype = {
 		me.$button_custom.on("click", me.handleCustomClick.bind(me));
 		me.$button_delete.on("click", me.handleDeleteClick.bind(me));
 		me.$button_help.on("click", me.handleHelpClick.bind(me));
-		me.$button_left.on("click", me.handleLeftClick.bind(me));
 		me.$button_top.on("click", me.handleTopClick.bind(me));
-		me.$button_restart.on("click", me.handleRestartClick.bind(me));
+		me.$button_left.on("click", me.handleLeftClick.bind(me));
 		me.$button_right.on("click", me.handleRightClick.bind(me));
 		me.$button_bottom.on("click", me.handleBottomClick.bind(me));
+		me.$button_restart.on("click", me.handleRestartClick.bind(me));
 		me.$button_undo.on("click", me.handleUndoClick.bind(me));
+		me.$level_element.on("click", me.handleLevelElementClick.bind(me));
 		me.$level_select.on("change", me.handleLevelSelectChange.bind(me));
 	},
 
@@ -177,6 +186,89 @@ Main.prototype = {
 		document.cookie = `${name}=${value}; expires=${d.toUTCString()}; path=/;`;
 	},
 
+	handleLevelElementClick: function (e) {
+		let me = this;
+		let x = $(e.target).data("x"); 
+		let y = $(e.target).data("y");
+		if (me.level[y][x].cell.isCrate) {
+			if (me.worker_x === x && me.worker_y + 1 === y) {
+				me.$button_bottom.click();
+			} else if (me.worker_x + 1 === x && me.worker_y === y) {
+				me.$button_right.click();
+			} else if (me.worker_x === x && me.worker_y - 1 === y) {
+				me.$button_top.click();
+			} else if (me.worker_x - 1 === x && me.worker_y === y) {
+				me.$button_left.click();
+			}
+		} else {
+			me.destination_node = {
+				path: "",
+				x,
+				y
+			}
+			me.setPath("", [{"x": me.worker_x, "y": me.worker_y}], me.worker_x, me.worker_y);
+			me.followPath();
+			me.destination_node.path = "";
+		}
+	},
+
+	setPath: function (path, visited, x, y) { // This works well on smaller levels. It takes way too long on a big level.
+		let me = this;
+		if (x === me.destination_node.x && y === me.destination_node.y 
+			&& (me.destination_node.path.length === 0 || path.length < me.destination_node.path.length)) {
+			me.destination_node.path = path;
+			return;
+		}
+		if (y > 0 && visited.find(element => element.x === x && element.y === y - 1) === undefined && me.canMoveOver(me.level[y - 1][x].cell.type) && !me.level[y - 1][x].cell.isCrate) {
+			let visitedBranch = [...visited];
+			visitedBranch.push({"x": x, "y": y - 1});
+			me.setPath(path + "U", visitedBranch, x, y - 1);
+		}
+		if (x < me.level_width && visited.find(element => element.x === x + 1 && element.y === y) === undefined && me.canMoveOver(me.level[y][x + 1].cell.type) && !me.level[y][x + 1].cell.isCrate) {
+			let visitedBranch = [...visited];
+			visitedBranch.push({"x": x + 1, "y": y});
+			me.setPath(path + "R", visitedBranch, x + 1, y);
+		}
+		if (y < me.level_height && visited.find(element => element.x === x && element.y === y + 1) === undefined && me.canMoveOver(me.level[y + 1][x].cell.type) && !me.level[y + 1][x].cell.isCrate) {
+			let visitedBranch = [...visited];
+			visitedBranch.push({"x": x, "y": y + 1});
+			me.setPath(path + "D", visitedBranch, x, y + 1);
+		}
+		if (x > 0 && visited.find(element => element.x === x - 1 && element.y === y) === undefined && me.canMoveOver(me.level[y][x - 1].cell.type) && !me.level[y][x - 1].cell.isCrate) {
+			let visitedBranch = [...visited];
+			visitedBranch.push({"x": x - 1, "y": y});
+			me.setPath(path + "L", visitedBranch, x - 1, y);
+		}
+	},
+
+	followPath: function () {
+		let me = this;
+		if (me.animationId) return;
+		let delay = 50;
+		me.path_step_index = 0;
+		me.animationId = setInterval(function (path) {
+			switch (path.charAt(me.path_step_index)) {
+				case "U":
+					me.$button_top.click();
+					break;
+				case "R":
+					me.$button_right.click();
+					break;
+				case "D":
+					me.$button_bottom.click();
+					break;
+				case "L":
+					me.$button_left.click();
+					break;
+			}
+			me.path_step_index++;
+			if (me.path_step_index > path.length) {
+				clearInterval(me.animationId);
+				me.animationId = null;
+			}
+		}, delay, me.destination_node.path);
+	},
+	
 	handleLevelSelectChange: function (e) {
 		let me = this;
 		me.custom_level = null;
@@ -401,7 +493,7 @@ Main.prototype = {
 	},
 
 	canMoveOver: function (targetType) {
-		return ['floor', 'pallet', 'start', 'finish'].indexOf(targetType) > -1;
+		return ['floor', 'pallet', 'start'].indexOf(targetType) > -1;
 	},
 
 	updateHistory: function () {
@@ -621,9 +713,6 @@ Main.prototype = {
 						break;
 					case "start":
 						classArray.push("start");
-						break;
-					case "finish":
-						classArray.push("floor");
 						break;
 				}
 				if (me.level[y][x].cell.isCrate) {
