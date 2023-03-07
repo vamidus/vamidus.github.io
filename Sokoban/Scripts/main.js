@@ -214,7 +214,7 @@ Main.prototype = {
 		}
 	},
 
-	// this logic is loosely based on Edsger W. Dijkstra's shoretest path algorithm https://en.wikipedia.org/wiki/Shortest_path_problem
+	// this logic is inspired by Edsger W. Dijkstra's shoretest path algorithm https://en.wikipedia.org/wiki/Shortest_path_problem
 	setPath: function (processBatch) {
 		let me = this;
 		let nextProcessBatch = [];
@@ -302,6 +302,7 @@ Main.prototype = {
 		me.level_id = $(e.target).val();
 		me.$button_restart.click();
 		me.$level_select.blur();
+		$("#help-dialog").dialog("close");
 		me.$level_element.focus();
 	},
 
