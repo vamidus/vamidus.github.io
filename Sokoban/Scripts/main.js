@@ -338,7 +338,7 @@ Main.prototype = {
 
 	handleCustomClick: function () {
 		let me = this;
-		let level = prompt("Please paste the level {object} below and press [Ok]", "{\"name\":\"Test\",\"height\":\"3\",\"width\":\"30\",\"hash\":\"W31SCF25PW31\"}");
+		let level = prompt("Please paste the level {object} below and press [Ok]", "{\"name\":\"Monster\",\"height\":\"17\",\"width\":\"16\",\"hash\":\"W17F14WWFW12FWWFWF10WFWWFWFW8FWFWWFWFWF6WFWFWWFWFWFW4FWFWFWWFWFWF4WFWFWFWWFWFW4FWFWFWFWWFWF6WFWFWFWWFW8FWFWFWWF10WFWFW13FWFWWF12WFW3CW11FWWPFSF11W17\"}");
 		if (level !== null && level !== "") {
 			me.custom_level = JSON.parse(level);
 			me.level_steps_current = 0;
