@@ -23,7 +23,7 @@ body {
 	font: 10px Arial, Helvetica, sans-serif;
 }
 
-.meta-data {
+.header {
 	color: silver;
 	font-family: 'IBM VGA 8x16', monospace;
 	font-size: 24px;
@@ -32,20 +32,20 @@ body {
 	z-index: 1;
 }
 
-.meta-data .level-name-container {
+.header .level-name-container {
 	text-align: center;
 }
 
-.meta-data .level-name-container label {
+.header .level-name-container a {
+	color: unset;
+	text-decoration: none;
+}
+
+.header .level-name-container label {
 	width: max-content;
 }
 
-.meta-data .steps-container {
-	padding-right: 27px;
-	text-align: right;
-}
-
-.meta-data #button-help {
+.header #button-help {
 	background-color: black;
 	border: none;
 	border-radius: 0px;
@@ -55,17 +55,32 @@ body {
 	padding: 0px;
 }
 
-.meta-data label {
+.steps-container {
+	color: silver;
+	font-family: 'IBM VGA 8x16', monospace;
+	font-size: 24px;
+	height: 0px;
+	padding-right: 27px;
+	position: relative;
+	top: -1em;
+	text-align: right;
+	width: 100%;
+	z-index: 1;
+}
+
+.header label, 
+.steps-container label {
 	background-color: black;
 	color: white;
 }
 
-.meta-data span {
+.header span,
+.steps-container span {
 	color: yellow;
 	display: inline-block;
 }
 
-.meta-data button {
+.header button {
 	margin-top: 1em;
 }
 

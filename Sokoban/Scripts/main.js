@@ -205,45 +205,72 @@ Main.prototype = {
 				path: "",
 				x,
 				y
-			}
-			me.setPath("", [{"x": me.worker_x, "y": me.worker_y}], me.worker_x, me.worker_y);
+			};
+			me.setPath([{"path": "S", "x": me.worker_x, "y": me.worker_y}]);
+			me.destination_node.path = me.level[y][x].cell.path;
 			me.followPath();
 			me.destination_node.path = "";
+			me.unsetPath();
 		}
 	},
 
-	setPath: function (path, visited, x, y) { // This works well on smaller levels. It takes way too long on a big level.
+	// this logic is loosely based on Edsger W. Dijkstra's shoretest path algorithm https://en.wikipedia.org/wiki/Shortest_path_problem
+	setPath: function (processBatch) {
 		let me = this;
-		if (x === me.destination_node.x && y === me.destination_node.y 
-			&& (me.destination_node.path.length === 0 || path.length < me.destination_node.path.length)) {
-			me.destination_node.path = path;
-			return;
+		let nextProcessBatch = [];
+		for (let i = 0; i < processBatch.length; i++) {
+			let cell = me.level[processBatch[i].y][processBatch[i].x].cell;
+			if (cell.path === undefined || cell.path.length === 0 || cell.path.length > processBatch[i].path.length) {
+				cell.path = processBatch[i].path;
+				// R
+				if (processBatch[i].x + 1 < me.level_width && me.canMoveOver(me.level[processBatch[i].y][processBatch[i].x + 1].cell.type) && !me.level[processBatch[i].y][processBatch[i].x + 1].cell.isCrate) {
+					nextProcessBatch.push({
+						"path": processBatch[i].path + "R",
+						"x": processBatch[i].x + 1,
+						"y": processBatch[i].y
+					});
+				}
+				// L
+				if (processBatch[i].x - 1 > 0 && me.canMoveOver(me.level[processBatch[i].y][processBatch[i].x - 1].cell.type) && !me.level[processBatch[i].y][processBatch[i].x - 1].cell.isCrate) {
+					nextProcessBatch.push({
+						"path": processBatch[i].path + "L",
+						"x": processBatch[i].x - 1,
+						"y": processBatch[i].y
+					});
+				}
+				// D
+				if (processBatch[i].y + 1 < me.level_height && me.canMoveOver(me.level[processBatch[i].y + 1][processBatch[i].x].cell.type) && !me.level[processBatch[i].y + 1][processBatch[i].x].cell.isCrate) {
+					nextProcessBatch.push({
+						"path": processBatch[i].path + "D",
+						"x": processBatch[i].x,
+						"y": processBatch[i].y + 1
+					});
+				}
+				// U
+				if (processBatch[i].y - 1 > 0 && me.canMoveOver(me.level[processBatch[i].y - 1][processBatch[i].x].cell.type) && !me.level[processBatch[i].y - 1][processBatch[i].x].cell.isCrate) {
+					nextProcessBatch.push({
+						"path": processBatch[i].path + "U",
+						"x": processBatch[i].x,
+						"y": processBatch[i].y - 1
+					});
+				}
+			}
 		}
-		if (y > 0 && visited.find(element => element.x === x && element.y === y - 1) === undefined && me.canMoveOver(me.level[y - 1][x].cell.type) && !me.level[y - 1][x].cell.isCrate) {
-			let visitedBranch = [...visited];
-			visitedBranch.push({"x": x, "y": y - 1});
-			me.setPath(path + "U", visitedBranch, x, y - 1);
-		}
-		if (x < me.level_width && visited.find(element => element.x === x + 1 && element.y === y) === undefined && me.canMoveOver(me.level[y][x + 1].cell.type) && !me.level[y][x + 1].cell.isCrate) {
-			let visitedBranch = [...visited];
-			visitedBranch.push({"x": x + 1, "y": y});
-			me.setPath(path + "R", visitedBranch, x + 1, y);
-		}
-		if (y < me.level_height && visited.find(element => element.x === x && element.y === y + 1) === undefined && me.canMoveOver(me.level[y + 1][x].cell.type) && !me.level[y + 1][x].cell.isCrate) {
-			let visitedBranch = [...visited];
-			visitedBranch.push({"x": x, "y": y + 1});
-			me.setPath(path + "D", visitedBranch, x, y + 1);
-		}
-		if (x > 0 && visited.find(element => element.x === x - 1 && element.y === y) === undefined && me.canMoveOver(me.level[y][x - 1].cell.type) && !me.level[y][x - 1].cell.isCrate) {
-			let visitedBranch = [...visited];
-			visitedBranch.push({"x": x - 1, "y": y});
-			me.setPath(path + "L", visitedBranch, x - 1, y);
+		if (nextProcessBatch.length > 0) me.setPath(nextProcessBatch);
+	},
+
+	unsetPath: function () {
+		let me = this;
+		for (let y = 0; y < me.level_height; y++) {
+			for (let x = 0; x < me.level_width; x++) {
+				me.level[y][x].cell.path = "";
+			}
 		}
 	},
 
 	followPath: function () {
 		let me = this;
-		if (me.animationId) return;
+		if (me.destination_node.path === undefined || me.destination_node.path.length === 0 || me.animationId) return;
 		let delay = 50;
 		me.path_step_index = 0;
 		me.animationId = setInterval(function (path) {
@@ -311,7 +338,7 @@ Main.prototype = {
 
 	handleCustomClick: function () {
 		let me = this;
-		let level = prompt("Please paste the level {object} below and press [Ok]", "{\"name\":\"Level 1\",\"height\":\"3\",\"width\":\"30\",\"hash\":\"W31SCF25PW31\"}");
+		let level = prompt("Please paste the level {object} below and press [Ok]", "{\"name\":\"Test\",\"height\":\"3\",\"width\":\"30\",\"hash\":\"W31SCF25PW31\"}");
 		if (level !== null && level !== "") {
 			me.custom_level = JSON.parse(level);
 			me.level_steps_current = 0;
