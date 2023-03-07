@@ -90,6 +90,7 @@ body {
 	display: flex;
 	flex: 1 1 auto;
 	justify-content: center;
+	line-height: 11px;
 	margin: 9px;
 	padding: 1em;
 }
