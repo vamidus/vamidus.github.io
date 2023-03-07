@@ -21,6 +21,7 @@ var Main = function () {
 
 	this.$tool_type = null;
 	this.$tool_export = null;
+	this.$tool_import = null;
 };
 
 Main.prototype = {
@@ -51,6 +52,7 @@ Main.prototype = {
 
 		this.$tool_type = $("#tool-type");
 		this.$tool_export = $("#tool-export");
+		this.$tool_import = $("#tool-import");
 	},
 
 	setupEventHandlers: function () {
@@ -58,6 +60,7 @@ Main.prototype = {
 		$(window).on("resize", me.scaleLevel.bind(me));
 		me.$level_apply.on("click", me.handleLevelApplyClick.bind(me));
 		me.$tool_export.on("click", me.handleToolExportClickV4.bind(me));
+		me.$tool_import.on("click", me.handleToolImportClick.bind(me));
 	},
 
 	handleLevelApplyClick: function () {
@@ -215,6 +218,85 @@ Main.prototype = {
 		prompt("Here's your level!", JSON.stringify(result));
 	},
 
+	handleToolImportClick: function () {
+		var me = this;
+		let levelString = prompt("Paste the level here:");
+		if (levelString === null) return;
+		let level = JSON.parse(levelString);
+		me.level_name = level.name;
+		me.$level_name.val(me.level_name);
+		me.level_height = level.height;
+		me.$level_height.val(me.level_height);
+		me.level_width = level.width;
+		me.$level_width.val(me.level_width);
+		me.level_hash = decompress(level.hash);
+		me.level = [];
+		for (let y = 0; y < me.level_height; y++) {
+			let newRow = [];
+			for (let x = 0; x < me.level_width; x++) {
+				let cellType = me.level_hash.charAt(y * me.level_width + x);
+				switch (cellType) {
+					case "F":
+						newRow.push({
+							cell: {
+								type: "floor",
+								isWorker: false,
+								isCrate: false
+							}
+						});
+						break;
+					case "C":
+						newRow.push({
+							cell: {
+								type: "floor",
+								isWorker: false,
+								isCrate: true
+							}
+						});
+						break;
+					case "W":
+						newRow.push({
+							cell: {
+								type: "wall",
+								isWorker: false,
+								isCrate: false
+							}
+						});
+						break;
+					case "P":
+						newRow.push({
+							cell: {
+								type: "pallet",
+								isWorker: false,
+								isCrate: false
+							}
+						});
+						break;
+					case "G":
+						newRow.push({
+							cell: {
+								type: "pallet",
+								isWorker: false,
+								isCrate: true
+							}
+						});
+						break;
+					case "S":
+						newRow.push({
+							cell: {
+								type: "start",
+								isWorker: true,
+								isCrate: false
+							}
+						});
+						break;
+				}
+			}
+			me.level.push(newRow);
+		}
+		me.updateLevelElement();
+	},
+
 	getLevelHash: function () {
 		var me = this;
 		var result = '';
@@ -241,9 +323,9 @@ Main.prototype = {
 					case "start":
 						result += 'S';
 						break;
-					case "finish":
-						result += 'E';
-						break;
+					// case "finish":
+					// 	result += 'E';
+					// 	break;
 				}
 			}
 		}

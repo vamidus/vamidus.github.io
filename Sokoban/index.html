@@ -29,7 +29,7 @@
 						{"name":"Level 7","height":"11","width":"12","hash":"W6FFW3FWPPFFWFWWSW3PPFFW3F3WWPPF5CCFWWPPFFWFWFCFWWPPW3FWFCFW5FCFWCFFWF3WFFCWFCFWF3WFCFFCFFWF3WFFWWF3WF3W9"},
 						{"name":"Level 8","height":"12","width":"13","hash":"F7W5FFW7F3W4FWFSWWFCCFWWF4CF6WWFFCFFW3F3W4FW5CW4FCFFW3FPPWFWFCFCFCFP3WFWF4W3P3WFWFCCFWFWP3WFWFFW3FW5FW4F9"},
 						{"name":"Level 9","height":"17","width":"16","hash":"FFW4F12WFFW11FFWF4CF3CFCFWFFWFCWFCFWFFCFFWFFWFFCFCFFWF4W4FCWFWFFW4FWWSWCFCFCFFWWF3WWF4CFWCWF3WFW3FFCF4CFCFCFWFW4FFW9FFW3FFW3F8WF6WF8WF6WF8WP6WF8WP6WF8WP6WF8W8F6"},
-						{"name":"Level 10","height":"18","width":"17","hash":"F10W7F10WFFP3WF6W5FFP3WF6WF6P3WF6WFFWWFFP3WF6WWFWWFFP3WF5W3FW8F5WFC3FWWF5W5FFCFCFW7F3WCFCF3WF3WWSFCFFCF4CFFCFW7FCCFCFW5F5WFCF4WF9W4FW3F12WFFWF13WFFWF13WFFWF13W4F5"},
+						{"name":"Level 10","height":"18","width":"17","hash":"F10W7F10WFFP3WF6W5FFP3WF6WF6PFPWF6WFFWWFFP3WF6WWFWWFFP3WF5W3FW8F5WFC3FWWF5W5FFCFCFW7F3WCFCF3WF3WWSFCFFCF4CFFCFW7FCCFCFW5F5WF6WF9W4FW3F12WFFWF13WFFWF13WFFWF13W4F5"},
 						{"name":"Level 11","height":"20","width":"21","hash":"F14W4F12W6FFWF12WF7WF12WFFW4FW3FFW3FFW5FW3F4WFWWSW4F3C3FWF4WFWFCCF3CCFCF3WP4W3FFC3WF4CFFWP5WWFCF3WFCCFCCFWP5W4F3WFFCF4WP5WFFWF3WFCFCFCFWP5WFFWFW7FW3P5WFFWF3WFFCFCFFWP5WFFW3FWFCCFCFCW7F4WFWFFCF6WF8WFWFC3FC3FWF8WFWF7WFWF8WFW9FWF8WF11WF8W13F4"},
 						{"name":"Level 12","height":"15","width":"19","hash":"F10W4F10W4FWFFWF8W3FFW3CFWF7WWF3SFFCFFWF6WWFFCFCCWWFWWF6WFFWCWWF5WF6WFWFCFCCFWFW3F5WF3CFWFFWFCFW9F4WFFCCFWF3W5FWWFCF9WWPF4W3FFW9PPFPPWFW4F7WP3WPWF12WP5WF12W7F12"},
 						{"name":"Level 13","height":"16","width":"13","hash":"FFW9F4WGPGWGPGWF4WPGPGPGPWF4WGPGPGPGWF4WPGPGPGPWF4WGPGPGPGWF4W3F3W3F6WF3WF4W6FW7F11WWFCFCFCFCFCFW3FCFCFCFCFWWFWCFCFCFCFCWFFWF3CSCF3WFFWFFW5FFWFFW4F3W4F"},
@@ -86,17 +86,13 @@
 		</script>
 	</head>
 	<body class="pixel-theme">
-		<div class="container-fluid meta-data">
+		<div class="container-fluid header">
 			<div class="row">
 				<div class="col-4">
 					<button class="btn btn-dark" id="button-help" title="Menu" type="button">[<span>☰</span>]</button>
 				</div>
 				<div class="col-4 level-name-container">
-					<label>[Sokoban - <span id="current-level">Loading...</span>]</label>
-				</div>
-				<div class="col-4 steps-container">
-					<label>[Steps: <span id="current-number-of-steps">0</span>]</label>
-					<label>[Best: <span id="best-number-of-steps">0</span>]</label>
+					<label>[<a href="https://en.wikipedia.org/wiki/Sokoban" target="_blank">Sokoban</a> - <span id="current-level">Loading...</span>]</label>
 				</div>
 			</div>
 		</div>
@@ -144,7 +140,7 @@
 									</td>
 									<td>
 										<h5>Crate</h5>
-										<p>A container filled with extremely valueable goods. Containers are heavy, but can be pushed around if you put your weight behind them. Crates belong in designated storage areas.</p>
+										<p>A container filled with extremely valueable goods. Containers are heavy, but can be pushed around if you put your weight behind one. Crates belong in designated storage areas.</p>
 									</td>
 								</tr>
 								<tr>
@@ -222,6 +218,10 @@
 				<p class="step-message"></p>
 				<p>Press [Ok] to continue to the next level!</p>
 			</div>
+		</div>
+		<div class="steps-container">
+			<label>[Steps: <span id="current-number-of-steps">0</span>]</label>
+			<label>[Best: <span id="best-number-of-steps">0</span>]</label>
 		</div>
 		<section class="mobile-controls">
 			<div class="mobile-buttons-container">
