@@ -244,3 +244,21 @@ body {
 .pixel-theme .level-cell.worker-l {
 	background-image: url("./Images/pixel_worker_L.gif"), url("./Images/pixel_wood.png");
 }
+
+.shake {
+	animation: shake 5s linear 1;
+}
+
+@keyframes shake {
+	0% { background-position: 0px 0px, 0px 0px; }
+	10% { background-position: -1px -2px, 0px 0px; }
+	20% { background-position: -3px 0px, 0px 0px; }
+	30% { background-position: 3px 2px, 0px 0px; }
+	40% { background-position: 1px -1px, 0px 0px; }
+	50% { background-position: -1px 2px, 0px 0px; }
+	60% { background-position: -3px 1px, 0px 0px; }
+	70% { background-position: 3px 1px, 0px 0px; }
+	80% { background-position: -1px -1px, 0px 0px; }
+	90% { background-position: 1px 2px, 0px 0px; }
+	100% { background-position: 1px -2px, 0px 0px; }
+}
