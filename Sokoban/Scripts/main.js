@@ -2,6 +2,8 @@ let Main = function () {
 	// Configs
 	this.level_array = [];
 	this.show_help_on_startup = false;
+	this.synth_country_sound_to_a_tall_whistle = null;
+	this.synth_melodic_steps = null;
 
 	// Variables
 	this.completed_levels = [];
@@ -48,6 +50,7 @@ let Main = function () {
 	this.$help_tabs = null;
 	this.$level_element = null;
 	this.$level_select = null;
+	this.$music_toggle = null;
 	this.$win_dialog = null;
 };
 
@@ -73,6 +76,7 @@ Main.prototype = {
 		me.updateLevelElement();
 		me.setupHelpTabs();
 		if (me.show_help_on_startup) me.$button_help.click();
+		//me.setupShenanigans(); // This is just too annoying
 	},
 
 	setupElementSelectors: function () {
@@ -91,6 +95,7 @@ Main.prototype = {
 		this.$help_tabs = $("#help-tabs");
 		this.$level_element = $("#level-element");
 		this.$level_select = $("#level-select");
+		this.$music_toggle = $("#music-toggle");
 		this.$win_dialog = $("#win-dialog");
 	},
 
@@ -127,6 +132,7 @@ Main.prototype = {
 		me.$button_undo.on("click", me.handleUndoClick.bind(me));
 		me.$level_element.on("click", me.handleLevelElementClick.bind(me));
 		me.$level_select.on("change", me.handleLevelSelectChange.bind(me));
+		me.$music_toggle.on("click", me.handleMusicToggleClick.bind(me));
 	},
 
 	getCookies: function () {
@@ -304,6 +310,20 @@ Main.prototype = {
 		me.$level_select.blur();
 		$("#help-dialog").dialog("close");
 		me.$level_element.focus();
+	},
+
+	handleMusicToggleClick: function () {
+		let me = this;
+		if (me.synth_melodic_steps.isPlayingSong) {
+			me.synth_melodic_steps.pause();
+		} else {
+			me.synth_melodic_steps.play();
+		}
+		// if (me.synth_country_sound_to_a_tall_whistle.isPlayingSong) {
+		// 	me.synth_country_sound_to_a_tall_whistle.pause();
+		// } else {
+		// 	me.synth_country_sound_to_a_tall_whistle.play();
+		// }
 	},
 
 	handleKeyPress: function (e) {
@@ -770,6 +790,22 @@ Main.prototype = {
 			me.$level_element.css("transform", `scale(${(Math.floor(heightRatio * 8) / 8).toFixed(3)})`);
 		} else {
 			me.$level_element.css("transform", `scale(${(Math.floor(widthRatio * 8) / 8).toFixed(3)})`);
+		}
+	}, 
+
+	setupShenanigans: function () {
+		let me = this;
+		setInterval(me.shenanigan, 500, me);
+	},
+
+	shenanigan: function (me) {
+		$(".shake").removeClass("shake");
+		let flip = Math.floor(Math.random() * 100 + 1);
+		if (flip < 50) return;
+		let x = Math.floor(Math.random() * me.level_width);
+		let y = Math.floor(Math.random() * me.level_height);
+		if (me.level[y][x].cell.isCrate || me.level[y][x].cell.type === "pallet") {
+			$(`#cell-x${x}-y${y}`).addClass("shake");
 		}
 	}
 };
