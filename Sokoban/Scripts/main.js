@@ -2,6 +2,7 @@ let Main = function () {
 	// Configs
 	this.level_array = [];
 	this.show_help_on_startup = false;
+	this.play_music_on_startup = false;
 	this.synth_country_sound_to_a_tall_whistle = null;
 	this.synth_melodic_steps = null;
 
@@ -51,6 +52,7 @@ let Main = function () {
 	this.$level_element = null;
 	this.$level_select = null;
 	this.$music_toggle = null;
+	this.$start_game = null;
 	this.$win_dialog = null;
 };
 
@@ -67,15 +69,14 @@ Main.prototype = {
 	setup: function () {
 		let me = this;
 		me.setupElementSelectors();
-		me.setupLevelSelect();
 		me.setupEventHandlers();
+		me.setupLevelSelect();
 		me.getCookies();
 		me.getHighestCompletedLevel();
 		me.getLevelStepsBest();
 		me.setupLevel();
 		me.updateLevelElement();
 		me.setupHelpTabs();
-		if (me.show_help_on_startup) me.$button_help.click();
 		//me.setupShenanigans(); // This is just too annoying
 	},
 
@@ -96,6 +97,7 @@ Main.prototype = {
 		this.$level_element = $("#level-element");
 		this.$level_select = $("#level-select");
 		this.$music_toggle = $("#music-toggle");
+		this.$start_game = $("#start-game");
 		this.$win_dialog = $("#win-dialog");
 	},
 
@@ -133,6 +135,14 @@ Main.prototype = {
 		me.$level_element.on("click", me.handleLevelElementClick.bind(me));
 		me.$level_select.on("change", me.handleLevelSelectChange.bind(me));
 		me.$music_toggle.on("click", me.handleMusicToggleClick.bind(me));
+		me.$start_game.on("click", me.handleStartGameClick.bind(me)).focus();
+	},
+
+	handleStartGameClick: function () {
+		let me = this;
+		me.$start_game.prop("disabled", true).hide().parent().fadeOut(500);
+		if (me.play_music_on_startup) me.$music_toggle.click();
+		if (me.show_help_on_startup) me.$button_help.click();
 	},
 
 	getCookies: function () {
@@ -141,6 +151,8 @@ Main.prototype = {
 		me.completed_levels = completedLevels === null ? [] : JSON.parse(completedLevels);
 		let showHelpOnStartup = me.getCookie("showHelpOnStartup")
 		me.show_help_on_startup = showHelpOnStartup === null ? true : (showHelpOnStartup === "true");
+		let playMusicOnStartup = me.getCookie("playMusicOnStartup")
+		me.play_music_on_startup = playMusicOnStartup === null ? true : (playMusicOnStartup === "true");
 	},
 
 	getCookie: function (name) {
@@ -196,6 +208,7 @@ Main.prototype = {
 		let me = this;
 		let x = $(e.target).data("x"); 
 		let y = $(e.target).data("y");
+		if (!x || !y) return;
 		if (me.level[y][x].cell.isCrate) {
 			if (me.worker_x === x && me.worker_y + 1 === y) {
 				me.$button_bottom.click();
@@ -316,14 +329,30 @@ Main.prototype = {
 		let me = this;
 		if (me.synth_melodic_steps.isPlayingSong) {
 			me.synth_melodic_steps.pause();
+			me.play_music_on_startup = false;
 		} else {
 			me.synth_melodic_steps.play();
+			me.play_music_on_startup = true;
 		}
+		me.setCookie("playMusicOnStartup", me.play_music_on_startup, 365);
 		// if (me.synth_country_sound_to_a_tall_whistle.isPlayingSong) {
 		// 	me.synth_country_sound_to_a_tall_whistle.pause();
 		// } else {
 		// 	me.synth_country_sound_to_a_tall_whistle.play();
 		// }
+		me.updateMusicToggleButton();
+		me.$music_toggle.blur();
+	},
+
+	updateMusicToggleButton: function () {
+		let me = this;
+		if (me.synth_melodic_steps.isPlayingSong) {
+			me.$music_toggle.prop("title", "Pause music (p)")
+				.find("span").text("⏸");
+		} else {
+			me.$music_toggle.prop("title", "Play music (p)")
+				.find("span").text("⏵");
+		}
 	},
 
 	handleKeyPress: function (e) {
@@ -347,6 +376,9 @@ Main.prototype = {
 					break;
 				case 40: // Down arrow key
 					me.$button_bottom.click();
+					break;
+				case 80: // p key
+					me.$music_toggle.click();
 					break;
 				case 90: // Ctrl + Z
 					if (e.ctrlKey) {
@@ -623,6 +655,7 @@ Main.prototype = {
 			me.$win_dialog
 				.dialog({
 					beforeClose: function () {
+						me.$level_element.hide();
 						me.recordLevelProgress();
 						if (me.custom_level !== null) {
 							me.custom_level = null;
@@ -640,6 +673,7 @@ Main.prototype = {
 						me.updateNumberOfSteps();
 						me.setupLevel();
 						me.updateLevelElement();
+						me.$level_element.fadeIn(500).focus();
 					},
 					buttons: [
 						{
@@ -658,7 +692,7 @@ Main.prototype = {
 						} else if (me.level_steps_best == me.level_steps_current) {
 							step_message += "<br />Looks like you've done this before!";
 						} else if (me.level_steps_best > 0) {
-							step_message += `<br />Your current record is ${me.level_steps_best} steps. Do you think you can do better?`;
+							step_message += `<br />Your current record is ${me.level_steps_best} steps. Surely, you can do better!`;
 						} else {
 							step_message += "<br />You have set a new record!";
 						}
@@ -780,6 +814,7 @@ Main.prototype = {
 		me.scaleLevel();
 		me.findWorker();
 		me.didIWin();
+		me.updateMusicToggleButton();
 	},
 
 	scaleLevel: function () {
