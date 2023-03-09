@@ -1,6 +1,6 @@
 <html>
     <head>
-		<title>倉庫番</title>
+		<title>-=[倉庫番]=-</title>
 		<meta charset="utf-16">
 		<meta name="description" content="https://en.wikipedia.org/wiki/Sokoban">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
@@ -21,6 +21,7 @@
 	            font-size: 48px;
                 image-rendering: pixelated;
                 overflow: hidden;
+                margin: 0;
                 padding: 0;
                 scroll-behavior: smooth;
             }
@@ -34,36 +35,72 @@
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: contain;
-                height: 99%;
-                margin-top: -100%;
-                width: 99%;
+                height: 100%;                
+                width: 100%;
+                position: absolute;
+            }
+            .story {
+                animation-delay: 10s;
+                animation-duration: 15s;
+                animation-name: scrollIn;
+                animation-timing-function: ease-out;
+                animation-fill-mode: forwards;
+                margin-left: 1%;
+                position: absolute;
+                top: 200%;
             }
             @keyframes fadeIn {
                 0% { 
                     opacity: 0; 
-                    margin-top: 0;
                 }
                 100% { 
                     opacity: 1; 
-                    margin-top: 0;
                 }
             }
             @keyframes scrollOut {
-                0% { margin-top: 0; }
-                100% { margin-top: -100%; }
+                0% { top: 0; }
+                100% { top: -100%; }
+            }
+            @keyframes scrollIn {
+                0% { top: 200%; }
+                100% { top: 0; }
             }
             @media (max-height: 200px) {
                 body {
                     image-rendering: auto;
                 }
             }
-
         </style>
     </head>
     <body>   
         <div class="logo"></div>
         <div class="story container">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sodales quam magna, et placerat metus hendrerit vitae. Cras tristique faucibus ex, ut porta ante malesuada nec. In nec efficitur nibh. Integer ornare tincidunt lectus ut laoreet. Ut feugiat lobortis leo non lobortis. Nullam ante urna, placerat nec auctor at, feugiat vitae odio. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In at enim varius, sagittis leo in, pellentesque lacus.</p>
+            <p>
+                Once upon a time, in a small town,
+                a young man from a poor family 
+                and a daughter of a wealthy businessman
+                fell in love.
+            </p>
+            <p>
+                The young girl's father did not approve of this!
+                "You are not worthy of holding my daughter's sandals, let alone her hand!" - he yelled.
+            </p>
+            <p>
+                "I am willing to prove my worthiness! I'll do anything!" - exclaimed young man.
+            </p>
+            <p>
+                "Anything, huh?
+                Well, I guess even an insolent peasant such as yourself deserves a chance.
+                Now, go to my warehouse and straighten out the place! 
+                Move all the crates to their designated areas! 
+                And don't let me catch you meandering in there, or you'll never see my daughter again!
+                Now, out with you!!!" - barked the father.
+            </p>
+            <p>
+                "I'll came back victorious!" - proclaimed young man.
+                "Please come back soon!" - sighed young girl.
+                "Hahahaha!" - snickered the father.
+            </p>
         </div>
     </body>
 </html>
