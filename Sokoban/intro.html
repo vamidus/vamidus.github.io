@@ -1,7 +1,7 @@
 <html>
     <head>
 		<title>-=[倉庫番]=-</title>
-		<meta charset="utf-16">
+		<meta charset="utf-8">
 		<meta name="description" content="https://en.wikipedia.org/wiki/Sokoban">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
 		<link rel="shortcut icon" type="image/png" href="./CSS/Images/favicon.png"/>
@@ -16,91 +16,168 @@
             }
             body {
                 background-color: black;
-                color: silver;
+                color: black;
                 font-family: 'IBM VGA 8x16', monospace;
-	            font-size: 48px;
-                image-rendering: pixelated;
-                overflow: hidden;
+                font-size: 24px;
                 margin: 0;
                 padding: 0;
                 scroll-behavior: smooth;
             }
-            .logo {
-                animation-delay: 0s, 5s;
-                animation-duration: 10s, 20s;
-                animation-name: fadeIn, scrollOut;
-                animation-timing-function: linear, ease-in;
-                animation-fill-mode: forwards, forwards;
+            #logo {
                 background-image: url('./CSS/Images/sokoban_logo.png');
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: contain;
+                display: none;
+                image-rendering: pixelated;
+                opacity: 0;
+                position: absolute;
                 height: 100%;                
                 width: 100%;
-                position: absolute;
             }
             .story {
-                animation-delay: 10s;
-                animation-duration: 15s;
-                animation-name: scrollIn;
-                animation-timing-function: ease-out;
-                animation-fill-mode: forwards;
-                margin-left: 1%;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                display: none;
                 position: absolute;
-                top: 200%;
+                width: 100%;
+                height: 100%;
             }
-            @keyframes fadeIn {
-                0% { 
-                    opacity: 0; 
-                }
-                100% { 
-                    opacity: 1; 
-                }
+            #story1 {
+                background-image: url('./CSS/Images/intro - plate 1.gif');
             }
-            @keyframes scrollOut {
-                0% { top: 0; }
-                100% { top: -100%; }
+            #story2 {
+                background-image: url('./CSS/Images/intro - plate 2.gif');
             }
-            @keyframes scrollIn {
-                0% { top: 200%; }
-                100% { top: 0; }
+            #story3 {
+                background-image: url('./CSS/Images/intro - plate 3.gif');
+            }
+            #story4 {
+                background-image: url('./CSS/Images/intro - plate 4.gif');
+            }
+            footer {
+                display: none;
+                position: fixed;
+                bottom: 2em;
+                text-align: center;
+                width: 100%;
+            }
+            footer button {
+                background: none;
+                border: none;
+                color: white;
+            }
+            #mute, 
+            #unmute {
+                display: none;
+            }
+            .blink {
+                animation: blink 1s linear infinite;
+            }
+            @keyframes blink {
+                50% { opacity: 0; }
             }
             @media (max-height: 200px) {
-                body {
+                #logo {
                     image-rendering: auto;
                 }
             }
         </style>
+        <script>
+            let $footer = null;
+            let $logo = null;
+            let $story1 = null;
+            let $story2 = null;
+            let $story3 = null;
+            let $story4 = null;
+            let storyPage = 1;
+
+            $(document).ready(function () {
+                $footer = $("footer");
+                $logo = $("#logo");
+                $story1 = $("#story1");
+                $story2 = $("#story2");
+                $story3 = $("#story3");
+                $story4 = $("#story4");
+                $logo.show().animate({opacity: 1}, 3000).animate({opacity: 0}, 3000, "linear", function () {
+                    $(document).on("click", handleKeyPress.bind(this));
+                    $(document).on("keydown", handleKeyPress.bind(this));
+                    showStory();
+                });
+            });
+            function handleKeyPress() {
+                showStory();
+            }
+            function showStory() {
+                $story1.hide();
+                $story2.hide();
+                $story3.hide();
+                $story4.hide();
+                $footer.hide();
+                switch (storyPage) {
+                    case 1:
+                        $story1.show();
+                        setTimeout(function () {$footer.show()}, 4000);
+                        break
+                    case 2:
+                        $story2.show();
+                        setTimeout(function () {$footer.show()}, 6000);
+                        break
+                    case 3:
+                        $story3.show();
+                        setTimeout(function () {$footer.show()}, 7000);
+                        break
+                    case 4:
+                        $story4.show();
+                        setTimeout(function () {$footer.show()}, 4000);
+                        break
+                    case 5:
+                        window.location.replace("./index.html");
+                }
+                storyPage++;
+            }
+        </script>
     </head>
     <body>   
-        <div class="logo"></div>
-        <div class="story container">
-            <p>
-                Once upon a time, in a small town,
-                a young man from a poor family 
-                and a daughter of a wealthy businessman
-                fell in love.
-            </p>
-            <p>
-                The young girl's father did not approve of this!
-                "You are not worthy of holding my daughter's sandals, let alone her hand!" - he yelled.
-            </p>
-            <p>
-                "I am willing to prove my worthiness! I'll do anything!" - exclaimed young man.
-            </p>
-            <p>
-                "Anything, huh?
-                Well, I guess even an insolent peasant such as yourself deserves a chance.
-                Now, go to my warehouse and straighten out the place! 
-                Move all the crates to their designated areas! 
-                And don't let me catch you meandering in there, or you'll never see my daughter again!
-                Now, out with you!!!" - barked the father.
-            </p>
-            <p>
-                "I'll came back victorious!" - proclaimed young man.
-                "Please come back soon!" - sighed young girl.
-                "Hahahaha!" - snickered the father.
-            </p>
+        <div id="logo"></div>
+        <div class="story" id="story1" aria-label="
+                Once upon a time, in a small town, a young man from a poor
+                family and a daughter of a wealthy businessman fell in love.
+            ">
         </div>
+        <div class="story" id="story2" aria-label="
+                The young girl's father did not approve of this!
+                You are not worthy of holding my daughter's sandals, let alone her hand!
+                - he yelled.
+
+                I am willing to prove my worthiness! I'll do anything!
+                - exclaimed young man.
+            ">
+        </div>
+        <div class="story" id="story3" aria-label="
+                Anything, huh?
+                Well, I guess even an insolent peasant such as yourself deserves a chance.
+                Now, go to my warehouse and straighten out the place!
+                Move all the crates to their designated areas!
+                And don't let me catch you meandering in there, or you'll never see my daughter again!
+                Now, out with you!!!
+                - barked the father.
+            ">
+        </div>
+        <div class="story" id="story4" aria-label="
+                I'll came back victorious!
+                - proclaimed young man.
+
+                Please come back soon!
+                - sighed young girl.
+
+                Hahahaha!
+                - snickered the father.
+            ">
+        </div>
+        <footer>
+            <button class="blink" type="button">PRESS ANY KEY TO CONTINUE...</button>
+        </footer>
     </body>
 </html>
