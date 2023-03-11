@@ -190,6 +190,21 @@ body {
 	width: 114px;
 }
 
+#tab-pane-credits,
+#tab-pane-legend,
+#tab-pane-utilities {
+	background-color: black;
+	overflow: auto;
+}
+
+#tab-pane-credits {
+	text-align: center;
+}
+
+#tab-pane-credits h5{
+	color: yellow;
+}
+
 .mobile-controls {
 	display: none;
 }

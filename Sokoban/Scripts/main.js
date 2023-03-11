@@ -52,6 +52,7 @@ let Main = function () {
 	this.$level_element = null;
 	this.$level_select = null;
 	this.$music_toggle = null;
+	this.$music_toggle_2 = null;
 	this.$start_game = null;
 	this.$win_dialog = null;
 };
@@ -69,7 +70,6 @@ Main.prototype = {
 	setup: function () {
 		let me = this;
 		me.setupElementSelectors();
-		me.setupEventHandlers();
 		me.setupLevelSelect();
 		me.getCookies();
 		me.getHighestCompletedLevel();
@@ -77,6 +77,7 @@ Main.prototype = {
 		me.setupLevel();
 		me.updateLevelElement();
 		me.setupHelpTabs();
+		me.setupEventHandlers();
 		//me.setupShenanigans(); // This is just too annoying
 	},
 
@@ -97,6 +98,7 @@ Main.prototype = {
 		this.$level_element = $("#level-element");
 		this.$level_select = $("#level-select");
 		this.$music_toggle = $("#music-toggle");
+		this.$music_toggle_2 = $("#music-toggle-2");
 		this.$start_game = $("#start-game");
 		this.$win_dialog = $("#win-dialog");
 	},
@@ -135,6 +137,7 @@ Main.prototype = {
 		me.$level_element.on("click", me.handleLevelElementClick.bind(me));
 		me.$level_select.on("change", me.handleLevelSelectChange.bind(me));
 		me.$music_toggle.on("click", me.handleMusicToggleClick.bind(me));
+		me.$music_toggle_2.on("click", me.handleMusicToggleClick.bind(me));
 		me.$start_game.on("click", me.handleStartGameClick.bind(me)).focus();
 	},
 
@@ -197,7 +200,7 @@ Main.prototype = {
 			}
 		}
 	},
-
+	
 	setCookie: function (name, value, daysToExpiration) {
 		const d = new Date();
 		d.setTime(d.getTime() + (daysToExpiration * 24 * 60 * 60 * 1000));
@@ -347,10 +350,10 @@ Main.prototype = {
 	updateMusicToggleButton: function () {
 		let me = this;
 		if (me.synth_melodic_steps.isPlayingSong) {
-			me.$music_toggle.prop("title", "Pause music (p)")
+			me.$music_toggle.prop("title", "Pause music (P)")
 				.find("span").text("⏸");
 		} else {
-			me.$music_toggle.prop("title", "Play music (p)")
+			me.$music_toggle.prop("title", "Play music (P)")
 				.find("span").text("⏵");
 		}
 	},
@@ -421,7 +424,11 @@ Main.prototype = {
 	handleHelpClick: function () {
 		let me = this;
 		me.ignore_keyboard = true;
-		let dialog_width = Math.min(me.$level_element.parent().width(), 535);
+		let dialog_width = Math.min($("html, body").innerWidth() - 32, 800);
+		let dialog_tab_height = Math.min($("html, body").innerHeight() - 234, 770);
+		$("#tab-pane-credits").css("height", dialog_tab_height + "px");
+		$("#tab-pane-legend").css("height", dialog_tab_height + "px");
+		$("#tab-pane-utilities").css("height", dialog_tab_height + "px");
 		$("#help-dialog").dialog({
 			beforeClose: function () {
 				me.updateShowHelpSetting();
