@@ -13,9 +13,7 @@ let Main = function () {
 	this.animationId = null;
 	this.path_step_index = 0
 	this.destination_node = { // used by pathfinding
-		path: '',
-		x: null,
-		y: null
+		path: ''
 	}
 
 	this.ignore_keyboard = false;
@@ -351,10 +349,10 @@ Main.prototype = {
 		let me = this;
 		if (me.synth_melodic_steps.isPlayingSong) {
 			me.$music_toggle.prop("title", "Pause music (P)")
-				.find("span").text("⏸");
+				.find("span").text("Pause");
 		} else {
 			me.$music_toggle.prop("title", "Play music (P)")
-				.find("span").text("⏵");
+				.find("span").text("Play");
 		}
 	},
 
@@ -436,8 +434,8 @@ Main.prototype = {
 			},
 			buttons: [
 				{
-					text: "Ok",
-					title: "Close Menu",
+					text: "Close",
+					title: "Close",
 					click: function () {
 						$(this).dialog("close");
 					}

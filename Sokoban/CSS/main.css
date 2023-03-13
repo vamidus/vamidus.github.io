@@ -24,8 +24,19 @@ body {
 	font: 10px Arial, Helvetica, sans-serif;
 }
 
+.btn,
+.form-select {
+	border-radius: 0px;
+}
+
 .ui-widget-overlay {
 	background-color: black;
+}
+
+.ui-corner-all,
+.ui-corner-all li {
+	border-radius: 0px;
+	outline: none;
 }
 
 .overlay {
@@ -38,6 +49,13 @@ body {
 	position: absolute;	
 	width: 100%;
 	z-index: 2;
+}
+
+.overlay button {
+	background: none;
+	color: white;
+	font-size: 24px;
+	outline: none;
 }
 
 .header {
@@ -159,6 +177,12 @@ body {
 }
 
 /* this is inside help dialog, but not inside #help-dialog */
+#win-dialog {
+	background-image: url("./Images/Tanaka-san.png");
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
 .ui-dialog div.form-check { 
 	display: inline-block;
 	margin: 1em;
