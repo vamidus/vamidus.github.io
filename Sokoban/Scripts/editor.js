@@ -1,4 +1,4 @@
-var Main = function () {
+let Main = function () {
 	// Configs
 
 	// Variables
@@ -9,17 +9,14 @@ var Main = function () {
 	this.level_height = 0;
 
 	// Selectors
+	this.$create_level_dialog = null;
 	this.$level_name = null;
 
 	this.$level_width = null;
 	this.$level_height = null;
 	
-	this.$level_apply = null;
-
 	this.$level_element = null;
-	this.$level_export = null;
 
-	this.$tool_type = null;
 	this.$tool_export = null;
 	this.$tool_import = null;
 };
@@ -37,41 +34,52 @@ Main.prototype = {
 	setup: function () {
 		this.setupElementSelectors();
 		this.setupEventHandlers();
+		this.showCreateLevelDialog();
 	},
 
 	setupElementSelectors: function () {
+		this.$create_level_dialog = $("#create-level-dialog");
 		this.$level_name = $("#level-name");
 
 		this.$level_width = $("#level-width");
 		this.$level_height = $("#level-height");
 
-		this.$level_apply = $("#level-apply");
-
 		this.$level_element = $("#level-element");
-		this.$level_export = $("#level-export");
 
-		this.$tool_type = $("#tool-type");
 		this.$tool_export = $("#tool-export");
 		this.$tool_import = $("#tool-import");
 	},
 
 	setupEventHandlers: function () {
-		var me = this;
+		let me = this;
 		$(window).on("resize", me.scaleLevel.bind(me));
-		me.$level_apply.on("click", me.handleLevelApplyClick.bind(me));
-		me.$tool_export.on("click", me.handleToolExportClickV4.bind(me));
+		me.$tool_export.on("click", me.handleToolExportClick.bind(me));
 		me.$tool_import.on("click", me.handleToolImportClick.bind(me));
 	},
 
-	handleLevelApplyClick: function () {
-		var me = this;
-		me.setLevelMetadata();
-		me.setupLevel()
-		me.updateLevelElement();
+	showCreateLevelDialog: function () {
+		let me = this;
+		me.$create_level_dialog.dialog({
+			buttons: [
+				{
+					text: 'Create Level',
+					click: function () {
+						me.setLevelMetadata();
+						me.setupLevel()
+						me.updateLevelElement();
+						$(this).dialog("close");
+					}
+				}
+			],
+			closeOnEscape: false,
+			dialogClass: 'ibm-font',
+			modal: true,
+			resizable: false
+		});
 	},
 
 	setLevelMetadata: function () {
-		var me = this;
+		let me = this;
 		me.level_name = me.$level_name.val();
 
 		me.level_width = me.$level_width.val();
@@ -79,7 +87,7 @@ Main.prototype = {
 	},
 
 	updateLevelElement: function () {
-		var me = this;
+		let me = this;
 		me.$level_element.empty();
 		for (let y = 0; y < me.level_height; y++) {
 			let $newRow = $("<div />")
@@ -105,9 +113,6 @@ Main.prototype = {
 					case "start":
 						classArray.push("start");
 						break;
-					// case "finish":
-					// 	classArray.push("finish");
-					// 	break;
 				}
 				if (me.level[y][x].cell.isCrate) {
 					classArray.push("crate");
@@ -128,7 +133,7 @@ Main.prototype = {
 	},
 
 	setupLevel: function () {
-		var me = this;
+		let me = this;
 		me.level = [];
 		for (let y = 0; y < me.level_height; y++) {
 			let newRow = [];
@@ -146,22 +151,25 @@ Main.prototype = {
 	},
 
 	setupCells: function () {
-		var me = this;
+		let me = this;
 		me.$level_element
 			.find("div.level-cell")
 			.on("click", me.handleLevelCellClick.bind(me));
 	},
 
 	handleLevelCellClick: function (e) {
-		var me = this;
+		let me = this;
 		let $cell = $(e.target);
 		let x = $cell.data("x");
 		let y = $cell.data("y");
-		let type = me.$tool_type.val();
+		let type = $("input[name=tool-type]:checked").val();
 		if (type === 'crate') {
 			if (me.level[y][x].cell.type !== 'pallet') {
-				me.level[y][x].cell.type = 'floor'
+				me.level[y][x].cell.type = 'floor';
 			};
+			me.level[y][x].cell.isCrate = true;
+		} else if (type === 'stack') {
+			me.level[y][x].cell.type = 'pallet';
 			me.level[y][x].cell.isCrate = true;
 		} else {
 			me.level[y][x].cell.type = type;
@@ -170,46 +178,10 @@ Main.prototype = {
 		me.updateLevelElement();
 	},
 
-	handleToolExportClickV1: function () {
-		var me = this;
-		var levelHash = me.getLevelHash();
-		var result = {
-			name: me.level_name,
-			height: me.level_height,
-			width: me.level_width,
-			hash: levelHash
-		};
-		me.$level_export.text(JSON.stringify(result));
-	},
-
-	handleToolExportClickV2: function () {
-		var me = this;
-		var levelHash = me.getLevelHash();
-		var result = {
-			name: me.level_name,
-			height: me.level_height,
-			width: me.level_width,
-			hash: levelHash
-		};
-		me.$level_export.text(LZString.compress(JSON.stringify(result)));
-	},
-
-	handleToolExportClickV3: function () {
-		var me = this;
-		var levelHash = me.getLevelHash();
-		var result = {
-			name: me.level_name,
-			height: me.level_height,
-			width: me.level_width,
-			hash: levelHash
-		};
-		prompt("Here's your level!", LZString.compress(JSON.stringify(result)));
-	},
-
-	handleToolExportClickV4: function () {
-		var me = this;
-		var levelHash = me.getLevelHash();
-		var result = {
+	handleToolExportClick: function () {
+		let me = this;
+		let levelHash = me.getLevelHash();
+		let result = {
 			name: me.level_name,
 			height: me.level_height,
 			width: me.level_width,
@@ -219,7 +191,7 @@ Main.prototype = {
 	},
 
 	handleToolImportClick: function () {
-		var me = this;
+		let me = this;
 		let levelString = prompt("Paste the level here:");
 		if (levelString === null) return;
 		let level = JSON.parse(levelString);
@@ -298,8 +270,8 @@ Main.prototype = {
 	},
 
 	getLevelHash: function () {
-		var me = this;
-		var result = '';
+		let me = this;
+		let result = '';
 		for (let y = 0; y < me.level_height; y++) {
 			for (let x = 0; x < me.level_width; x++) {
 				switch (me.level[y][x].cell.type) {
@@ -323,9 +295,6 @@ Main.prototype = {
 					case "start":
 						result += 'S';
 						break;
-					// case "finish":
-					// 	result += 'E';
-					// 	break;
 				}
 			}
 		}
@@ -345,6 +314,6 @@ Main.prototype = {
 };
 
 Main.CreateInstance = function (settings) {
-	var instance = new Main();
+	let instance = new Main();
 	instance.initialize(settings);
 };

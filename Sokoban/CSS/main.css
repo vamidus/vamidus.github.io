@@ -13,15 +13,70 @@ body {
 	overflow: hidden;
 }
 
-html .editor,
-body .editor {
-	background-color: grey;
-}
-
 body {
 	display: flex;
 	flex-flow: column;
 	font: 10px Arial, Helvetica, sans-serif;
+}
+
+.editor {
+	color: silver;
+	font-family: 'IBM VGA 8x16', monospace;
+	font-size: 16px;
+}
+
+.editor fieldset {
+	border: 5px double silver;
+	margin: 9px;
+	padding: 1em;
+}
+
+.editor .btn-group label {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 32px;
+	box-sizing: content-box;
+	height: 32px;
+	image-rendering: pixelated;
+	padding: 8px;
+	width: 32px;
+}
+
+.editor .btn-group label[for="tool-floor"] {
+	background-image: url("./Images/pixel_floor.png");
+}
+
+.editor .btn-group label[for="tool-wall"] {
+	background-image: url("./Images/pixel_bricks.png");
+}
+
+.editor .btn-group label[for="tool-pallet"] {
+	background-image: url("./Images/pixel_pallet.png");
+}
+
+.editor .btn-group label[for="tool-crate"] {
+	background-image: url("./Images/pixel_crate.png");
+}
+
+.editor .btn-group label[for="tool-stack"] {
+	background-image: url("./Images/pixel_stack.png");
+}
+
+.editor .btn-group label[for="tool-start"] {
+	background-image: url("./Images/pixel_worker_B.gif");
+}
+
+.editor #create-level-dialog {
+	text-align: right;
+}
+
+.editor div[aria-describedby="create-level-dialog"] .ui-dialog-titlebar-close {
+	display: none;
+}
+
+.editor input {
+	font-family: 'IBM VGA 8x16', monospace;
+	margin: 4px;
 }
 
 .btn,
@@ -176,11 +231,40 @@ body {
 	border-bottom: 2px solid silver;
 }
 
-/* this is inside help dialog, but not inside #help-dialog */
 #win-dialog {
 	background-image: url("./Images/Tanaka-san.png");
 	background-repeat: no-repeat;
-	background-position: right bottom;
+	background-position: bottom 0px right 12px;
+	background-size: 100px;
+	image-rendering: pixelated;
+}
+
+#win-dialog .step-message-container {
+	background-color: white;
+	border: 3px solid black;
+	border-radius: 16px;
+	color: black;
+	padding: 16px;
+	image-rendering: pixelated;
+}
+
+#win-dialog .step-message-container strong {
+	color: royalblue;
+}
+
+#win-dialog .step-message-container p:last-of-type {
+	margin-bottom: 0px;
+}
+
+#win-dialog .step-message-beak {
+	background-image: url("./Images/beak.png");
+	background-position-y: 25%;
+	background-repeat: no-repeat;
+	margin-left: -3px;
+}
+
+div[aria-describedby="win-dialog"] .ui-dialog-buttonpane {
+	margin-top: 0px;
 }
 
 .ui-dialog div.form-check { 
