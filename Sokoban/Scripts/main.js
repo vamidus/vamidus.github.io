@@ -336,11 +336,6 @@ Main.prototype = {
 			me.play_music_on_startup = true;
 		}
 		me.setCookie("playMusicOnStartup", me.play_music_on_startup, 365);
-		// if (me.synth_country_sound_to_a_tall_whistle.isPlayingSong) {
-		// 	me.synth_country_sound_to_a_tall_whistle.pause();
-		// } else {
-		// 	me.synth_country_sound_to_a_tall_whistle.play();
-		// }
 		me.updateMusicToggleButton();
 		me.$music_toggle.blur();
 	},
@@ -447,6 +442,7 @@ Main.prototype = {
 					.prependTo(pane);
 			},
 			modal: true,
+			resizable: false,
 			dialogClass: 'ibm-font',
 			width: dialog_width
 		});
@@ -657,57 +653,56 @@ Main.prototype = {
 		if (me.checkForWin()) {
 			me.ignore_keyboard = true;
 			let dialog_width = Math.min(me.$level_element.parent().width(), 535);
-			me.$win_dialog
-				.dialog({
-					beforeClose: function () {
-						me.$level_element.hide();
-						me.recordLevelProgress();
-						if (me.custom_level !== null) {
-							me.custom_level = null;
+			me.$win_dialog.dialog({
+				beforeClose: function () {
+					me.$level_element.hide();
+					me.recordLevelProgress();
+					if (me.custom_level !== null) {
+						me.custom_level = null;
+					} else {
+						if (me.level_id + 1 < me.level_array.length) {
+							me.level_id++;
 						} else {
-							if (me.level_id + 1 < me.level_array.length) {
-								me.level_id++;
-							} else {
-								me.level_id = 0;
-							}
+							me.level_id = 0;
 						}
-						me.$level_select.val(me.level_id);
-						me.level_steps_current = 0;
-						me.getCookies();
-						me.getLevelStepsBest();
-						me.updateNumberOfSteps();
-						me.setupLevel();
-						me.updateLevelElement();
-						me.$level_element.fadeIn(500).focus();
-					},
-					buttons: [
-						{
-							text: 'Ok',
-							title: 'Close and continue',
-							click: function () {
-								$(this).dialog("close");
-							}
+					}
+					me.$level_select.val(me.level_id);
+					me.level_steps_current = 0;
+					me.getCookies();
+					me.getLevelStepsBest();
+					me.updateNumberOfSteps();
+					me.setupLevel();
+					me.updateLevelElement();
+					me.$level_element.fadeIn(500).focus();
+				},
+				buttons: [
+					{
+						text: 'Ok',
+						title: 'Close and continue',
+						click: function () {
+							$(this).dialog("close");
 						}
-					],
-					dialogClass: 'ibm-font',
-					open: function () {
-						let step_message = `You took ${me.level_steps_current} steps!`;
-						if (me.level_steps_best > me.level_steps_current) {
-							step_message += `<br />You've beaten your previous record of ${me.level_steps_best} steps!`;
-						} else if (me.level_steps_best == me.level_steps_current) {
-							step_message += "<br />Looks like you've done this before!";
-						} else if (me.level_steps_best > 0) {
-							step_message += `<br />Your current record is ${me.level_steps_best} steps. Surely, you can do better!`;
-						} else {
-							step_message += "<br />You have set a new record!";
-						}
-						$(this).find("p.step-message").html(step_message);
-					},
-					modal: true,
-					title: `Congratulations! You have completed ${me.level_name}!`,
-					width: dialog_width
-				}
-			);
+					}
+				],
+				open: function () {
+					let step_message = `You took <strong>${me.level_steps_current}</strong> steps!`;
+					if (me.level_steps_best > me.level_steps_current) {
+						step_message += `<br />You've beaten your previous record of <strong>${me.level_steps_best}</strong> steps!`;
+					} else if (me.level_steps_best == me.level_steps_current) {
+						step_message += "<br />Looks like you've done this before!";
+					} else if (me.level_steps_best > 0) {
+						step_message += `<br />Your current record is <strong>${me.level_steps_best}</strong> steps. Surely, you can do better!`;
+					} else {
+						step_message += "<br />You have set a new record!";
+					}
+					$(this).find("p.step-message").html(step_message);
+				},
+				dialogClass: 'ibm-font',
+				modal: true,
+				resizable: false,
+				title: `Congratulations! You have completed ${me.level_name}!`,
+				width: dialog_width
+			});
 		}
 	},
 

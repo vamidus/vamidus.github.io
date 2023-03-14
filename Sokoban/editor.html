@@ -2,12 +2,14 @@
 <html lnag="en">
 	<head>
 		<title>Sokoban Level Editor</title>
-		<meta charset="utf-16">
+		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 		<link rel="shortcut icon" type="image/png" href="./CSS/Images/favicon.png"/>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/dark-hive/jquery-ui.css">
 		<link rel="stylesheet" type="text/css" href="./CSS/main.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 		<script src="./Scripts/vz-compress.js"></script>
 		<script src="./Scripts/editor.js"></script>
 		<script>
@@ -18,7 +20,30 @@
 	</head>
 	<body class="pixel-theme editor">
 		<fieldset>
-			<legend>Level Metadata</legend>
+			<legend>Tools</legend>
+			<section>
+				<div class="btn-group" role="group" aria-label="Tool type">
+					<input type="radio" class="btn-check" name="tool-type" id="tool-floor" value="floor" autocomplete="off">
+					<label class="btn btn-outline-primary" for="tool-floor"></label>
+					<input type="radio" class="btn-check" name="tool-type" id="tool-wall" value="wall" autocomplete="off" checked>
+					<label class="btn btn-outline-primary" for="tool-wall"></label>
+					<input type="radio" class="btn-check" name="tool-type" id="tool-pallet" value="pallet" autocomplete="off">
+					<label class="btn btn-outline-primary" for="tool-pallet"></label>
+					<input type="radio" class="btn-check" name="tool-type" id="tool-crate" value="crate" autocomplete="off">
+					<label class="btn btn-outline-primary" for="tool-crate"></label>
+					<input type="radio" class="btn-check" name="tool-type" id="tool-stack" value="stack" autocomplete="off">
+					<label class="btn btn-outline-primary" for="tool-stack"></label>
+					<input type="radio" class="btn-check" name="tool-type" id="tool-start" value="start" autocomplete="off">
+					<label class="btn btn-outline-primary" for="tool-start"></label>
+				</div>
+				<button id="tool-export" type="button">Export</button>
+				<button id="tool-import" type="button">Import...</button>
+			</section>
+		</fieldset>
+		<div class="level-container">
+			<div class="level" id="level-element"></div>
+		</div>
+		<div id="create-level-dialog" title="Create Level" style="display: none;">
 			<section>
 				<label>Name:</label>
 				<input id="level-name" type="text" value="Level 1" />
@@ -29,26 +54,6 @@
 				<label>Height:</label>
 				<input id="level-height" type="text" value="9" />						
 			</section>
-			<section>
-				<button id="level-apply" type="submit">Create Level</button>
-			</section>
-			<legend>Tools</legend>
-			<section>
-				<select id="tool-type">
-					<option value="floor">Floor</option>
-					<option value="wall">Wall</option>
-					<option value="pallet">Pallet</option>
-					<option value="crate">Crate</option>
-					<option value="start">Start</option>
-					<!-- <option value="finish">Finish</option> -->
-				</select>	
-				<button id="tool-export" type="button">Export</button>
-				<button id="tool-import" type="button">Import...</button>
-			</section>
-		</fieldset>
-		<div class="level-container">
-			<div class="level" id="level-element"></div>
 		</div>
-		<pre id="level-export"></pre>
 	</body>
 </html>
