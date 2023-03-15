@@ -122,7 +122,7 @@ Main.prototype = {
 				$(tab).find("#tab-pane-credits").stop().scrollTop(0);
 				setTimeout(function () {
 					$(tab).find("#tab-pane-credits").animate({
-						scrollTop: "510px"
+						scrollTop: "750px"
 					}, {
 						duration: 50000,
 						easing: "linear"
