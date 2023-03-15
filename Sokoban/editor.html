@@ -20,9 +20,9 @@
 	</head>
 	<body class="pixel-theme editor">
 		<fieldset>
-			<legend>Tools</legend>
+			<legend>[<strong>SOKOBAN Level Editor</strong>]</legend>
 			<section>
-				<div class="btn-group" role="group" aria-label="Tool type">
+				<div class="btn-group" role="group" aria-label="Tool type" title="Tiles to fill areas with">
 					<input type="radio" class="btn-check" name="tool-type" id="tool-floor" value="floor" autocomplete="off">
 					<label class="btn btn-outline-primary" for="tool-floor"></label>
 					<input type="radio" class="btn-check" name="tool-type" id="tool-wall" value="wall" autocomplete="off" checked>
@@ -36,8 +36,8 @@
 					<input type="radio" class="btn-check" name="tool-type" id="tool-start" value="start" autocomplete="off">
 					<label class="btn btn-outline-primary" for="tool-start"></label>
 				</div>
-				<button id="tool-export" type="button">Export</button>
-				<button id="tool-import" type="button">Import...</button>
+				<button class="btn btn-lg btn-warning" id="tool-export" type="button" title="Export to JSON string">Export...</button>
+				<button class="btn btn-lg btn-warning" id="tool-import" type="button" title="Import a JSON string">Import...</button>
 			</section>
 		</fieldset>
 		<div class="level-container">

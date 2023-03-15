@@ -8,6 +8,9 @@ let Main = function () {
 	this.level_width = 0;
 	this.level_height = 0;
 
+	this.select_start = {x: null, y: null};
+	this.select_end = {x: null, y: null};
+
 	// Selectors
 	this.$create_level_dialog = null;
 	this.$level_name = null;
@@ -154,7 +157,9 @@ Main.prototype = {
 		let me = this;
 		me.$level_element
 			.find("div.level-cell")
-			.on("click", me.handleLevelCellClick.bind(me));
+			.on("click", me.handleLevelCellClick.bind(me))
+			.on("mousedown", me.handleLevelCellMousedown.bind(me))
+			.on("mouseup", me.handleLevelCellMouseup.bind(me));
 	},
 
 	handleLevelCellClick: function (e) {
@@ -176,6 +181,61 @@ Main.prototype = {
 			me.level[y][x].cell.isCrate = false;
 		}
 		me.updateLevelElement();
+	},
+
+	handleLevelCellMousedown: function (e) {
+		if (e.which !== 1) return;
+		let me = this;
+		let $cell = $(e.target);
+		me.select_start = {
+			x: $cell.data("x"),
+			y: $cell.data("y")
+		};
+	},
+
+	handleLevelCellMouseup: function (e) {
+		if (e.which !== 1) return;
+		let me = this;
+		let $cell = $(e.target);
+		let x = $cell.data("x");
+		let y = $cell.data("y");
+		if (me.select_start.x === x && me.select_start.y === y) {
+			me.select_start = {
+				x: null,
+				y: null
+			};
+			me.select_end = {
+				x: null,
+				y: null
+			};
+		} else {
+			if (me.select_start.x > x) {
+				me.select_end.x = me.select_start.x;
+				me.select_start.x = x;
+			} else {
+				me.select_end.x = x
+			}
+			if (me.select_start.y > y) {
+				me.select_end.y = me.select_start.y;
+				me.select_start.y = y;
+			} else {
+				me.select_end.y = y
+			}
+		}
+		me.updateSelection();
+	},
+
+	updateSelection: function () {
+		let me = this;
+		if (me.select_start.x === null || me.select_start.y === null) {
+			$("div.selected").removeClass("selected");
+		} else {
+			for (let y = me.select_start.y; y <= me.select_end.y; y++) {
+				for (let x = me.select_start.x; x <= me.select_end.x; x++) {
+					$(`#cell-x${x}-y${y}`).click();
+				}
+			}
+		}
 	},
 
 	handleToolExportClick: function () {

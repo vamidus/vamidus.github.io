@@ -116,7 +116,20 @@ Main.prototype = {
 
 	setupHelpTabs: function () {
 		let me = this;
-		me.$help_tabs.tabs();
+		me.$help_tabs.tabs({
+			beforeActivate: function () {
+				let tab = this;
+				$(tab).find("#tab-pane-credits").stop().scrollTop(0);
+				setTimeout(function () {
+					$(tab).find("#tab-pane-credits").animate({
+						scrollTop: "510px"
+					}, {
+						duration: 50000,
+						easing: "linear"
+					});
+				}, 100);
+			}
+		});
 	},
 
 	setupEventHandlers: function () {
@@ -132,11 +145,16 @@ Main.prototype = {
 		me.$button_bottom.on("click", me.handleBottomClick.bind(me));
 		me.$button_restart.on("click", me.handleRestartClick.bind(me));
 		me.$button_undo.on("click", me.handleUndoClick.bind(me));
+		me.$help_tabs.on("click", me.handleHelpTabsClick.bind(me));
 		me.$level_element.on("click", me.handleLevelElementClick.bind(me));
 		me.$level_select.on("change", me.handleLevelSelectChange.bind(me));
 		me.$music_toggle.on("click", me.handleMusicToggleClick.bind(me));
 		me.$music_toggle_2.on("click", me.handleMusicToggleClick.bind(me));
 		me.$start_game.on("click", me.handleStartGameClick.bind(me)).focus();
+	},
+
+	handleHelpTabsClick: function () {
+		$("#tab-pane-credits").stop();
 	},
 
 	handleStartGameClick: function () {
@@ -353,6 +371,7 @@ Main.prototype = {
 
 	handleKeyPress: function (e) {
 		let me = this;
+		me.handleHelpTabsClick();
 		if (!me.ignore_keyboard) {
 			switch (e.which) {
 				case 27: // Esc
