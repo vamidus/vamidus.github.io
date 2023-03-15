@@ -31,6 +31,17 @@ body {
 	padding: 1em;
 }
 
+.editor fieldset legend {
+	background-color: black;
+	margin-top: -29px;
+	width: auto;
+}
+
+.editor fieldset legend strong {
+	color: yellow;
+	font-weight: normal;
+}
+
 .editor .btn-group label {
 	background-position: center;
 	background-repeat: no-repeat;
@@ -307,6 +318,11 @@ div[aria-describedby="win-dialog"] .ui-dialog-buttonpane {
 
 #tab-pane-credits {
 	text-align: center;
+}
+
+#tab-pane-credits img {
+	image-rendering: pixelated;
+	width: 100%;
 }
 
 #tab-pane-credits h5{
