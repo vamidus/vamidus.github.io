@@ -47,11 +47,16 @@ let Main = function () {
 	this.$current_level = null;
 	this.$current_number_of_steps = null;
 	this.$help_tabs = null;
+	this.$import_level_text = null;
 	this.$level_element = null;
 	this.$level_select = null;
 	this.$music_toggle = null;
 	this.$music_toggle_2 = null;
 	this.$start_game = null;
+
+	this.$clear_cookies_dialog = null;
+	this.$help_dialog = null;
+	this.$import_dialog = null;
 	this.$win_dialog = null;
 };
 
@@ -92,12 +97,17 @@ Main.prototype = {
 		this.$best_number_of_steps = $("#best-number-of-steps");
 		this.$current_level = $("#current-level");
 		this.$current_number_of_steps = $("#current-number-of-steps");
+		this.$import_level_text = $("#import-level-text");
 		this.$help_tabs = $("#help-tabs");
 		this.$level_element = $("#level-element");
 		this.$level_select = $("#level-select");
 		this.$music_toggle = $("#music-toggle");
 		this.$music_toggle_2 = $("#music-toggle-2");
 		this.$start_game = $("#start-game");
+
+		this.$clear_cookies_dialog = $("#clear-cookies-dialog");
+		this.$help_dialog = $("#help-dialog");
+		this.$import_dialog = $("#import-dialog");
 		this.$win_dialog = $("#win-dialog");
 	},
 
@@ -340,7 +350,7 @@ Main.prototype = {
 		me.level_id = $(e.target).val();
 		me.$button_restart.click();
 		me.$level_select.blur();
-		$("#help-dialog").dialog("close");
+		me.$help_dialog.dialog("close");
 		me.$level_element.focus();
 	},
 
@@ -403,34 +413,76 @@ Main.prototype = {
 			}
 		}
 	},
+	
+	handleDeleteClick: function () {
+		let me = this;
+		let dialog_width = Math.min($("html, body").innerWidth() - 32, 800);
+
+		me.$clear_cookies_dialog.dialog({
+			buttons: [
+				{
+					text: "Yes",
+					title: "Yes, delete all SOKOBAN cookies!",
+					click: function () {
+						$(this).dialog("close");
+						$("#checkbox-show-help")[0].checked = true;
+						me.setCookie("completedLevels", "", -1);
+						me.setCookie("showHelpOnStartup", "", -1);
+						me.$button_restart.click()
+						me.$help_dialog.dialog("close");
+						me.$level_select.blur();
+						me.$button_delete.blur();
+						me.$level_element.focus();
+					}
+				},
+				{
+					text: "No",
+					title: "No, I think I'll keep all SOKOBAN cookies!",
+					click: function () {
+						$(this).dialog("close");
+					}
+				}
+			],
+			dialogClass: 'ibm-font',
+			modal: true,
+			resizable: false,
+			width: dialog_width
+		});
+	},
 
 	handleCustomClick: function () {
 		let me = this;
-		let level = prompt("Please paste the level {object} below and press [Ok]", "{\"name\":\"Monster\",\"height\":\"17\",\"width\":\"16\",\"hash\":\"W17F14WWFW12FWWFWF10WFWWFWFW8FWFWWFWFWF6WFWFWWFWFWFW4FWFWFWWFWFWF4WFWFWFWWFWFW4FWFWFWFWWFWF6WFWFWFWWFW8FWFWFWWF10WFWFW13FWFWWF12WFW3CW11FWWPFSF11W17\"}");
-		if (level !== null && level !== "") {
-			me.custom_level = JSON.parse(level);
-			me.level_steps_current = 0;
-			me.getCookies();
-			me.getLevelStepsBest();
-			me.updateNumberOfSteps();
-			me.setupLevel();
-			me.updateLevelElement();
-		}
-		me.$button_custom.blur();
-		me.$level_element.focus();
-	},
+		let dialog_width = Math.min($("html, body").innerWidth() - 32, 800);
 
-	handleDeleteClick: function () {
-		if (confirm("Are you sure you want to delete all cookies?")) {
-			let me = this;
-			me.setCookie("completedLevels", "", -1);
-			me.setCookie("showHelpOnStartup", "", -1);
-			$("#checkbox-show-help")[0].checked = true;
-			me.$button_restart.click()
-			me.$level_select.blur();
-			me.$button_delete.blur();
-			me.$level_element.focus();
-		}
+		me.$import_dialog.dialog({
+			buttons: [
+				{
+					text: "Load",
+					title: "Load custom level",
+					click: function () {
+						$(this).dialog("close");					
+						let level = me.$import_level_text.val();
+						if (level !== null && level !== "") {
+							me.custom_level = JSON.parse(level);
+							me.level_steps_current = 0;
+							me.getCookies();
+							me.getLevelStepsBest();
+							me.updateNumberOfSteps();
+							me.setupLevel();
+							me.updateLevelElement();
+							me.$help_dialog.dialog("close");
+							me.$button_custom.blur();
+							me.$level_element.focus();
+						}
+					}
+				}
+			],
+			dialogClass: 'ibm-font',
+			modal: true,
+			resizable: false,
+			width: dialog_width
+		});
+
 	},
 
 	handleHelpClick: function () {
@@ -441,7 +493,7 @@ Main.prototype = {
 		$("#tab-pane-credits").css("height", dialog_tab_height + "px");
 		$("#tab-pane-legend").css("height", dialog_tab_height + "px");
 		$("#tab-pane-utilities").css("height", dialog_tab_height + "px");
-		$("#help-dialog").dialog({
+		me.$help_dialog.dialog({
 			beforeClose: function () {
 				me.updateShowHelpSetting();
 				me.ignore_keyboard = false;
@@ -460,9 +512,9 @@ Main.prototype = {
 				$(`<div class='form-check form-switch'><input ${(me.show_help_on_startup === true ? "checked" : "")} class='form-check-input' id='checkbox-show-help' type='checkbox' value='' /><label class='form-check-label' for='checkbox-show-help'>Show this on startup</label></div>`)
 					.prependTo(pane);
 			},
+			dialogClass: 'ibm-font',
 			modal: true,
 			resizable: false,
-			dialogClass: 'ibm-font',
 			width: dialog_width
 		});
 	},
