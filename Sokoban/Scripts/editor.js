@@ -165,9 +165,12 @@ Main.prototype = {
 	handleLevelCellClick: function (e) {
 		let me = this;
 		let $cell = $(e.target);
-		let x = $cell.data("x");
-		let y = $cell.data("y");
-		let type = $("input[name=tool-type]:checked").val();
+		me.setCellType($cell.data("x"), $cell.data("y"), $("input[name=tool-type]:checked").val());
+		me.updateLevelElement();
+	},
+
+	setCellType: function (x, y, type) {
+		let me = this;
 		if (type === 'crate') {
 			if (me.level[y][x].cell.type !== 'pallet') {
 				me.level[y][x].cell.type = 'floor';
@@ -180,7 +183,6 @@ Main.prototype = {
 			me.level[y][x].cell.type = type;
 			me.level[y][x].cell.isCrate = false;
 		}
-		me.updateLevelElement();
 	},
 
 	handleLevelCellMousedown: function (e) {
@@ -227,14 +229,14 @@ Main.prototype = {
 
 	updateSelection: function () {
 		let me = this;
-		if (me.select_start.x === null || me.select_start.y === null) {
-			$("div.selected").removeClass("selected");
-		} else {
+		let type = $("input[name=tool-type]:checked").val();
+		if (me.select_start.x !== null && me.select_start.y !== null && type !== null) {
 			for (let y = me.select_start.y; y <= me.select_end.y; y++) {
 				for (let x = me.select_start.x; x <= me.select_end.x; x++) {
-					$(`#cell-x${x}-y${y}`).click();
+					me.setCellType(x, y, type);
 				}
 			}
+			me.updateLevelElement();
 		}
 	},
 
