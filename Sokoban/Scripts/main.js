@@ -160,6 +160,7 @@ Main.prototype = {
 		me.$level_select.on("change", me.handleLevelSelectChange.bind(me));
 		me.$music_toggle.on("click", me.handleMusicToggleClick.bind(me));
 		me.$music_toggle_2.on("click", me.handleMusicToggleClick.bind(me));
+		me.$start_game.parent().on("click", me.handleStartGameClick.bind(me));
 		me.$start_game.on("click", me.handleStartGameClick.bind(me)).focus();
 	},
 
@@ -169,7 +170,9 @@ Main.prototype = {
 
 	handleStartGameClick: function () {
 		let me = this;
-		me.$start_game.prop("disabled", true).hide().parent().fadeOut(500);
+		me.$start_game.parent().fadeOut("slow", function () {
+			me.$start_game.parent().remove();
+		});
 		if (me.play_music_on_startup) me.$music_toggle.click();
 		if (me.show_help_on_startup) me.$button_help.click();
 	},
