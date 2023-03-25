@@ -3,6 +3,7 @@
 class Main {
 	constructor() {
 		// Configs
+		this.square_size = 64;
 		this.square_black = "grey";
 		this.square_white = "white";
 
@@ -11,7 +12,6 @@ class Main {
 
 		this.board_height = 8;
 		this.board_width = 8;
-		this.square_size = 64;
 
 		this.class_black = "black";
 		this.class_white = "white";

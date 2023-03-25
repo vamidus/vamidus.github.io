@@ -63,10 +63,10 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-    html,
+	html,
 	body {
-        background-color: black;
-    }
+		background-color: black;
+	}
 
 	.legend {
 		color: silver;
@@ -75,15 +75,15 @@ body {
 	.rank:nth-child(2) .square {
 		border-top: 3px solid grey;
 	}
-	
+
 	.rank:nth-child(9) .square {
 		border-bottom: 3px solid grey;
 	}
-	
+
 	.rank .square:nth-child(2) {
 		border-left: 3px solid grey;
 	}
-	
+
 	.rank .square:nth-child(9) {
 		border-right: 3px solid grey;
 	}
