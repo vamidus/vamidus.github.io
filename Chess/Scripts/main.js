@@ -23,7 +23,7 @@ class Main {
 		this.square_files = "abcdefgh";
 		this.square_ranks = "87654321";
 
-		this.scale_range = 1 / 800;
+		this.scale_range = 1 / 720;
 
 		// Selectors
 		this.$board = null;
@@ -43,6 +43,7 @@ class Main {
 		me.setCssVariables();
 		me.scaleBoard();
 		me.setupBoard();
+		me.setupEventHandlers();
 		me.setupPieces();
 	}
 	setupElementSelectors() {
@@ -78,6 +79,7 @@ class Main {
 						.addClass(me.class_square)
 						.attr("id", "square-x" + x + "-y" + y)
 						.attr("data-square", me.square_files.charAt(x) + me.square_ranks.charAt(y))
+						//.text(me.square_files.charAt(x) + me.square_ranks.charAt(y))
 						.data("x", x)
 						.data("y", y)
 						.appendTo($newRow);
@@ -90,7 +92,7 @@ class Main {
 				} else if (y > -1 && y < me.board_height && ( x === -1 || x === me.board_width)) {
 					$("<div />")
 						.addClass(me.class_legend)
-						.text(me.square_ranks.charAt(y))
+						.html(me.square_ranks.charAt(y))
 						.appendTo($newRow);
 				} else {
 					$("<div />")
@@ -101,6 +103,27 @@ class Main {
 			$newRow.appendTo(me.$board);
 			colorIsBlack = !colorIsBlack;
 		}
+	}
+	setupEventHandlers() {
+		let me = this;
+		me.$board.find(".square")
+			.on("mousedown", me.handleSquareMouseDown.bind(me))
+			.on("mouseup", me.handleSquareMouseUp.bind(me));
+	}
+	handleSquareMouseDown(e) {
+		if (e.which !== 1) return;
+		let me = this;
+		let $square = $(e.target).parent(".square");
+		console.log($square.data());
+		return false;
+	}
+	handleSquareMouseUp(e) {
+		if (e.which !== 1) return;
+		let me = this;
+		let $square = $(e.target).parent(".square");
+		if ($square.length === 0) $square = $(e.target); // this may be becaue there are no pieces in this square ...let's hope it is our target; THIS NEEDS TO BE TESTED OUT - I DO NOT TRUST THIS LOGIC!!!
+		console.log($square.data());
+		return false;
 	}
 	setupPieces() {
 		let me = this;
@@ -143,7 +166,7 @@ class Main {
 		let piece = "P";
 		let rank = null;
 		let file = null;
-		if ("KQRBNP".indexOf(move.charAt(0)) > -1) { // indexOf is case-sensitive, so there's no collision between B and b
+		if ("KQRBNP".indexOf(move.charAt(0)) > -1) { // indexOf is case-sensitive, so there's no collision between B and b; This may be a problem - to be solved later
 			piece = move.charAt(0);
 			rank = move.charAt(1);
 			file = move.charAt(2);
@@ -174,7 +197,7 @@ class Main {
 				break;
 		}
 		if (!rank || !file || p === null) return;
-		$(`[data-square='${rank}${file}']`).text(me.pieces[i].charAt(p));
+		$(`[data-square='${rank}${file}']`).html(`<span>${me.pieces[i].charAt(p)}<span>`);
 	}
 	// isEven(number) {
 	// 	return number % 2 === 0
