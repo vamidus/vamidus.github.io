@@ -22,19 +22,19 @@ body {
 }
 
 .rank:nth-child(2) .square {
-	border-top: 3px solid black;
+	border-top: 2px solid black;
 }
 
 .rank:nth-child(9) .square {
-	border-bottom: 3px solid black;
+	border-bottom: 2px solid black;
 }
 
 .rank .square:nth-child(2) {
-	border-left: 3px solid black;
+	border-left: 2px solid black;
 }
 
 .rank .square:nth-child(9) {
-	border-right: 3px solid black;
+	border-right: 2px solid black;
 }
 
 .legend {
@@ -54,6 +54,17 @@ body {
 	width: var(--square-size);
 }
 
+.square span {
+	cursor: grab;
+}
+
+.square-dragged { /* TODO: set top and left position attributes in JS; TODO: investigate :active pseudo-class!!! it may be how we should move pieces around! */
+
+	cursor: grabbing;
+	position: absolute;
+	text-shadow: 6px 6px 3px black;
+} 
+
 .white {
 	background-color: var(--square-white);
 }
@@ -62,7 +73,9 @@ body {
 	background-color: var(--square-black);
 }
 
-@media (prefers-color-scheme: dark) {
+
+/* TODO: Fix this nonsense! */
+/* @media (prefers-color-scheme: dark) {
 	html,
 	body {
 		background-color: black;
@@ -87,4 +100,4 @@ body {
 	.rank .square:nth-child(9) {
 		border-right: 3px solid grey;
 	}
-}
+} */
