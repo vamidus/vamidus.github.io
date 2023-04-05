@@ -1,5 +1,3 @@
-// TODO: make it scale to fit viewport (https://stackoverflow.com/questions/52467896/transform-scale-using-viewport-units)
-
 class Main {
 	constructor() {
 		// Configs
@@ -29,8 +27,7 @@ class Main {
 		this.$board = null;
 	}
 	initialize(settings) {
-		if (settings)
-			this.applySettings(settings);
+		if (settings) this.applySettings(settings);
 		this.setup();
 	}
 	applySettings(settings) {
@@ -43,7 +40,6 @@ class Main {
 		me.setCssVariables();
 		me.scaleBoard();
 		me.setupBoard();
-		me.setupEventHandlers();
 		me.setupPieces();
 	}
 	setupElementSelectors() {
@@ -57,11 +53,10 @@ class Main {
 		let me = this;
 		let $container = me.$board.parent();
 		let scale = me.scale_range * Math.min($container.innerWidth(), $container.innerHeight());
-		document.documentElement.style.setProperty("--board-scale", scale);
+		document.documentElement.style.setProperty("--square-size", `${me.square_size * scale}px`);
 	}
 	setCssVariables() {
 		let me = this;
-		document.documentElement.style.setProperty("--square-size", `${me.square_size}px`);
 		document.documentElement.style.setProperty("--square-black", me.square_black);
 		document.documentElement.style.setProperty("--square-white", me.square_white);
 	}
@@ -79,6 +74,7 @@ class Main {
 						.addClass(me.class_square)
 						.attr("id", "square-x" + x + "-y" + y)
 						.attr("data-square", me.square_files.charAt(x) + me.square_ranks.charAt(y))
+						//.prop("title", me.square_files.charAt(x) + me.square_ranks.charAt(y))
 						//.text(me.square_files.charAt(x) + me.square_ranks.charAt(y))
 						.data("x", x)
 						.data("y", y)
@@ -104,31 +100,39 @@ class Main {
 			colorIsBlack = !colorIsBlack;
 		}
 	}
-	setupEventHandlers() {
-		let me = this;
-		me.$board.find(".square")
-			.on("mousedown", me.handleSquareMouseDown.bind(me))
-			.on("mouseup", me.handleSquareMouseUp.bind(me));
-	}
-	handleSquareMouseDown(e) {
-		if (e.which !== 1) return;
-		let me = this;
-		let $square = $(e.target).parent(".square");
-		console.log($square.data());
-		return false;
-	}
-	handleSquareMouseUp(e) {
-		if (e.which !== 1) return;
-		let me = this;
-		let $square = $(e.target).parent(".square");
-		if ($square.length === 0) $square = $(e.target); // this may be becaue there are no pieces in this square ...let's hope it is our target; THIS NEEDS TO BE TESTED OUT - I DO NOT TRUST THIS LOGIC!!!
-		console.log($square.data());
-		return false;
-	}
 	setupPieces() {
 		let me = this;
 		me.setupBottomPieces();
 		me.setupTopPieces();
+		me.$board.find("span").draggable({ 
+			containment: me.$board,
+			refreshPositions: true,
+			//opacity: .75, 
+			revert: function () {
+				return false; // todo: validate the move here
+			},
+			//snap: true,
+			//grid: [64, 64], 
+
+			start: function (event) {
+				//debugger;
+			},
+
+			stop: function (event) {
+				//debugger;
+			},
+
+			// drag: function (event, ui) {
+			// 	var zoom = document.documentElement.style.getPropertyValue("--board-scale");
+			// 	var original = ui.originalPosition;
+
+			// 	// jQuery will simply use the same object we alter here
+			// 	ui.position = {
+			// 		left: (event.clientX - me.click.x + original.left - me.$board.position().left) / zoom,
+			// 		top:  (event.clientY - me.click.y + original.top  - me.$board.position().top ) / zoom
+			// 	};			
+			// }
+		});
 	}
 	setupBottomPieces() {
 		let me = this;
@@ -197,7 +201,7 @@ class Main {
 				break;
 		}
 		if (!rank || !file || p === null) return;
-		$(`[data-square='${rank}${file}']`).html(`<span>${me.pieces[i].charAt(p)}<span>`);
+		$(`[data-square='${rank}${file}']`).html(`<span>${me.pieces[i].charAt(p)}</span>`);
 	}
 	// isEven(number) {
 	// 	return number % 2 === 0

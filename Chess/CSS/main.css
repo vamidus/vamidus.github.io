@@ -1,7 +1,7 @@
 html,
 body {
 	color: black;
-	font: 18pt Arial, Helvetica, sans-serif;
+	font: calc(var(--square-size) / 2) Arial, Helvetica, sans-serif;
 	height: 100%;
 }
 
@@ -13,31 +13,28 @@ body {
 	overflow: hidden;
 }
 
-.board {
-	scale: var(--board-scale);
-}
-
 .rank {
 	display: flex;
 }
 
 .rank:nth-child(2) .square {
-	border-top: 2px solid black;
+	border-top: calc(var(--square-size) / 32) solid black;
 }
 
 .rank:nth-child(9) .square {
-	border-bottom: 2px solid black;
+	border-bottom: calc(var(--square-size) / 32) solid black;
 }
 
 .rank .square:nth-child(2) {
-	border-left: 2px solid black;
+	border-left: calc(var(--square-size) / 32) solid black;
 }
 
 .rank .square:nth-child(9) {
-	border-right: 2px solid black;
+	border-right: calc(var(--square-size) / 32) solid black;
 }
 
 .legend {
+	cursor: default;
 	display: inline-block;
 	line-height: var(--square-size);
 	text-align: center;
@@ -47,23 +44,22 @@ body {
 
 .square {
 	display: inline-block;
-	font-size: 42pt;
+	font-size: calc(var(--square-size) / 1.14);
 	line-height: var(--square-size);
 	text-align: center;
 	height: var(--square-size);
 	width: var(--square-size);
 }
 
-.square span {
+.square .ui-draggable-handle {
 	cursor: grab;
 }
 
-.square-dragged { /* TODO: set top and left position attributes in JS; TODO: investigate :active pseudo-class!!! it may be how we should move pieces around! */
-
+.square .ui-draggable-dragging {
 	cursor: grabbing;
-	position: absolute;
-	text-shadow: 6px 6px 3px black;
-} 
+	opacity: .75;
+	text-shadow: 2px 2px 4px gray;
+}
 
 .white {
 	background-color: var(--square-white);
@@ -72,7 +68,6 @@ body {
 .black {
 	background-color: var(--square-black);
 }
-
 
 /* TODO: Fix this nonsense! */
 /* @media (prefers-color-scheme: dark) {
