@@ -109,7 +109,7 @@ class Main {
 			refreshPositions: true,
 			//opacity: .75, 
 			revert: function () {
-				return false; // todo: validate the move here
+				return true; // todo: validate the move here
 			},
 			//snap: true,
 			//grid: [64, 64], 
