@@ -168,9 +168,15 @@ class Main {
 				let result = me.state.move(`${me.dragged_from_square}-${me.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
 				me.$board.find(".square span").remove();
 				me.drawBoard();
-				me.setupDraggable();
-				if (result.ok && me.timeout_handle === null) {
-					me.timeout_handle = setTimeout(me.getComputerMove, 10, 5, me);
+				if (result.ok) {
+					if (result.flags & P4_MOVE_FLAG_MATE) {
+						setTimeout(function() {
+							alert("Congratulations, You won! Refresh the page to try again!");
+						}, 10);
+					} else if (me.timeout_handle === null) {
+						me.setupDraggable();
+						me.timeout_handle = setTimeout(me.getComputerMove, 10, 5, me);
+					}
 				}
 			}
 		});
