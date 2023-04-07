@@ -23,6 +23,13 @@ class Main {
 
 		this.scale_range = 1 / 720;
 
+		this.state = null;
+
+		this.dragged_from_square = "";
+		this.dragged_over_square = "";
+
+		this.timeout_handle = null;
+
 		// Selectors
 		this.$board = null;
 	}
@@ -40,7 +47,9 @@ class Main {
 		me.setCssVariables();
 		me.scaleBoard();
 		me.setupBoard();
-		me.setupPieces();
+		me.startGame();
+		me.drawBoard();
+		me.setupDraggable();
 	}
 	setupElementSelectors() {
 		this.$board = $(".board:first");
@@ -49,24 +58,23 @@ class Main {
 		let me = this;
 		$(window).on("resize", me.scaleBoard.bind(me));
 	}
+	setCssVariables() {
+		let me = this;
+		document.documentElement.style.setProperty("--square-black", me.square_black);
+		document.documentElement.style.setProperty("--square-white", me.square_white);
+	}
 	scaleBoard() {
 		let me = this;
 		let $container = me.$board.parent();
 		let scale = me.scale_range * Math.min($container.innerWidth(), $container.innerHeight());
 		document.documentElement.style.setProperty("--square-size", `${me.square_size * scale}px`);
 	}
-	setCssVariables() {
-		let me = this;
-		document.documentElement.style.setProperty("--square-black", me.square_black);
-		document.documentElement.style.setProperty("--square-white", me.square_white);
-	}
 	setupBoard() {
 		let me = this;
 		let colorIsBlack = true;
 		me.$board.empty();
 		for (let y = -1; y < me.board_height + 1; y++) {
-			let $newRow = $("<div />")
-				.addClass(me.class_rank);
+			let $newRow = $("<div />").addClass(me.class_rank);
 			for (let x = -1; x < me.board_width + 1; x++) {
 				if (y > -1 && y < me.board_height && x > -1 && x < me.board_width) {
 					$("<div />")
@@ -74,8 +82,6 @@ class Main {
 						.addClass(me.class_square)
 						.attr("id", "square-x" + x + "-y" + y)
 						.attr("data-square", me.square_files.charAt(x) + me.square_ranks.charAt(y))
-						//.prop("title", me.square_files.charAt(x) + me.square_ranks.charAt(y))
-						//.text(me.square_files.charAt(x) + me.square_ranks.charAt(y))
 						.data("x", x)
 						.data("y", y)
 						.appendTo($newRow);
@@ -100,112 +106,122 @@ class Main {
 			colorIsBlack = !colorIsBlack;
 		}
 	}
-	setupPieces() {
+	startGame() {
 		let me = this;
-		me.setupBottomPieces();
-		me.setupTopPieces();
-		me.$board.find("span").draggable({ 
-			containment: me.$board,
-			refreshPositions: true,
-			//opacity: .75, 
-			revert: function () {
-				return true; // todo: validate the move here
+		me.state = p4_new_game();
+	}
+	drawBoard() {
+		let me = this;
+		for (let y = 9; y > 1; y--) {
+			for (let x = 1; x < 9; x++) {
+				let i = y * 10 + x;
+				let piece = me.getPieceFromP4Index(me.state.board[i]);
+				if (!!piece) {
+					let file = me.square_files.charAt(x - 1);
+					let rank = me.square_ranks.charAt(y * -1 + 9);
+					$(`[data-square='${file}${rank}']`).html(`<span>${piece}</span>`);
+				}
+			}
+		}
+	}
+	getPieceFromP4Index(index) {
+		let me = this;
+		switch (index) {
+			case 2:
+				return me.pieces[0].charAt(5); // "♙"; // P
+			case 3:
+				return me.pieces[1].charAt(5); // "♟︎"; // p
+			case 4:
+				return me.pieces[0].charAt(2); // "♖"; // R
+			case 5:
+				return me.pieces[1].charAt(2); // "♜"; // r
+			case 6:
+				return me.pieces[0].charAt(4); // "♘"; // N
+			case 7:
+				return me.pieces[1].charAt(4); // "♞"; // n
+			case 8:
+				return me.pieces[0].charAt(3); // "♗"; // B
+			case 9:
+				return me.pieces[1].charAt(3); // "♝"; // b
+			case 10:
+				return me.pieces[0].charAt(0); // "♔"; // K
+			case 11:
+				return me.pieces[1].charAt(0); // "♚"; // k
+			case 12:
+				return me.pieces[0].charAt(1); // "♕"; // Q
+			case 13:
+				return me.pieces[1].charAt(1); // "♛"; // q
+		}
+	}
+	setupDraggable() {
+		let me = this;
+		me.$board.find("span").draggable({
+			// revert: true,
+			// revertDuration: 1000,
+			start: function (event, ui) { // TODO: cleanup signatures
+				let el = me.allElementsFromPoint(event.pageX, event.pageY);
+				me.dragged_from_square = $(el).filter(".square").not($(this)).first().data("square");
 			},
-			//snap: true,
-			//grid: [64, 64], 
-
-			start: function (event) {
-				//debugger;
-			},
-
-			stop: function (event) {
-				//debugger;
-			},
-
-			// drag: function (event, ui) {
-			// 	var zoom = document.documentElement.style.getPropertyValue("--board-scale");
-			// 	var original = ui.originalPosition;
-
-			// 	// jQuery will simply use the same object we alter here
-			// 	ui.position = {
-			// 		left: (event.clientX - me.click.x + original.left - me.$board.position().left) / zoom,
-			// 		top:  (event.clientY - me.click.y + original.top  - me.$board.position().top ) / zoom
-			// 	};			
-			// }
+			stop: function (event, ui) { // TODO: cleanup signatures
+				let el = me.allElementsFromPoint(event.pageX, event.pageY);
+				me.dragged_over_square = $(el).filter(".square").not($(this)).first().data("square");;
+				let result = me.state.move(`${me.dragged_from_square}-${me.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
+				me.$board.find(".square span").remove();
+				me.drawBoard();
+				me.setupDraggable();
+				if (result.ok && me.timeout_handle === null) {
+					me.timeout_handle = setTimeout(me.getComputerMove, 10, 5, me);
+				}
+			}
 		});
 	}
-	setupBottomPieces() {
-		let me = this;
-		let thisColor = me.aiIsBlack ? "white" : "black";
-		me.setPiece(thisColor, "Ra1");
-		me.setPiece(thisColor, "Nb1");
-		me.setPiece(thisColor, "Bc1");
-		me.setPiece(thisColor, "Qd1");
-		me.setPiece(thisColor, "Ke1");
-		me.setPiece(thisColor, "Bf1");
-		me.setPiece(thisColor, "Ng1");
-		me.setPiece(thisColor, "Rh1");
-		for (let i = 0; i < me.square_files.length; i++) {
-			me.setPiece(thisColor, `${me.square_files.charAt(i)}2`);
+	allElementsFromPoint(x, y) {
+		let element, elements = [];
+		let old_visibility = [];
+		while (true) {
+			element = document.elementFromPoint(x, y);
+			if (!element || element === document.documentElement) {
+				break;
+			}
+			elements.push(element);
+			old_visibility.push(element.style.visibility);
+			element.style.visibility = 'hidden'; // Temporarily hide the element (without changing the layout)
 		}
+		for (let i = 0; i < elements.length; i++) {
+			elements[i].style.visibility = old_visibility[i];
+		}
+		elements.reverse();
+
+		return elements;
 	}
-	setupTopPieces() {
-		let me = this;
-		let thisColor = me.aiIsBlack ? "black" : "white";
-		me.setPiece(thisColor, "Ra8");
-		me.setPiece(thisColor, "Nb8");
-		me.setPiece(thisColor, "Bc8");
-		me.setPiece(thisColor, "Qd8");
-		me.setPiece(thisColor, "Ke8");
-		me.setPiece(thisColor, "Bf8");
-		me.setPiece(thisColor, "Ng8");
-		me.setPiece(thisColor, "Rh8");
-		for (let i = 0; i < me.square_files.length; i++) {
-			me.setPiece(thisColor, `${me.square_files.charAt(i)}7`);
+	getComputerMove(depth, me) { // 1 - 5
+		let startTime = Date.now();
+		let moves = me.state.findmove(depth);
+		let delta = Date.now() - startTime;
+		if (depth > 2) {
+			let minTime = 25 * depth;
+			while (delta < minTime) {
+				depth++;
+				moves = me.state.findmove(depth);
+				delta = Date.now() - startTime;
+			}
 		}
+		let result = me.state.move(moves[0], moves[1]);
+		if (result.ok) {
+			me.$board.find(".square span").remove();
+			me.drawBoard();
+			if (result.flags & P4_MOVE_FLAG_MATE) {
+				setTimeout(function() {
+					alert("Checkmate! Refresh the page to try again!");
+				}, 10);
+			} else {
+				me.setupDraggable();
+			}
+		}
+		clearTimeout(me.timeout_handle);
+		me.timeout_handle = null;
+		return result;
 	}
-	setPiece(color, move) {
-		let me = this;
-		let i = (color === "white") ? 0 : 1;
-		let piece = "P";
-		let rank = null;
-		let file = null;
-		if ("KQRBNP".indexOf(move.charAt(0)) > -1) { // indexOf is case-sensitive, so there's no collision between B and b; This may be a problem - to be solved later
-			piece = move.charAt(0);
-			rank = move.charAt(1);
-			file = move.charAt(2);
-		} else {
-			rank = move.charAt(0);
-			file = move.charAt(1);
-		}
-		let p = null;
-		switch (piece.toUpperCase()) {
-			case "K": // ♔/♚
-				p = 0;
-				break;
-			case "Q": // ♕/♛
-				p = 1;
-				break;
-			case "R": // ♖/♜
-				p = 2;
-				break;
-			case "B": // ♗/♝
-				p = 3;
-				break;
-			case "N": // ♘/♞
-				p = 4;
-				break;
-			case "P": // ♙/♟︎
-			default:  // ♙/♟︎
-				p = 5;
-				break;
-		}
-		if (!rank || !file || p === null) return;
-		$(`[data-square='${rank}${file}']`).html(`<span>${me.pieces[i].charAt(p)}</span>`);
-	}
-	// isEven(number) {
-	// 	return number % 2 === 0
-	// }
 	static CreateInstance(settings) {
 		var instance = new Main();
 		instance.initialize(settings);
