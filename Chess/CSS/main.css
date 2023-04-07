@@ -43,6 +43,7 @@ body {
 }
 
 .square {
+	cursor: default;
 	display: inline-block;
 	font-size: calc(var(--square-size) / 1.14);
 	line-height: var(--square-size);
@@ -61,11 +62,11 @@ body {
 	text-shadow: 2px 2px 4px gray;
 }
 
-.white {
+.square.white {
 	background-color: var(--square-white);
 }
 
-.black {
+.square.black {
 	background-color: var(--square-black);
 }
 

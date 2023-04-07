@@ -24,6 +24,9 @@ class Main {
 		this.scale_range = 1 / 720;
 
 		this.state = null;
+		this.player_type = ["Human", "Computer"];
+		this.current_player_types = [0, 0];
+		this.depth = 0;
 
 		this.dragged_from_square = "";
 		this.dragged_over_square = "";
@@ -47,9 +50,7 @@ class Main {
 		me.setCssVariables();
 		me.scaleBoard();
 		me.setupBoard();
-		me.startGame();
-		me.drawBoard();
-		me.setupDraggable();
+		me.startNewGame();
 	}
 	setupElementSelectors() {
 		this.$board = $(".board:first");
@@ -106,9 +107,20 @@ class Main {
 			colorIsBlack = !colorIsBlack;
 		}
 	}
-	startGame() {
+	startNewGame() {
 		let me = this;
 		me.state = p4_new_game();
+		me.setGameParameters();
+		me.drawBoard();
+		me.setupDraggable();
+		if (me.player_type[me.current_player_types[me.state.to_play]] === "Computer") {
+			me.timeout_handle = setTimeout(me.getComputerMove, 10, me);
+		}
+	}
+	setGameParameters() {
+		let me = this; // todo: get all this from menu
+		me.current_player_types = [0, 1]; 
+		me.depth = 1;
 	}
 	drawBoard() {
 		let me = this;
@@ -116,10 +128,11 @@ class Main {
 			for (let x = 1; x < 9; x++) {
 				let i = y * 10 + x;
 				let piece = me.getPieceFromP4Index(me.state.board[i]);
-				if (!!piece) {
+				let pieceColor = me.getPieceColorFromP4Index(me.state.board[i]);
+				if (!!piece && !!pieceColor) {
 					let file = me.square_files.charAt(x - 1);
 					let rank = me.square_ranks.charAt(y * -1 + 9);
-					$(`[data-square='${file}${rank}']`).html(`<span>${piece}</span>`);
+					$(`[data-square='${file}${rank}']`).html(`<span class='${pieceColor}'>${piece}</span>`);
 				}
 			}
 		}
@@ -153,29 +166,58 @@ class Main {
 				return me.pieces[1].charAt(1); // "♛"; // q
 		}
 	}
+	getPieceColorFromP4Index(index) {
+		let me = this;
+		switch (index) {
+			case 2:
+			case 4:
+			case 6:
+			case 8:
+			case 10:
+			case 12:
+				return me.class_white;
+			case 3:
+			case 5:
+			case 7:
+			case 9:
+			case 11:
+			case 13:
+				return me.class_black;
+		}
+	}
 	setupDraggable() {
 		let me = this;
-		me.$board.find("span").draggable({
-			// revert: true,
-			// revertDuration: 1000,
+		let draggableSelector = "";
+		let humanPlayerType = me.player_type.indexOf("Human");
+		if (me.state.to_play === 0 && me.current_player_types[0] === humanPlayerType) {
+			draggableSelector = `span.${me.class_white}`;
+		} else if (me.state.to_play === 1 && me.current_player_types[1] === humanPlayerType) {
+			draggableSelector = `span.${me.class_black}`;
+		}
+		me.$board.find(`${draggableSelector}`).draggable({
 			start: function (event, ui) { // TODO: cleanup signatures
 				let el = me.allElementsFromPoint(event.pageX, event.pageY);
 				me.dragged_from_square = $(el).filter(".square").not($(this)).first().data("square");
 			},
 			stop: function (event, ui) { // TODO: cleanup signatures
 				let el = me.allElementsFromPoint(event.pageX, event.pageY);
-				me.dragged_over_square = $(el).filter(".square").not($(this)).first().data("square");;
+				me.dragged_over_square = $(el).filter(".square").not($(this)).first().data("square");
 				let result = me.state.move(`${me.dragged_from_square}-${me.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
+				//console.log(result); // todo: disable debug when done
 				me.$board.find(".square span").remove();
 				me.drawBoard();
+				me.setupDraggable();
 				if (result.ok) {
 					if (result.flags & P4_MOVE_FLAG_MATE) {
+						me.$board.find(".square span").remove();
+						me.drawBoard();
 						setTimeout(function() {
 							alert("Congratulations, You won! Refresh the page to try again!");
 						}, 10);
-					} else if (me.timeout_handle === null) {
-						me.setupDraggable();
-						me.timeout_handle = setTimeout(me.getComputerMove, 10, 5, me);
+					} else if (me.timeout_handle === null) { // TODO: pass this on to next player
+						if (me.player_type[me.current_player_types[me.state.to_play]] === "Computer") {
+							me.timeout_handle = setTimeout(me.getComputerMove, 10, me);
+						}
 					}
 				}
 			}
@@ -200,32 +242,39 @@ class Main {
 
 		return elements;
 	}
-	getComputerMove(depth, me) { // 1 - 5
+	getComputerMove(me) { // 1 - 5 (does it go higher?)
 		let startTime = Date.now();
-		let moves = me.state.findmove(depth);
+		let localDepth = 0 + me.depth;
+		let moves = me.state.findmove(localDepth);
 		let delta = Date.now() - startTime;
-		if (depth > 2) {
-			let minTime = 25 * depth;
+		if (localDepth > 2) {
+			let minTime = 25 * localDepth;
 			while (delta < minTime) {
-				depth++;
-				moves = me.state.findmove(depth);
+				localDepth++;
+				moves = me.state.findmove(localDepth);
 				delta = Date.now() - startTime;
 			}
 		}
 		let result = me.state.move(moves[0], moves[1]);
+		//console.log(result); // todo: disable debug when done
+		me.$board.find(".square span").remove();
+		me.drawBoard();
+		me.setupDraggable(); // pass it on to the next player
 		if (result.ok) {
-			me.$board.find(".square span").remove();
-			me.drawBoard();
+			clearTimeout(me.timeout_handle);
+			me.timeout_handle = null;
 			if (result.flags & P4_MOVE_FLAG_MATE) {
+				me.$board.find(".square span").remove();
+				me.drawBoard();
 				setTimeout(function() {
 					alert("Checkmate! Refresh the page to try again!");
 				}, 10);
 			} else {
-				me.setupDraggable();
+				if (me.player_type[me.current_player_types[me.state.to_play]] === "Computer") {
+					me.timeout_handle = setTimeout(me.getComputerMove, 10, me);
+				}
 			}
 		}
-		clearTimeout(me.timeout_handle);
-		me.timeout_handle = null;
 		return result;
 	}
 	static CreateInstance(settings) {
