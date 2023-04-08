@@ -17,6 +17,17 @@ body {
 	display: flex;
 }
 
+.menu-container {
+	position: absolute;
+	left: .3em;
+	top: 0px;
+	visibility: hidden; /* TODO: remove when done! */
+}
+
+#menu-icon {
+	cursor: pointer;
+}
+
 .rank:nth-child(2) .square {
 	border-top: calc(var(--square-size) / 32) solid black;
 }
@@ -68,6 +79,14 @@ body {
 
 .square.black {
 	background-color: var(--square-black);
+}
+
+span.white {
+	color: #222;
+}
+
+span.black {
+	color: black;
 }
 
 /* TODO: Fix this nonsense! */
