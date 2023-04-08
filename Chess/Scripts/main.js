@@ -120,7 +120,7 @@ class Main {
 	setGameParameters() {
 		let me = this; // todo: get all this from menu
 		me.current_player_types = [0, 1]; 
-		me.depth = 1;
+		me.depth = 6;
 	}
 	drawBoard() {
 		let me = this;
