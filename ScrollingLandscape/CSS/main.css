@@ -1,0 +1,36 @@
+html,
+body {
+	margin: 0px;
+}
+
+div {
+	animation-name: MOVE-BG;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: infinite;	
+	background-repeat: no-repeat;
+	background-size: 4096px calc(100vh);
+	height: 100%;
+	position: absolute;
+	width: 100%;
+}
+
+#background {
+	animation-duration: 600s;
+	background-image: url('./Images/background.png');
+}
+
+#midground {
+	animation-duration: 400s;
+	background-image: url('./Images/midground.png');
+}
+
+#foreground {
+	animation-duration: 300s;
+	background-image: url('./Images/foreground.png');
+}
+
+@keyframes MOVE-BG {
+    0% { background-position: 0 0; }
+	50% { background-position: calc(100vw - 4096px) 0; }
+    100% { background-position: 0 0; }
+}
