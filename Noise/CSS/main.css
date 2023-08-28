@@ -1,0 +1,19 @@
+html,
+body {
+	background-color: #000;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+}
+.container {
+	animation: noise .016666666s infinite alternate;
+	background:
+		repeating-radial-gradient(#111 0 0.0001%, #eee 0 0.0002%) 50% 0/2500px 2500px,
+		repeating-conic-gradient(#000 0 0.0001%, #fff 0 0.0002%) 60% 60%/2500px 2500px;
+	background-blend-mode: difference;
+	height: 100%;
+	width: 100%;
+}
+@keyframes noise {
+	100% { background-position: 50% 0, 60% 50% }
+}
