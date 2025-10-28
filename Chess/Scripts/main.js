@@ -34,7 +34,19 @@ class Main {
 		this.timeout_handle = null;
 
 		// Selectors
+		// Map p4wn engine piece types to their character index in this.pieces strings
+		// P4_PAWN, P4_ROOK, etc. are global constants from engine.js
+		this.pieceCharIndexMap = {
+			2: 5,   // P4_PAWN -> ♙ / ♟︎ (index 5 in "♔♕♖♗♘♙" and "♚♛♜♝♞♟︎")
+			4: 2,   // P4_ROOK -> ♖ / ♜ (index 2)
+			6: 4,   // P4_KNIGHT -> ♘ / ♞ (index 4)
+			8: 3,   // P4_BISHOP -> ♗ / ♝ (index 3)
+			10: 0,  // P4_KING -> ♔ / ♚ (index 0)
+			12: 1   // P4_QUEEN -> ♕ / ♛ (index 1)
+		};
 		this.$board = null;
+		this.$menuIcon = null;
+		this.$menu = null;
 	}
 	initialize(settings) {
 		if (settings) this.applySettings(settings);
@@ -43,180 +55,154 @@ class Main {
 	applySettings(settings) {
 		$.extend(this, settings);
 	}
-	setup() {
-		let me = this;
-		me.setupElementSelectors();
-		me.setupEventListeners();
-		me.setCssVariables();
-		me.scaleBoard();
-		me.setupBoard();
-		me.startNewGame();
+	setup() { // Use 'this' directly, no need for 'me'
+		this.setupElementSelectors();
+		this.setupEventListeners();
+		this.setCssVariables();
+		this.scaleBoard();
+		this.setupBoard();
+		this.startNewGame();
 	}
 	setupElementSelectors() {
 		this.$board = $(".board:first");
+		this.$menuIcon = $("#menu-icon");
+		this.$menu = $(".menu");
 	}
 	setupEventListeners() {
-		let me = this;
-		$(window).on("resize", me.scaleBoard.bind(me));
+		$(window).on("resize", this.scaleBoard.bind(this));
+		this.$menuIcon.on("click", () => {
+			this.$menu.toggleClass("open");
+		});
 	}
 	setCssVariables() {
-		let me = this;
-		document.documentElement.style.setProperty("--square-black", me.square_black);
-		document.documentElement.style.setProperty("--square-white", me.square_white);
+		document.documentElement.style.setProperty("--square-black", this.square_black);
+		document.documentElement.style.setProperty("--square-white", this.square_white);
 	}
 	scaleBoard() {
-		let me = this;
-		let $container = me.$board.parent();
-		let scale = me.scale_range * Math.min($container.innerWidth(), $container.innerHeight());
-		document.documentElement.style.setProperty("--square-size", `${me.square_size * scale}px`);
+		let $container = this.$board.parent();
+		let scale = this.scale_range * Math.min($container.innerWidth(), $container.innerHeight());
+		document.documentElement.style.setProperty("--square-size", `${this.square_size * scale}px`);
 	}
 	setupBoard() {
-		let me = this;
+		// Use 'this' directly, no need for 'me'
 		let colorIsBlack = true;
-		me.$board.empty();
-		for (let y = -1; y < me.board_height + 1; y++) {
-			let $newRow = $("<div />").addClass(me.class_rank);
-			for (let x = -1; x < me.board_width + 1; x++) {
-				if (y > -1 && y < me.board_height && x > -1 && x < me.board_width) {
+		this.$board.empty();
+		for (let y = -1; y < this.board_height + 1; y++) {
+			let $newRow = $("<div />").addClass(this.class_rank);
+			for (let x = -1; x < this.board_width + 1; x++) {
+				if (y > -1 && y < this.board_height && x > -1 && x < this.board_width) {
 					$("<div />")
-						.addClass(colorIsBlack ? me.class_black : me.class_white)
-						.addClass(me.class_square)
+						.addClass(colorIsBlack ? this.class_black : this.class_white)
+						.addClass(this.class_square)
 						.attr("id", "square-x" + x + "-y" + y)
-						.attr("data-square", me.square_files.charAt(x) + me.square_ranks.charAt(y))
+						.attr("data-square", this.square_files.charAt(x) + this.square_ranks.charAt(y))
 						.data("x", x)
 						.data("y", y)
 						.appendTo($newRow);
 					colorIsBlack = !colorIsBlack;
-				} else if ((y === -1 || y === me.board_height) && x > -1 && x < me.board_width) {
+				} else if ((y === -1 || y === this.board_height) && x > -1 && x < this.board_width) {
 					$("<div />")
-						.addClass(me.class_legend)
-						.text(me.square_files.charAt(x))
+						.addClass(this.class_legend)
+						.text(this.square_files.charAt(x))
 						.appendTo($newRow);
-				} else if (y > -1 && y < me.board_height && ( x === -1 || x === me.board_width)) {
+				} else if (y > -1 && y < this.board_height && ( x === -1 || x === this.board_width)) {
 					$("<div />")
-						.addClass(me.class_legend)
-						.html(me.square_ranks.charAt(y))
+						.addClass(this.class_legend)
+						.html(this.square_ranks.charAt(y))
 						.appendTo($newRow);
 				} else {
 					$("<div />")
-						.addClass(me.class_legend)
+						.addClass(this.class_legend)
 						.appendTo($newRow);
 				}
 			}
-			$newRow.appendTo(me.$board);
+			$newRow.appendTo(this.$board);
 			colorIsBlack = !colorIsBlack;
 		}
 	}
+	updateBoardUI() {
+		// Clear all piece spans from the board squares
+		this.$board.find(".square span").remove();
+		// Redraw pieces based on the current game state
+		this.drawBoard();
+		// Re-enable dragging for the current player's pieces
+		this.setupDraggable();
+	}
 	startNewGame() {
-		let me = this;
-		me.state = p4_new_game();
-		me.setGameParameters();
-		me.drawBoard();
-		me.setupDraggable();
-		if (me.player_type[me.current_player_types[me.state.to_play]] === "Computer") {
-			me.timeout_handle = setTimeout(me.getComputerMove, 10, me);
+		this.state = p4_new_game();
+		this.setGameParameters(); // This sets current_player_types and depth
+		this.updateBoardUI(); // Draw board and setup draggables
+		if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
+			this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 		}
 	}
 	setGameParameters() {
-		let me = this; // todo: get all this from menu
-		me.current_player_types = [0, 1]; 
-		me.depth = 6;
+		// TODO: get all this from menu
+		// Using 'this' directly as 'me' is redundant here.
+		this.current_player_types = [0, 1]; 
+		this.depth = 6;
 	}
 	drawBoard() {
-		let me = this;
+		// Use 'this' directly, no need for 'me'
 		for (let y = 9; y > 1; y--) {
 			for (let x = 1; x < 9; x++) {
 				let i = y * 10 + x;
-				let piece = me.getPieceFromP4Index(me.state.board[i]);
-				let pieceColor = me.getPieceColorFromP4Index(me.state.board[i]);
-				if (!!piece && !!pieceColor) {
-					let file = me.square_files.charAt(x - 1);
-					let rank = me.square_ranks.charAt(y * -1 + 9);
+				let piece = this.getPieceFromP4Index(this.state.board[i]);
+				let pieceColor = this.getPieceColorFromP4Index(this.state.board[i]);
+				if (piece && pieceColor) { // Removed redundant '!!'
+					let file = this.square_files.charAt(x - 1);
+					// Map p4wn engine's 1-9 rank to 0-7 for square_ranks string (87654321)
+					// e.g., p4wn y=8 (rank 1) -> square_ranks.charAt(7)
+					// p4wn y=2 (rank 7) -> square_ranks.charAt(1)
+					let rank = this.square_ranks.charAt(9 - y);
 					$(`[data-square='${file}${rank}']`).html(`<span class='${pieceColor}'>${piece}</span>`);
 				}
 			}
 		}
 	}
 	getPieceFromP4Index(index) {
-		let me = this;
-		switch (index) {
-			case 2:
-				return me.pieces[0].charAt(5); // "♙"; // P
-			case 3:
-				return me.pieces[1].charAt(5); // "♟︎"; // p
-			case 4:
-				return me.pieces[0].charAt(2); // "♖"; // R
-			case 5:
-				return me.pieces[1].charAt(2); // "♜"; // r
-			case 6:
-				return me.pieces[0].charAt(4); // "♘"; // N
-			case 7:
-				return me.pieces[1].charAt(4); // "♞"; // n
-			case 8:
-				return me.pieces[0].charAt(3); // "♗"; // B
-			case 9:
-				return me.pieces[1].charAt(3); // "♝"; // b
-			case 10:
-				return me.pieces[0].charAt(0); // "♔"; // K
-			case 11:
-				return me.pieces[1].charAt(0); // "♚"; // k
-			case 12:
-				return me.pieces[0].charAt(1); // "♕"; // Q
-			case 13:
-				return me.pieces[1].charAt(1); // "♛"; // q
+		if (!index) return null;
+		const colorIndex = index & 1; // 0 for white, 1 for black
+		const pieceType = index & 14; // P4_PAWN, P4_ROOK, etc. (even numbers)
+		const charIndex = this.pieceCharIndexMap[pieceType];
+		if (charIndex !== undefined) {
+			return this.pieces[colorIndex].charAt(charIndex);
 		}
+		return null;
 	}
 	getPieceColorFromP4Index(index) {
-		let me = this;
-		switch (index) {
-			case 2:
-			case 4:
-			case 6:
-			case 8:
-			case 10:
-			case 12:
-				return me.class_white;
-			case 3:
-			case 5:
-			case 7:
-			case 9:
-			case 11:
-			case 13:
-				return me.class_black;
-		}
+		if (!index) return null;
+		// Even indices are white (index & 1 === 0), odd are black (index & 1 === 1)
+		return (index & 1) === 0 ? this.class_white : this.class_black;
 	}
 	setupDraggable() {
-		let me = this;
 		let draggableSelector = "";
-		let humanPlayerType = me.player_type.indexOf("Human");
-		if (me.state.to_play === 0 && me.current_player_types[0] === humanPlayerType) {
-			draggableSelector = `span.${me.class_white}`;
-		} else if (me.state.to_play === 1 && me.current_player_types[1] === humanPlayerType) {
-			draggableSelector = `span.${me.class_black}`;
+		let humanPlayerType = this.player_type.indexOf("Human");
+		if (this.state.to_play === 0 && this.current_player_types[0] === humanPlayerType) {
+			draggableSelector = `span.${this.class_white}`;
+		} else if (this.state.to_play === 1 && this.current_player_types[1] === humanPlayerType) {
+			draggableSelector = `span.${this.class_black}`;
 		}
-		me.$board.find(`${draggableSelector}`).draggable({
-			start: function (event, ui) { // TODO: cleanup signatures
-				let el = me.allElementsFromPoint(event.pageX, event.pageY);
-				me.dragged_from_square = $(el).filter(".square").not($(this)).first().data("square");
+		this.$board.find(`${draggableSelector}`).draggable({
+			start: (event, ui) => { // Use arrow function to preserve 'this' context
+				const el = this.allElementsFromPoint(event.pageX, event.pageY);
+				this.dragged_from_square = $(el).filter(".square").not(ui.helper).first().data("square");
 			},
-			stop: function (event, ui) { // TODO: cleanup signatures
-				let el = me.allElementsFromPoint(event.pageX, event.pageY);
-				me.dragged_over_square = $(el).filter(".square").not($(this)).first().data("square");
-				let result = me.state.move(`${me.dragged_from_square}-${me.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
-				//console.log(result); // todo: disable debug when done
-				me.$board.find(".square span").remove();
-				me.drawBoard();
-				me.setupDraggable();
+			stop: (event, ui) => { // Use arrow function to preserve 'this' context
+				const el = this.allElementsFromPoint(event.pageX, event.pageY);
+				this.dragged_over_square = $(el).filter(".square").not(ui.helper).first().data("square");
+				let result = this.state.move(`${this.dragged_from_square}-${this.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
+				// console.log(result); // todo: disable debug when done
+				this.updateBoardUI(); // Encapsulated board update
 				if (result.ok) {
 					if (result.flags & P4_MOVE_FLAG_MATE) {
-						me.$board.find(".square span").remove();
-						me.drawBoard();
+						this.updateBoardUI(); // Encapsulated board update
 						setTimeout(function() {
 							alert("Congratulations, You won! Refresh the page to try again!");
 						}, 10);
-					} else if (me.timeout_handle === null) { // TODO: pass this on to next player
-						if (me.player_type[me.current_player_types[me.state.to_play]] === "Computer") {
-							me.timeout_handle = setTimeout(me.getComputerMove, 10, me);
+					} else if (this.timeout_handle === null) { // TODO: pass this on to next player
+						if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
+							this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 						}
 					}
 				}
@@ -242,36 +228,33 @@ class Main {
 
 		return elements;
 	}
-	getComputerMove(me) { // 1 - 5 (does it go higher?)
+	getComputerMove() { // Removed 'me' parameter, use 'this' directly
 		let startTime = Date.now();
-		let localDepth = 0 + me.depth;
-		let moves = me.state.findmove(localDepth);
+		let localDepth = this.depth;
+		let moves = this.state.findmove(localDepth);
 		let delta = Date.now() - startTime;
 		if (localDepth > 2) {
 			let minTime = 25 * localDepth;
 			while (delta < minTime) {
 				localDepth++;
-				moves = me.state.findmove(localDepth);
+				moves = this.state.findmove(localDepth);
 				delta = Date.now() - startTime;
 			}
 		}
-		let result = me.state.move(moves[0], moves[1]);
-		//console.log(result); // todo: disable debug when done
-		me.$board.find(".square span").remove();
-		me.drawBoard();
-		me.setupDraggable(); // pass it on to the next player
+		let result = this.state.move(moves[0], moves[1]);
+		// console.log(result); // todo: disable debug when done
+		this.updateBoardUI(); // Encapsulated board update
 		if (result.ok) {
-			clearTimeout(me.timeout_handle);
-			me.timeout_handle = null;
+			clearTimeout(this.timeout_handle);
+			this.timeout_handle = null;
 			if (result.flags & P4_MOVE_FLAG_MATE) {
-				me.$board.find(".square span").remove();
-				me.drawBoard();
+				this.updateBoardUI(); // Encapsulated board update
 				setTimeout(function() {
 					alert("Checkmate! Refresh the page to try again!");
 				}, 10);
 			} else {
-				if (me.player_type[me.current_player_types[me.state.to_play]] === "Computer") {
-					me.timeout_handle = setTimeout(me.getComputerMove, 10, me);
+				if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
+					this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 				}
 			}
 		}

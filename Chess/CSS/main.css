@@ -1,6 +1,7 @@
 html,
 body {
 	color: black;
+	--border-color: black; /* Default border color for light mode */
 	font: calc(var(--square-size) / 2) Arial, Helvetica, sans-serif;
 	height: 100%;
 }
@@ -17,31 +18,54 @@ body {
 	display: flex;
 }
 
+.menu {
+	position: absolute;
+	left: 0;
+	top: 2.5em; /* Position it just below the menu icon */
+	background-color: #f0f0f0;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 10px;
+	min-width: 200px;
+	transform: translateX(-110%); /* Start off-screen to the left */
+	transition: transform 0.3s ease-in-out;
+	z-index: 10; /* Ensure it appears above the board */
+	box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
 .menu-container {
 	position: absolute;
 	left: .3em;
 	top: 0px;
-	visibility: hidden; /* TODO: remove when done! */
 }
 
-#menu-icon {
+.menu-container button {
+	background: none;
+	border: none;
+	padding: 0;
 	cursor: pointer;
+	font-size: inherit;
+	color: inherit;
+}
+
+.menu.open {
+	transform: translateX(0); /* Slide it into view */
 }
 
 .rank:nth-child(2) .square {
-	border-top: calc(var(--square-size) / 32) solid black;
+	border-top: calc(var(--square-size) / 32) solid var(--border-color);
 }
 
 .rank:nth-child(9) .square {
-	border-bottom: calc(var(--square-size) / 32) solid black;
+	border-bottom: calc(var(--square-size) / 32) solid var(--border-color);
 }
 
 .rank .square:nth-child(2) {
-	border-left: calc(var(--square-size) / 32) solid black;
+	border-left: calc(var(--square-size) / 32) solid var(--border-color);
 }
 
 .rank .square:nth-child(9) {
-	border-right: calc(var(--square-size) / 32) solid black;
+	border-right: calc(var(--square-size) / 32) solid var(--border-color);
 }
 
 .legend {
@@ -89,30 +113,15 @@ span.black {
 	color: black;
 }
 
-/* TODO: Fix this nonsense! */
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
 	html,
 	body {
 		background-color: black;
+		color: silver;
+		--border-color: grey; /* New border color for dark mode */
 	}
 
 	.legend {
 		color: silver;
 	}
-
-	.rank:nth-child(2) .square {
-		border-top: 3px solid grey;
-	}
-
-	.rank:nth-child(9) .square {
-		border-bottom: 3px solid grey;
-	}
-
-	.rank .square:nth-child(2) {
-		border-left: 3px solid grey;
-	}
-
-	.rank .square:nth-child(9) {
-		border-right: 3px solid grey;
-	}
-} */
+}

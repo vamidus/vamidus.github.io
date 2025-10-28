@@ -8,11 +8,11 @@
 		<link rel="shortcut icon" type="image/png" href="./CSS/Images/favicon.png"/>
 		<link rel="stylesheet" type="text/css" href="CSS/main.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-		<script src="Scripts/jquery.ui.touch-punch.min.js"></script>
-		<script src="Scripts/engine.js"></script>
-		<script src="Scripts/main.js"></script>
-		<script>
+		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" defer></script>
+		<script src="Scripts/jquery.ui.touch-punch.min.js" defer></script>
+		<script src="Scripts/engine.js" defer></script>
+		<script src="Scripts/main.js" defer></script>
+		<script defer>
 			$(function () {
 				Main.CreateInstance({
 					square_size: 64,
@@ -27,7 +27,7 @@
 			<div class="board"></div>
 		</div>
 		<div class="menu-container">
-			<span id="menu-icon">☰</span>
+			<button id="menu-icon" aria-label="Open menu">☰</button>
 			<div class="menu">
 			</div>
 		</div>
