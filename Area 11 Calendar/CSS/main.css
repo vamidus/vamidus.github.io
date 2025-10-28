@@ -1,0 +1,87 @@
+body {
+	background-color: slategray;
+	color: #fff3cd;
+	font: 24px Copperplate, fantasy, sans-serif;
+}
+
+a {
+	color: pink;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.container {
+	display: inline-block;
+	padding: 32px;
+	margin: 32px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.row {
+	margin-bottom: 3rem;
+}
+
+.organization {
+	font-size: 55%;
+}
+
+.category {
+	font-size: 500%;
+	color: white;
+}
+
+.calendar-name {
+	font-size: 3rem;
+	color: white;
+	text-align: right;
+}
+
+.year {
+	border-left: 12px solid salmon;
+	color: salmon;
+	font-size: 820%;
+	line-height: 86%;
+}
+
+.date {
+	font-size: 2rem;
+	text-align: right;
+}
+
+.event-name {
+	border-left: 12px solid salmon;
+	font-size: 2rem;
+}
+
+.event-description {
+	font-size: 110%;
+}
+
+.event-time {
+	font-size: 80%;
+	color: #86b7fe;
+}
+
+.event-location {
+	color: violet;
+}
+
+.event-notes {
+	color: aquamarine;
+}
+
+.date-header {
+	border: none;
+	color: black;
+}
+
+.event-name-header {
+	border: none;
+	color: black;
+}
