@@ -55,7 +55,7 @@ class Main {
 	applySettings(settings) {
 		$.extend(this, settings);
 	}
-	setup() { // Use 'this' directly, no need for 'me'
+	setup() {
 		this.setupElementSelectors();
 		this.setupEventListeners();
 		this.setCssVariables();
@@ -84,7 +84,6 @@ class Main {
 		document.documentElement.style.setProperty("--square-size", `${this.square_size * scale}px`);
 	}
 	setupBoard() {
-		// Use 'this' directly, no need for 'me'
 		let colorIsBlack = true;
 		this.$board.empty();
 		for (let y = -1; y < this.board_height + 1; y++) {
@@ -131,19 +130,17 @@ class Main {
 	startNewGame() {
 		this.state = p4_new_game();
 		this.setGameParameters(); // This sets current_player_types and depth
-		this.updateBoardUI(); // Draw board and setup draggables
+		this.updateBoardUI();
 		if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
 			this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 		}
 	}
 	setGameParameters() {
 		// TODO: get all this from menu
-		// Using 'this' directly as 'me' is redundant here.
 		this.current_player_types = [0, 1]; 
 		this.depth = 6;
 	}
 	drawBoard() {
-		// Use 'this' directly, no need for 'me'
 		for (let y = 9; y > 1; y--) {
 			for (let x = 1; x < 9; x++) {
 				let i = y * 10 + x;
@@ -184,19 +181,19 @@ class Main {
 			draggableSelector = `span.${this.class_black}`;
 		}
 		this.$board.find(`${draggableSelector}`).draggable({
-			start: (event, ui) => { // Use arrow function to preserve 'this' context
+			start: (event, ui) => {
 				const el = this.allElementsFromPoint(event.pageX, event.pageY);
 				this.dragged_from_square = $(el).filter(".square").not(ui.helper).first().data("square");
 			},
-			stop: (event, ui) => { // Use arrow function to preserve 'this' context
+			stop: (event, ui) => {
 				const el = this.allElementsFromPoint(event.pageX, event.pageY);
 				this.dragged_over_square = $(el).filter(".square").not(ui.helper).first().data("square");
 				let result = this.state.move(`${this.dragged_from_square}-${this.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
 				// console.log(result); // todo: disable debug when done
-				this.updateBoardUI(); // Encapsulated board update
+				this.updateBoardUI();
 				if (result.ok) {
 					if (result.flags & P4_MOVE_FLAG_MATE) {
-						this.updateBoardUI(); // Encapsulated board update
+						this.updateBoardUI();
 						setTimeout(function() {
 							alert("Congratulations, You won! Refresh the page to try again!");
 						}, 10);
@@ -228,7 +225,7 @@ class Main {
 
 		return elements;
 	}
-	getComputerMove() { // Removed 'me' parameter, use 'this' directly
+	getComputerMove() {
 		let startTime = Date.now();
 		let localDepth = this.depth;
 		let moves = this.state.findmove(localDepth);
@@ -243,12 +240,12 @@ class Main {
 		}
 		let result = this.state.move(moves[0], moves[1]);
 		// console.log(result); // todo: disable debug when done
-		this.updateBoardUI(); // Encapsulated board update
+		this.updateBoardUI();
 		if (result.ok) {
 			clearTimeout(this.timeout_handle);
 			this.timeout_handle = null;
 			if (result.flags & P4_MOVE_FLAG_MATE) {
-				this.updateBoardUI(); // Encapsulated board update
+				this.updateBoardUI();
 				setTimeout(function() {
 					alert("Checkmate! Refresh the page to try again!");
 				}, 10);
