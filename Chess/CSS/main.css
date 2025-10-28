@@ -1,27 +1,30 @@
 html,
 body {
 	color: black;
-	--border-color: black; /* Default border color for light mode */
-	font: calc(var(--square-size) / 2) Arial, Helvetica, sans-serif;
 	height: 100%;
 }
 
 .container-global {
 	align-items: center;
 	display: flex;
+	font: calc(var(--square-size) / 2) Arial, Helvetica, sans-serif;
 	justify-content: center;
 	height: 100%;
 	overflow: hidden;
 }
 
-.rank {
-	display: flex;
+#menu-icon {
+	background: none;
+	border: none;
+	font: calc(var(--square-size) / 2) Arial, Helvetica, sans-serif;
+	padding: .2em .4em;
+	color: inherit;
 }
 
 .menu {
 	position: absolute;
-	left: 0;
-	top: 2.5em; /* Position it just below the menu icon */
+	left: .5em;
+	top: .5em;
 	background-color: #f0f0f0;
 	border: 1px solid #ccc;
 	border-radius: 4px;
@@ -39,18 +42,12 @@ body {
 	top: 0px;
 }
 
-.menu-container button {
-	background: none;
-	border: none;
-	padding: 0;
-	cursor: pointer;
-	font-size: inherit;
-	color: inherit;
-	visibility: hidden;
-}
-
 .menu.open {
 	transform: translateX(0); /* Slide it into view */
+}
+
+.rank {
+	display: flex;
 }
 
 .rank:nth-child(2) .square {

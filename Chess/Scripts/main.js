@@ -67,11 +67,19 @@ class Main {
 		this.$board = $(".board:first");
 		this.$menuIcon = $("#menu-icon");
 		this.$menu = $(".menu");
+		this.$okButton = $("#ok-button");
+		this.$cancelButton = $("#cancel-button");
 	}
 	setupEventListeners() {
 		$(window).on("resize", this.scaleBoard.bind(this));
 		this.$menuIcon.on("click", () => {
 			this.$menu.toggleClass("open");
+		});
+		this.$okButton.on("click", () => {
+			this.$menu.removeClass("open");
+		});
+		this.$cancelButton.on("click", () => {
+			this.$menu.removeClass("open");
 		});
 	}
 	setCssVariables() {
@@ -194,8 +202,11 @@ class Main {
 				if (result.ok) {
 					if (result.flags & P4_MOVE_FLAG_MATE) {
 						this.updateBoardUI();
-						setTimeout(function() {
-							alert("Congratulations, You won! Refresh the page to try again!");
+						setTimeout(() => {
+							const modalBody = document.getElementById('game-over-modal-body');
+							modalBody.innerHTML = "Congratulations, You won!";
+							const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
+							gameOverModal.show();
 						}, 10);
 					} else if (this.timeout_handle === null) { // TODO: pass this on to next player
 						if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
@@ -246,8 +257,11 @@ class Main {
 			this.timeout_handle = null;
 			if (result.flags & P4_MOVE_FLAG_MATE) {
 				this.updateBoardUI();
-				setTimeout(function() {
-					alert("Checkmate! Refresh the page to try again!");
+				setTimeout(() => {
+					const modalBody = document.getElementById('game-over-modal-body');
+					modalBody.innerHTML = "Checkmate!";
+					const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
+					gameOverModal.show();
 				}, 10);
 			} else {
 				if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
