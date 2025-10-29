@@ -54,6 +54,9 @@ class Main {
 		const preferredScheme = this.getPreferredColorScheme();
 		this.setColorScheme(preferredScheme);
 		$(`#${preferredScheme}-scheme`).prop('checked', true);
+
+		const difficulty = this.getDifficulty();
+		this.$difficultySlider.val(difficulty);
 	}
 	applySettings(settings) {
 		$.extend(this, settings);
@@ -72,6 +75,7 @@ class Main {
 		this.$menuContainer = $(".menu-container");
 		this.$menu = $(".menu");
 		this.$okButton = $("#ok-button");
+		this.$difficultySlider = $("#difficulty-slider");
 		//this.$cancelButton = $("#cancel-button");
 	}
 	setupEventListeners() {
@@ -88,6 +92,11 @@ class Main {
 
 		$('input[name="color-scheme"]').on('change', (e) => {
 			this.setColorScheme(e.target.id.split('-')[0]);
+		});
+		this.$difficultySlider.on('input', (e) => {
+			this.depth = e.target.value;
+			localStorage.setItem('difficulty', this.depth);
+			console.log("Difficulty:", this.depth);
 		});
 	}
 	setColorScheme(scheme) {
@@ -107,6 +116,14 @@ class Main {
 			return savedScheme;
 		} else {
 			return 'auto';
+		}
+	}
+	getDifficulty() {
+		const savedDifficulty = localStorage.getItem('difficulty');
+		if (savedDifficulty) {
+			return parseInt(savedDifficulty, 10);
+		} else {
+			return 0; // Easy
 		}
 	}
 	setCssVariables() {
@@ -173,7 +190,7 @@ class Main {
 	setGameParameters() {
 		// TODO: get all this from menu
 		this.current_player_types = [0, 1]; 
-		this.depth = 6;
+		this.depth = this.$difficultySlider.val();
 	}
 	drawBoard() {
 		for (let y = 9; y > 1; y--) {

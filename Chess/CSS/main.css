@@ -56,6 +56,32 @@ body {
 	margin: 10px 0;
 }
 
+.color-scheme-group {
+	padding-left: 10px;
+}
+
+.difficulty-slider-container {
+	display: inline-block;
+	padding: 10px;
+	width: 65%;
+}
+
+.difficulty-labels {
+	cursor: default;
+    font-size: 0.75rem;
+	margin: 0 1%;
+}
+
+label[for="difficulty-slider"] {
+	margin-top: 8px;
+	vertical-align: top;
+}
+
+.tab-content label {
+	text-align: right;
+	width: 33%;
+}
+
 .modal-content {
 	color: black;
 }

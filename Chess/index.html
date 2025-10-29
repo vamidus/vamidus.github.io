@@ -40,16 +40,33 @@
 				</ul>
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active" id="game" role="tabpanel" aria-labelledby="game-tab">
-						<label for="color-scheme">Color scheme:</label>
-						<div class="btn-group" role="group" aria-label="Color scheme switcher">
-							<input type="radio" class="btn-check" name="color-scheme" id="light-scheme" autocomplete="off" checked>
-							<label class="btn btn-outline-primary" for="light-scheme">Light</label>
+						<div>
+							<label for="color-scheme">Color scheme:</label>
+							<div class="btn-group color-scheme-group" role="group" aria-label="Color scheme switcher">
+								<input type="radio" class="btn-check" name="color-scheme" id="light-scheme" autocomplete="off" checked>
+								<label class="btn btn-outline-primary" for="light-scheme">Light</label>
 
-							<input type="radio" class="btn-check" name="color-scheme" id="dark-scheme" autocomplete="off">
-							<label class="btn btn-outline-primary" for="dark-scheme">Dark</label>
+								<input type="radio" class="btn-check" name="color-scheme" id="dark-scheme" autocomplete="off">
+								<label class="btn btn-outline-primary" for="dark-scheme">Dark</label>
 
-							<input type="radio" class="btn-check" name="color-scheme" id="auto-scheme" autocomplete="off">
-							<label class="btn btn-outline-primary" for="auto-scheme">Auto</label>
+								<input type="radio" class="btn-check" name="color-scheme" id="auto-scheme" autocomplete="off">
+								<label class="btn btn-outline-primary" for="auto-scheme">Auto</label>
+							</div>
+						</div>
+						<div>
+							<label for="difficulty-slider" class="form-label">Difficulty:</label>
+							<div class="difficulty-slider-container">
+								<input type="range" class="form-range" min="0" max="6" id="difficulty-slider">
+								<div class="difficulty-labels d-flex justify-content-between">
+									<span class="difficulty-label">1</span>
+									<span class="difficulty-label">2</span>
+									<span class="difficulty-label">3</span>
+									<span class="difficulty-label">4</span>
+									<span class="difficulty-label">5</span>
+									<span class="difficulty-label">6</span>
+									<span class="difficulty-label">7</span>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="tab-pane fade" id="advanced" role="tabpanel" aria-labelledby="advanced-tab">Some advanced content</div>
