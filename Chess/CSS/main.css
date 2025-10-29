@@ -29,7 +29,7 @@ body {
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	padding: 10px;
-	width: 33%;
+	width: 50%;
 	box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
 
@@ -125,5 +125,11 @@ span.black {
 
 	.legend {
 		color: silver;
+	}
+}
+
+@media (max-width: 768px) {
+	.menu {
+		width: 90%;
 	}
 }
