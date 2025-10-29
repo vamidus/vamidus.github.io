@@ -72,7 +72,7 @@ class Main {
 		this.$menuContainer = $(".menu-container");
 		this.$menu = $(".menu");
 		this.$okButton = $("#ok-button");
-		this.$cancelButton = $("#cancel-button");
+		//this.$cancelButton = $("#cancel-button");
 	}
 	setupEventListeners() {
 		$(window).on("resize", this.scaleBoard.bind(this));
@@ -82,15 +82,14 @@ class Main {
 		this.$okButton.on("click", () => {
 			this.$menuContainer.removeClass("open");
 		});
-		this.$cancelButton.on("click", () => {
-			this.$menuContainer.removeClass("open");
-		});
+		// this.$cancelButton.on("click", () => {
+		// 	this.$menuContainer.removeClass("open");
+		// });
 
 		$('input[name="color-scheme"]').on('change', (e) => {
 			this.setColorScheme(e.target.id.split('-')[0]);
 		});
 	}
-
 	setColorScheme(scheme) {
 		const root = document.documentElement;
 		if (scheme === 'auto') {
@@ -102,7 +101,6 @@ class Main {
 			localStorage.setItem('color-scheme', scheme);
 		}
 	}
-
 	getPreferredColorScheme() {
 		const savedScheme = localStorage.getItem('color-scheme');
 		if (savedScheme) {
@@ -156,13 +154,13 @@ class Main {
 			colorIsBlack = !colorIsBlack;
 		}
 	}
-	updateBoardUI() {
+	updateBoardUI(setupDraggable = true) {
 		// Clear all piece spans from the board squares
 		this.$board.find(".square span").remove();
 		// Redraw pieces based on the current game state
 		this.drawBoard();
-		// Re-enable dragging for the current player's pieces
-		this.setupDraggable();
+		// Re-enable dragging for the current player's pieces, unless asked not to
+		if (setupDraggable) this.setupDraggable();
 	}
 	startNewGame() {
 		this.state = p4_new_game();
@@ -226,11 +224,11 @@ class Main {
 				const el = this.allElementsFromPoint(event.pageX, event.pageY);
 				this.dragged_over_square = $(el).filter(".square").not(ui.helper).first().data("square");
 				let result = this.state.move(`${this.dragged_from_square}-${this.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
-				// console.log(result); // todo: disable debug when done
+				//console.log("Human move:", result); // todo: disable debug when done
 				this.updateBoardUI();
 				if (result.ok) {
 					if (result.flags & P4_MOVE_FLAG_MATE) {
-						this.updateBoardUI();
+						this.updateBoardUI(false);
 						setTimeout(() => {
 							const modalBody = document.getElementById('game-over-modal-body');
 							modalBody.innerHTML = "Congratulations, You won!";
@@ -279,13 +277,15 @@ class Main {
 			}
 		}
 		let result = this.state.move(moves[0], moves[1]);
-		// console.log(result); // todo: disable debug when done
+		// console.log("Moves:", moves);
+		// console.log("Computer move:", result); // todo: disable debug when done
+		// console.log("State:", this.state);
 		this.updateBoardUI();
 		if (result.ok) {
 			clearTimeout(this.timeout_handle);
 			this.timeout_handle = null;
 			if (result.flags & P4_MOVE_FLAG_MATE) {
-				this.updateBoardUI();
+				this.updateBoardUI(false);
 				setTimeout(() => {
 					const modalBody = document.getElementById('game-over-modal-body');
 					modalBody.innerHTML = "Checkmate!";
