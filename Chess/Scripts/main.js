@@ -51,6 +51,9 @@ class Main {
 	initialize(settings) {
 		if (settings) this.applySettings(settings);
 		this.setup();
+		const preferredScheme = this.getPreferredColorScheme();
+		this.setColorScheme(preferredScheme);
+		$(`#${preferredScheme}-scheme`).prop('checked', true);
 	}
 	applySettings(settings) {
 		$.extend(this, settings);
@@ -82,6 +85,31 @@ class Main {
 		this.$cancelButton.on("click", () => {
 			this.$menuContainer.removeClass("open");
 		});
+
+		$('input[name="color-scheme"]').on('change', (e) => {
+			this.setColorScheme(e.target.id.split('-')[0]);
+		});
+	}
+
+	setColorScheme(scheme) {
+		const root = document.documentElement;
+		if (scheme === 'auto') {
+			root.classList.remove('light-theme', 'dark-theme');
+			localStorage.removeItem('color-scheme');
+		} else {
+			root.classList.remove('light-theme', 'dark-theme');
+			root.classList.add(scheme + '-theme');
+			localStorage.setItem('color-scheme', scheme);
+		}
+	}
+
+	getPreferredColorScheme() {
+		const savedScheme = localStorage.getItem('color-scheme');
+		if (savedScheme) {
+			return savedScheme;
+		} else {
+			return 'auto';
+		}
 	}
 	setCssVariables() {
 		document.documentElement.style.setProperty("--square-black", this.square_black);

@@ -1,13 +1,14 @@
 html,
 body {
-	color: black;
+	background-color: inherit;
+	color: inherit;
 	height: 100%;
 }
 
 .container-global {
 	align-items: center;
 	display: flex;
-	font: calc(var(--square-size) / 2) Arial, Helvetica, sans-serif;
+	font: calc(var(--square-size) / 2.5) Arial, Helvetica, sans-serif;
 	justify-content: center;
 	height: 100%;
 	overflow: hidden;
@@ -16,7 +17,7 @@ body {
 #menu-icon {
 	background: none;
 	border: none;
-	font: calc(var(--square-size) / 2) Arial, Helvetica, sans-serif;
+	font: calc(var(--square-size) / 1.8) Arial, Helvetica, sans-serif;
 	padding: .2em .4em;
 	position: absolute;
 	right: .5em;
@@ -50,24 +51,33 @@ body {
 	display: flex;
 }
 
+.tab-content {
+	color: black;
+	margin: 10px 0;
+}
+
+.modal-content {
+	color: black;
+}
+
 .rank {
 	display: flex;
 }
 
 .rank:nth-child(2) .square {
-	border-top: calc(var(--square-size) / 32) solid var(--border-color);
+	border-top: calc(var(--square-size) / 28) solid var(--border-color);
 }
 
 .rank:nth-child(9) .square {
-	border-bottom: calc(var(--square-size) / 32) solid var(--border-color);
+	border-bottom: calc(var(--square-size) / 28) solid var(--border-color);
 }
 
 .rank .square:nth-child(2) {
-	border-left: calc(var(--square-size) / 32) solid var(--border-color);
+	border-left: calc(var(--square-size) / 28) solid var(--border-color);
 }
 
 .rank .square:nth-child(9) {
-	border-right: calc(var(--square-size) / 32) solid var(--border-color);
+	border-right: calc(var(--square-size) / 28) solid var(--border-color);
 }
 
 .legend {
@@ -95,8 +105,8 @@ body {
 
 .square .ui-draggable-dragging {
 	cursor: grabbing;
-	opacity: .75;
-	text-shadow: 2px 2px 4px gray;
+	opacity: .85;
+	text-shadow: 4px 4px 4px black;
 }
 
 .square.white {
@@ -115,21 +125,32 @@ span.black {
 	color: black;
 }
 
+:root.dark-theme {
+	background-color: black;
+	color: silver;
+	--border-color: grey;
+}
+
+:root.light-theme {
+	background-color: white;
+	color: black;
+	--border-color: black;
+}
+
 @media (prefers-color-scheme: dark) {
-	html,
-	body {
+	:root:not(.light-theme) {
 		background-color: black;
 		color: silver;
-		--border-color: grey; /* New border color for dark mode */
+		--border-color: grey;
 	}
 
-	.legend {
+	:root:not(.light-theme) .legend {
 		color: silver;
 	}
 }
 
 @media (max-width: 768px) {
 	.menu {
-		width: 90%;
+		width: 85%;
 	}
 }

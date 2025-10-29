@@ -39,12 +39,24 @@
 					</li>
 				</ul>
 				<div class="tab-content" id="myTabContent">
-					<div class="tab-pane fade show active" id="game" role="tabpanel" aria-labelledby="game-tab">Some game content</div>
+					<div class="tab-pane fade show active" id="game" role="tabpanel" aria-labelledby="game-tab">
+						<label for="color-scheme">Color scheme:</label>
+						<div class="btn-group" role="group" aria-label="Color scheme switcher">
+							<input type="radio" class="btn-check" name="color-scheme" id="light-scheme" autocomplete="off" checked>
+							<label class="btn btn-outline-primary" for="light-scheme">Light</label>
+
+							<input type="radio" class="btn-check" name="color-scheme" id="dark-scheme" autocomplete="off">
+							<label class="btn btn-outline-primary" for="dark-scheme">Dark</label>
+
+							<input type="radio" class="btn-check" name="color-scheme" id="auto-scheme" autocomplete="off">
+							<label class="btn btn-outline-primary" for="auto-scheme">Auto</label>
+						</div>
+					</div>
 					<div class="tab-pane fade" id="advanced" role="tabpanel" aria-labelledby="advanced-tab">Some advanced content</div>
 				</div>
-				<div class="menu-buttons">
-					<button type="button" class="btn btn-secondary" id="cancel-button">Cancel</button>
-					<button type="button" class="btn btn-primary" id="ok-button">OK</button>
+				<div class="menu-buttons float-end">
+					<!-- <button type="button" class="btn btn-secondary" id="cancel-button">Cancel</button> -->
+					<button type="button" class="btn btn-primary" id="ok-button">Close</button>
 				</div>
 			</div>
 		</div>
