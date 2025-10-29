@@ -30,7 +30,7 @@ body {
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-	opacity: .8;
+	opacity: .9;
 	padding: 10px;
 	width: 50%;
 }
@@ -85,7 +85,7 @@ label[for="difficulty-slider"] {
 
 .modal-content {
 	color: black;
-	opacity: .8;	
+	opacity: .9;	
 }
 
 .rank {

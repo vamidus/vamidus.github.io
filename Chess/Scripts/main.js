@@ -54,9 +54,9 @@ class Main {
 		const preferredScheme = this.getPreferredColorScheme();
 		this.setColorScheme(preferredScheme);
 		$(`#${preferredScheme}-scheme`).prop('checked', true);
-
 		const difficulty = this.getDifficulty();
 		this.$difficultySlider.val(difficulty);
+		this.startNewGame();
 	}
 	applySettings(settings) {
 		$.extend(this, settings);
@@ -67,7 +67,6 @@ class Main {
 		this.setCssVariables();
 		this.scaleBoard();
 		this.setupBoard();
-		this.startNewGame();
 	}
 	setupElementSelectors() {
 		this.$board = $(".board:first");
