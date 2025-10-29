@@ -76,7 +76,7 @@ class Main {
 		this.$menu = $(".menu");
 		this.$okButton = $("#ok-button");
 		this.$difficultySlider = $("#difficulty-slider");
-		//this.$cancelButton = $("#cancel-button");
+		// this.$cancelButton = $("#cancel-button");
 	}
 	setupEventListeners() {
 		$(window).on("resize", this.scaleBoard.bind(this));
@@ -96,7 +96,7 @@ class Main {
 		this.$difficultySlider.on('input', (e) => {
 			this.depth = e.target.value;
 			localStorage.setItem('difficulty', this.depth);
-			console.log("Difficulty:", this.depth);
+			// console.log("Difficulty:", this.depth); // TODO: remove when done
 		});
 	}
 	setColorScheme(scheme) {
@@ -241,7 +241,7 @@ class Main {
 				const el = this.allElementsFromPoint(event.pageX, event.pageY);
 				this.dragged_over_square = $(el).filter(".square").not(ui.helper).first().data("square");
 				let result = this.state.move(`${this.dragged_from_square}-${this.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
-				//console.log("Human move:", result); // todo: disable debug when done
+				// console.log("Human move:", result); // todo: disable debug when done
 				this.updateBoardUI();
 				if (result.ok) {
 					if (result.flags & P4_MOVE_FLAG_MATE) {

@@ -29,9 +29,10 @@ body {
 	background-color: #f0f0f0;
 	border: 1px solid #ccc;
 	border-radius: 4px;
+	box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+	opacity: .8;
 	padding: 10px;
 	width: 50%;
-	box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
 
 .menu-container {
@@ -63,13 +64,13 @@ body {
 .difficulty-slider-container {
 	display: inline-block;
 	padding: 10px;
-	width: 65%;
+	width: 60%;
 }
 
 .difficulty-labels {
 	cursor: default;
     font-size: 0.75rem;
-	margin: 0 1%;
+	margin: 0 1.5%;
 }
 
 label[for="difficulty-slider"] {
@@ -79,11 +80,12 @@ label[for="difficulty-slider"] {
 
 .tab-content label {
 	text-align: right;
-	width: 33%;
+	width: 37%;
 }
 
 .modal-content {
 	color: black;
+	opacity: .8;	
 }
 
 .rank {
