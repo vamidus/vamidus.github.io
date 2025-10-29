@@ -66,6 +66,7 @@ class Main {
 	setupElementSelectors() {
 		this.$board = $(".board:first");
 		this.$menuIcon = $("#menu-icon");
+		this.$menuContainer = $(".menu-container");
 		this.$menu = $(".menu");
 		this.$okButton = $("#ok-button");
 		this.$cancelButton = $("#cancel-button");
@@ -73,13 +74,13 @@ class Main {
 	setupEventListeners() {
 		$(window).on("resize", this.scaleBoard.bind(this));
 		this.$menuIcon.on("click", () => {
-			this.$menu.toggleClass("open");
+			this.$menuContainer.toggleClass("open");
 		});
 		this.$okButton.on("click", () => {
-			this.$menu.removeClass("open");
+			this.$menuContainer.removeClass("open");
 		});
 		this.$cancelButton.on("click", () => {
-			this.$menu.removeClass("open");
+			this.$menuContainer.removeClass("open");
 		});
 	}
 	setCssVariables() {
