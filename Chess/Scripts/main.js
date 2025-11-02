@@ -342,6 +342,18 @@ class Main {
 				delta = Date.now() - startTime;
 			}
 		}
+		if (!moves || (moves[0] === 0 && moves[1] === 0)) {
+			this.updateBoardUI(false);
+			const modalBody = document.getElementById('game-over-modal-body');
+			if (p4_check_check(this.state, this.state.to_play)) {
+				modalBody.innerHTML = "Checkmate!";
+			} else {
+				modalBody.innerHTML = "Stalemate!";
+			}
+			const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
+			gameOverModal.show();
+			return;
+		}
 		let result = this.state.move(moves[0], moves[1]);
 		// console.log("Moves:", moves);
 		// console.log("Computer move:", result); // todo: disable debug when done

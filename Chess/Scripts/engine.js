@@ -704,6 +704,17 @@ function p4_findmove(state, level, colour, ep){
         ep = state.enpassant;
     }
     var movelist = p4_parse(state, colour, ep, 0);
+    var legal_movelist = [];
+    for (var i = 0; i < movelist.length; i++) {
+        var mv = movelist[i];
+        var changes = p4_make_move(state, mv[1], mv[2], P4_QUEEN);
+        if (!p4_check_check(state, colour)) {
+            legal_movelist.push(mv);
+        }
+        p4_unmake_move(state, changes);
+    }
+    movelist = legal_movelist;
+
     var alpha = P4_MIN_SCORE;
     var mv, t, i;
     var bs = 0;
