@@ -62,16 +62,16 @@
 						<div>
 							<label for="difficulty-slider" class="form-label">Difficulty:</label>
 							<div class="difficulty-slider-container">
-								<input type="range" class="form-range" min="0" max="6" id="difficulty-slider">
-								<div class="difficulty-labels d-flex justify-content-between">
-									<span class="difficulty-label">1</span>
-									<span class="difficulty-label">2</span>
-									<span class="difficulty-label">3</span>
-									<span class="difficulty-label">4</span>
-									<span class="difficulty-label">5</span>
-									<span class="difficulty-label">6</span>
-									<span class="difficulty-label">7</span>
-								</div>
+								<input type="range" class="form-range" min="0" max="6" id="difficulty-slider" list="difficulty-levels">
+								<datalist id="difficulty-levels">
+									<option value="0" label="1"></option>
+									<option value="1" label="2"></option>
+									<option value="2" label="3"></option>
+									<option value="3" label="4"></option>
+									<option value="4" label="5"></option>
+									<option value="5" label="6"></option>
+									<option value="6" label="7"></option>
+								</datalist>
 							</div>
 						</div>
 					</div>
