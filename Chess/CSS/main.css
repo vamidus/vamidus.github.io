@@ -226,3 +226,8 @@ span.black {
     outline: none;
     box-shadow: none;
 }
+
+.move-history-container {
+    max-height: 200px;
+    overflow-y: auto;
+}

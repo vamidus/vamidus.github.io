@@ -38,7 +38,9 @@ class Main {
 		this.highlighting = true;
 
 		this.timeout_handle = null;
-		
+
+		this.moveHistory = [];		
+
 		// Selectors
 		// Map p4wn engine piece types to their character index in this.pieces strings
 		// P4_PAWN, P4_ROOK, etc. are global constants from engine.js
@@ -97,6 +99,8 @@ class Main {
 		this.$difficultySlider = $("#difficulty-slider");
 		this.$newGameButton = $("#new-game-button");
 		this.$highlightSwitch = $("#highlight-switch");
+		this.$moveHistoryBody = $("#move-history-body");
+		this.$moveHistoryContainer = $(".move-history-container");
 	}
 
 	setupEventListeners() {
@@ -259,6 +263,7 @@ class Main {
 		this.lastMoveWhite = null;
 		this.lastMoveBlack = null;
 		this.state = p4_new_game();
+		this.clearMoveHistory();
 		this.setGameParameters(); // This sets current_player_types and depth
 		this.updateBoardUI();
 		if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
@@ -439,14 +444,17 @@ class Main {
 					const lastMove = {
 						from: this.dragged_from_square,
 						to: this.dragged_over_square,
-						color: movedColor
+						color: movedColor,
+						notation: result.string
 					};
 					if (lastMove.color === this.class_white) {
 						this.lastMoveWhite = lastMove;
 					} else {
 						this.lastMoveBlack = lastMove;
 					}
+					this.moveHistory.push(lastMove.notation);
 					this.updateBoardUI();
+					this.updateMoveHistory();
 					if (result.flags & P4_MOVE_FLAG_MATE) {
 						this.updateBoardUI(false);
 						setTimeout(() => {
@@ -518,14 +526,17 @@ class Main {
 			const lastMove = {
 				from: p4_stringify_point(moves[0]),
 				to: p4_stringify_point(moves[1]),
-				color: movedColor
+				color: movedColor,
+				notation: result.string
 			};
 			if (lastMove.color === this.class_white) {
 				this.lastMoveWhite = lastMove;
 			} else {
 				this.lastMoveBlack = lastMove;
 			}
+			this.moveHistory.push(lastMove.notation);
 			this.updateBoardUI();
+			this.updateMoveHistory();
 			clearTimeout(this.timeout_handle);
 			this.timeout_handle = null;
 			if (result.flags & P4_MOVE_FLAG_MATE) {
@@ -604,15 +615,18 @@ class Main {
 			const lastMove = {
 				from: from,
 				to: to,
-				color: movedColor
+				color: movedColor,
+				notation: result.string
 			};
 			if (lastMove.color === this.class_white) {
 				this.lastMoveWhite = lastMove;
 			} else {
 				this.lastMoveBlack = lastMove;
 			}
+			this.moveHistory.push(lastMove.notation);
 			this.deselectPiece();
 			this.updateBoardUI();
+			this.updateMoveHistory();
 			if (result.flags & P4_MOVE_FLAG_MATE) {
 				this.updateBoardUI(false);
 				setTimeout(() => {
@@ -626,6 +640,28 @@ class Main {
 			}
 		} else {
 			this.deselectPiece();
+		}
+	}
+
+	clearMoveHistory() {
+		this.moveHistory = [];
+		this.$moveHistoryBody.empty();
+	}
+
+	updateMoveHistory() {
+		const lastMoveIndex = this.moveHistory.length - 1;
+		const lastMove = this.moveHistory[lastMoveIndex];
+		if (lastMoveIndex % 2 === 0) { // White's move
+			const moveNumber = lastMoveIndex / 2 + 1;
+			const row = `<tr><th scope="row">${moveNumber}</th><td>${lastMove}</td><td></td></tr>`;
+			this.$moveHistoryBody.append(row);
+		} else { // Black's move
+			const lastRow = this.$moveHistoryBody.find("tr:last");
+			lastRow.find("td:last").text(lastMove);
+		}
+		const container = this.$moveHistoryContainer;
+		if (container[0].scrollHeight > container[0].clientHeight) {
+			container.scrollTop(container[0].scrollHeight);
 		}
 	}
 
