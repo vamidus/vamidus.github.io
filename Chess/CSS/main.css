@@ -204,3 +204,8 @@ span.black {
 .highlight-selected {
     box-shadow: inset 0 0 .025em .05em rgba(27, 244, 3, 0.5);
 }
+
+.highlight-check {
+    outline: .05em solid red;
+    outline-offset: -.05em;
+}

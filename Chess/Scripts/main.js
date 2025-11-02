@@ -187,8 +187,8 @@ class Main {
 	}
 	updateBoardUI(setupDraggable = true) {
 		// Clear previous highlights
-		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move, .highlight-selected')
-			.removeClass('highlight-from-white highlight-to-white highlight-from-black highlight-to-black highlight-possible-move highlight-selected');
+		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move, .highlight-selected, .highlight-check')
+			.removeClass('highlight-from-white highlight-to-white highlight-from-black highlight-to-black highlight-possible-move highlight-selected highlight-check');
 
 		if (this.lastMoveWhite) {
 			const { from, to, color } = this.lastMoveWhite;
@@ -201,6 +201,8 @@ class Main {
 			this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
 			this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
 		}
+
+		this.highlightCheck();
 
 		// Clear all piece spans from the board squares
 		this.$board.find(".square span").remove();
@@ -255,6 +257,101 @@ class Main {
 		if (!index) return null;
 		// Even indices are white (index & 1 === 0), odd are black (index & 1 === 1)
 		return (index & 1) === 0 ? this.class_white : this.class_black;
+	}
+	highlightCheck() {
+		p4_maybe_prepare(this.state);
+		const inCheck = p4_check_check(this.state, this.state.to_play);
+		if (!inCheck) return;
+
+		const kingPiece = this.state.to_play === 0 ? P4_KING : P4_KING | 1;
+		let kingPosition = -1;
+
+		// Find the king's position
+		for (let i = 0; i < this.state.pieces[this.state.to_play].length; i++) {
+			const piece = this.state.pieces[this.state.to_play][i];
+			if (piece[0] === kingPiece) {
+				kingPosition = piece[1];
+				break;
+			}
+		}
+
+		if (kingPosition !== -1) {
+			const kingSquare = p4_stringify_point(kingPosition);
+			this.$board.find(`[data-square=${kingSquare}]`).addClass('highlight-check');
+
+			// Find the checking piece
+			const opponentColor = 1 - this.state.to_play;
+			const board = this.state.board;
+			const s = kingPosition;
+			const dir = 10 - 20 * this.state.to_play;
+
+			// Pawn attacks
+			let attackerPos = s + dir - 1;
+			if (board[attackerPos] === (P4_PAWN | opponentColor)) {
+				this.$board.find(`[data-square=${p4_stringify_point(attackerPos)}]`).addClass('highlight-check');
+				return;
+			}
+			attackerPos = s + dir + 1;
+			if (board[attackerPos] === (P4_PAWN | opponentColor)) {
+				this.$board.find(`[data-square=${p4_stringify_point(attackerPos)}]`).addClass('highlight-check');
+				return;
+			}
+
+			// Knight attacks
+			const knight_moves = P4_MOVES[P4_KNIGHT];
+			const knight = P4_KNIGHT | opponentColor;
+			for (let i = 0; i < 8; i++) {
+				attackerPos = s + knight_moves[i];
+				if (board[attackerPos] === knight) {
+					this.$board.find(`[data-square=${p4_stringify_point(attackerPos)}]`).addClass('highlight-check');
+					return;
+				}
+			}
+			
+			// King attacks
+			const king_moves = P4_MOVES[P4_KING];
+			const king = P4_KING | opponentColor;
+			for (let i = 0; i < 8; i++) {
+				attackerPos = s + king_moves[i];
+				if (board[attackerPos] === king) {
+					this.$board.find(`[data-square=${p4_stringify_point(attackerPos)}]`).addClass('highlight-check');
+					return;
+				}
+			}
+
+			// Diagonal and grid attacks
+			const diagonal_moves = P4_MOVES[P4_BISHOP];
+			const grid_moves = P4_MOVES[P4_ROOK];
+			const diag_slider = P4_BISHOP | opponentColor;
+			const diag_mask = 27;
+			const grid_slider = P4_ROOK | opponentColor;
+			const grid_mask = 23;
+
+			for (let i = 0; i < 4; i++) {
+				let m = diagonal_moves[i];
+				let e = s;
+				let E;
+				do {
+					e += m;
+					E = board[e];
+				} while (!E);
+				if ((E & diag_mask) === diag_slider) {
+					this.$board.find(`[data-square=${p4_stringify_point(e)}]`).addClass('highlight-check');
+					return;
+				}
+
+				m = grid_moves[i];
+				e = s;
+				do {
+					e += m;
+					E = board[e];
+				} while (!E);
+				if ((E & grid_mask) === grid_slider) {
+					this.$board.find(`[data-square=${p4_stringify_point(e)}]`).addClass('highlight-check');
+					return;
+				}
+			}
+		}
 	}
 	setupDraggable() {
 		let draggableSelector = "";
