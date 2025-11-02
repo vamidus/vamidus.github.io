@@ -355,26 +355,28 @@ class Main {
 			if (lastMove.color === this.class_white) {
 				this.lastMoveWhite = lastMove;
 			} else {
-														this.lastMoveBlack = lastMove;
-													}
-												this.updateBoardUI();
-												clearTimeout(this.timeout_handle);
-												this.timeout_handle = null;
-												if (result.flags & P4_MOVE_FLAG_MATE) {
-													this.updateBoardUI(false);
-													setTimeout(() => {
-														const modalBody = document.getElementById('game-over-modal-body');
-														modalBody.innerHTML = "Checkmate!";
-														const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
-														gameOverModal.show();
-													}, 10);
-												} else {
-													if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
-														this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
-													}
-												}
-											}
-											return result;	}
+				this.lastMoveBlack = lastMove;
+			}
+			this.updateBoardUI();
+			clearTimeout(this.timeout_handle);
+			this.timeout_handle = null;
+			if (result.flags & P4_MOVE_FLAG_MATE) {
+				this.updateBoardUI(false);
+				setTimeout(() => {
+					const modalBody = document.getElementById('game-over-modal-body');
+					modalBody.innerHTML = "Checkmate!";
+					const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
+					gameOverModal.show();
+				}, 10);
+			} else {
+				if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
+					this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
+				}
+			}
+		}
+		return result;
+	}	
+	
 	static CreateInstance(settings) {
 		var instance = new Main();
 		instance.initialize(settings);
