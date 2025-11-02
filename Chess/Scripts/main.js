@@ -51,6 +51,7 @@ class Main {
 		this.$menuIcon = null;
 		this.$menu = null;
 	}
+	
 	initialize(settings) {
 		if (settings) this.applySettings(settings);
 		this.setup();
@@ -61,9 +62,11 @@ class Main {
 		this.$difficultySlider.val(difficulty);
 		this.startNewGame();
 	}
+
 	applySettings(settings) {
 		$.extend(this, settings);
 	}
+
 	setup() {
 		this.setupElementSelectors();
 		this.setupEventListeners();
@@ -71,6 +74,7 @@ class Main {
 		this.scaleBoard();
 		this.setupBoard();
 	}
+
 	setupElementSelectors() {
 		this.$board = $(".board:first");
 		this.$menuIcon = $("#menu-icon");
@@ -79,8 +83,8 @@ class Main {
 		this.$okButton = $("#ok-button");
 		this.$difficultySlider = $("#difficulty-slider");
 		this.$newGameButton = $("#new-game-button");
-		// this.$cancelButton = $("#cancel-button");
 	}
+
 	setupEventListeners() {
 		$(window).on("resize", this.scaleBoard.bind(this));
 		this.$menuIcon.on("click", () => {
@@ -98,9 +102,6 @@ class Main {
 			this.startNewGame();
 			this.$menuContainer.removeClass("open");
 		});
-		// this.$cancelButton = $("click", () => {
-		// 	this.$menuContainer.removeClass("open");
-		// });
 
 		$('input[name="color-scheme"]').on('change', (e) => {
 			this.setColorScheme(e.target.id.split('-')[0]);
@@ -108,11 +109,11 @@ class Main {
 		this.$difficultySlider.on('input', (e) => {
 			this.depth = e.target.value;
 			localStorage.setItem('difficulty', this.depth);
-			// console.log("Difficulty:", this.depth); // TODO: remove when done
 		});
 
 		this.$board.on("click", ".square", (e) => this.handleSquareClick(e.currentTarget));
 	}
+
 	setColorScheme(scheme) {
 		const root = document.documentElement;
 		if (scheme === 'auto') {
@@ -124,6 +125,7 @@ class Main {
 			localStorage.setItem('color-scheme', scheme);
 		}
 	}
+
 	getPreferredColorScheme() {
 		const savedScheme = localStorage.getItem('color-scheme');
 		if (savedScheme) {
@@ -132,6 +134,7 @@ class Main {
 			return 'auto';
 		}
 	}
+
 	getDifficulty() {
 		const savedDifficulty = localStorage.getItem('difficulty');
 		if (savedDifficulty) {
@@ -140,15 +143,18 @@ class Main {
 			return 0; // Easy
 		}
 	}
+
 	setCssVariables() {
 		document.documentElement.style.setProperty("--square-black", this.square_black);
 		document.documentElement.style.setProperty("--square-white", this.square_white);
 	}
+
 	scaleBoard() {
 		let $container = this.$board.parent();
 		let scale = this.scale_range * Math.min($container.innerWidth(), $container.innerHeight());
 		document.documentElement.style.setProperty("--square-size", `${this.square_size * scale}px`);
 	}
+
 	setupBoard() {
 		let colorIsBlack = true;
 		this.$board.empty();
@@ -185,6 +191,7 @@ class Main {
 			colorIsBlack = !colorIsBlack;
 		}
 	}
+
 	updateBoardUI(setupDraggable = true) {
 		// Clear previous highlights
 		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move, .highlight-selected, .highlight-check')
@@ -211,6 +218,7 @@ class Main {
 		// Re-enable dragging for the current player's pieces, unless asked not to
 		if (setupDraggable) this.setupDraggable();
 	}
+
 	startNewGame() {
 		this.lastMoveWhite = null;
 		this.lastMoveBlack = null;
@@ -221,18 +229,20 @@ class Main {
 			this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 		}
 	}
+
 	setGameParameters() {
 		// TODO: get all this from menu
 		this.current_player_types = [0, 1]; 
 		this.depth = this.$difficultySlider.val();
 	}
+
 	drawBoard() {
 		for (let y = 9; y > 1; y--) {
 			for (let x = 1; x < 9; x++) {
 				let i = y * 10 + x;
 				let piece = this.getPieceFromP4Index(this.state.board[i]);
 				let pieceColor = this.getPieceColorFromP4Index(this.state.board[i]);
-				if (piece && pieceColor) { // Removed redundant '!!'
+				if (piece && pieceColor) {
 					let file = this.square_files.charAt(x - 1);
 					// Map p4wn engine's 1-9 rank to 0-7 for square_ranks string (87654321)
 					// e.g., p4wn y=8 (rank 1) -> square_ranks.charAt(7)
@@ -243,6 +253,7 @@ class Main {
 			}
 		}
 	}
+
 	getPieceFromP4Index(index) {
 		if (!index) return null;
 		const colorIndex = index & 1; // 0 for white, 1 for black
@@ -253,11 +264,13 @@ class Main {
 		}
 		return null;
 	}
+
 	getPieceColorFromP4Index(index) {
 		if (!index) return null;
 		// Even indices are white (index & 1 === 0), odd are black (index & 1 === 1)
 		return (index & 1) === 0 ? this.class_white : this.class_black;
 	}
+
 	highlightCheck() {
 		p4_maybe_prepare(this.state);
 		const inCheck = p4_check_check(this.state, this.state.to_play);
@@ -353,6 +366,7 @@ class Main {
 			}
 		}
 	}
+
 	setupDraggable() {
 		let draggableSelector = "";
 		let humanPlayerType = this.player_type.indexOf("Human");
@@ -380,7 +394,6 @@ class Main {
 				const el = this.allElementsFromPoint(event.pageX, event.pageY);
 				this.dragged_over_square = $(el).filter(".square").not(ui.helper).first().data("square");
 				let result = this.state.move(`${this.dragged_from_square}-${this.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
-				// console.log("Human move:", result); // todo: disable debug when done
 				if (result.ok) {
 					const lastMove = {
 						from: this.dragged_from_square,
@@ -412,6 +425,7 @@ class Main {
 			}
 		});
 	}
+
 	allElementsFromPoint(x, y) {
 		let element, elements = [];
 		let old_visibility = [];
@@ -431,6 +445,7 @@ class Main {
 
 		return elements;
 	}
+
 	getComputerMove() {
 		let startTime = Date.now();
 		let localDepth = this.depth;
@@ -457,9 +472,6 @@ class Main {
 			return;
 		}
 		let result = this.state.move(moves[0], moves[1]);
-		// console.log("Moves:", moves);
-		// console.log("Computer move:", result); // todo: disable debug when done
-		// console.log("State:", this.state);
 		if (result.ok) {
 			const lastMove = {
 				from: p4_stringify_point(moves[0]),
@@ -490,6 +502,7 @@ class Main {
 		}
 		return result;
 	}
+
 	handleSquareClick(clickedSquare) {
 		const humanPlayerType = this.player_type.indexOf("Human");
 		if (this.current_player_types[this.state.to_play] !== humanPlayerType) {
