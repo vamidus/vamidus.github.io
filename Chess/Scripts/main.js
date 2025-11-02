@@ -187,7 +187,8 @@ class Main {
 	}
 	updateBoardUI(setupDraggable = true) {
 		// Clear previous highlights
-		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move, .highlight-selected').removeClass('highlight-from-white highlight-to-white highlight-from-black highlight-to-black highlight-possible-move highlight-selected');
+		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move, .highlight-selected')
+			.removeClass('highlight-from-white highlight-to-white highlight-from-black highlight-to-black highlight-possible-move highlight-selected');
 
 		if (this.lastMoveWhite) {
 			const { from, to, color } = this.lastMoveWhite;

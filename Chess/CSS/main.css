@@ -185,22 +185,22 @@ span.black {
 
 .highlight-from-white,
 .highlight-to-white {
-	outline: 4px dotted #444;
-	outline-offset: -4px;
+	outline: .05em dotted orange;
+	outline-offset: -.05em;
 	mix-blend-mode: difference;
 }
 
 .highlight-from-black,
 .highlight-to-black {
-	outline: 4px dotted #ddd;
-	outline-offset: -4px;
+	outline: .05em dotted orange;
+	outline-offset: -.05em;
 	mix-blend-mode: difference;
 }
 
 .highlight-possible-move {
-    box-shadow: inset 0 0 20px 1em rgba(27, 244, 3, 0.5);
+    box-shadow: inset 0 0 1em 1em rgba(27, 244, 3, 0.125);
 }
 
 .highlight-selected {
-    box-shadow: inset 0 0 20px 1em rgba(210, 210, 210, 0.5);
+    box-shadow: inset 0 0 .025em .05em rgba(27, 244, 3, 0.5);
 }
