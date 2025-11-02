@@ -30,6 +30,8 @@ class Main {
 
 		this.dragged_from_square = "";
 		        this.dragged_over_square = "";
+		this.selected_square = "";
+		        this.selected_square_node = null;
 		
 		        this.timeout_handle = null;
 		this.lastMoveWhite = null;
@@ -108,6 +110,8 @@ class Main {
 			localStorage.setItem('difficulty', this.depth);
 			// console.log("Difficulty:", this.depth); // TODO: remove when done
 		});
+
+		this.$board.on("click", ".square", (e) => this.handleSquareClick(e.currentTarget));
 	}
 	setColorScheme(scheme) {
 		const root = document.documentElement;
@@ -183,7 +187,7 @@ class Main {
 	}
 	updateBoardUI(setupDraggable = true) {
 		// Clear previous highlights
-		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move').removeClass('highlight-from-white highlight-to-white highlight-from-black highlight-to-black highlight-possible-move');
+		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move, .highlight-selected').removeClass('highlight-from-white highlight-to-white highlight-from-black highlight-to-black highlight-possible-move highlight-selected');
 
 		if (this.lastMoveWhite) {
 			const { from, to, color } = this.lastMoveWhite;
@@ -387,8 +391,86 @@ class Main {
 			}
 		}
 		return result;
-	}	
-	
+	}
+	handleSquareClick(clickedSquare) {
+		const humanPlayerType = this.player_type.indexOf("Human");
+		if (this.current_player_types[this.state.to_play] !== humanPlayerType) {
+			return; // Not human player's turn
+		}
+
+		const clickedSquareData = $(clickedSquare).data("square");
+
+		if (this.selected_square === "") {
+			this.selectPiece(clickedSquare, clickedSquareData);
+		} else {
+			if (this.selected_square === clickedSquareData) {
+				this.deselectPiece();
+			} else {
+				this.movePiece(this.selected_square, clickedSquareData);
+			}
+		}
+	}
+
+	selectPiece(squareElement, squareData) {
+		const pieceColor = this.getPieceColorFromP4Index(this.state.board[p4_destringify_point(squareData)]);
+		const currentPlayerColor = this.state.to_play === 0 ? this.class_white : this.class_black;
+
+		if (pieceColor === currentPlayerColor) {
+			this.selected_square = squareData;
+			this.selected_square_node = squareElement;
+			$(this.selected_square_node).addClass('highlight-selected');
+
+			p4_maybe_prepare(this.state);
+			const moves = p4_parse(this.state, this.state.to_play, this.state.enpassant, 0);
+			const from_square_p4 = p4_destringify_point(this.selected_square);
+
+			for (const move of moves) {
+				if (move[1] === from_square_p4) {
+					const to_square = p4_stringify_point(move[2]);
+					this.$board.find(`[data-square=${to_square}]`).addClass('highlight-possible-move');
+				}
+			}
+		}
+	}
+
+	deselectPiece() {
+		$(this.selected_square_node).removeClass('highlight-selected');
+		this.$board.find('.highlight-possible-move').removeClass('highlight-possible-move');
+		this.selected_square = "";
+		this.selected_square_node = null;
+	}
+
+	movePiece(from, to) {
+		let result = this.state.move(`${from}-${to}`);
+		if (result.ok) {
+			const lastMove = {
+				from: from,
+				to: to,
+				color: this.state.to_play === 0 ? this.class_white : this.class_black
+			};
+			if (lastMove.color === this.class_white) {
+				this.lastMoveWhite = lastMove;
+			} else {
+				this.lastMoveBlack = lastMove;
+			}
+			this.deselectPiece();
+			this.updateBoardUI();
+			if (result.flags & P4_MOVE_FLAG_MATE) {
+				this.updateBoardUI(false);
+				setTimeout(() => {
+					const modalBody = document.getElementById('game-over-modal-body');
+					modalBody.innerHTML = "Congratulations, You won!";
+					const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
+					gameOverModal.show();
+				}, 10);
+			} else if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
+				this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
+			}
+		} else {
+			this.deselectPiece();
+		}
+	}
+
 	static CreateInstance(settings) {
 		var instance = new Main();
 		instance.initialize(settings);
