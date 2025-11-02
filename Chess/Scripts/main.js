@@ -29,13 +29,16 @@ class Main {
 		this.depth = 0;
 
 		this.dragged_from_square = "";
-		        this.dragged_over_square = "";
+		this.dragged_over_square = "";
 		this.selected_square = "";
-		        this.selected_square_node = null;
+		this.selected_square_node = null;
 		
-		        this.timeout_handle = null;
 		this.lastMoveWhite = null;
 		this.lastMoveBlack = null;
+		this.highlighting = true;
+
+		this.timeout_handle = null;
+		
 		// Selectors
 		// Map p4wn engine piece types to their character index in this.pieces strings
 		// P4_PAWN, P4_ROOK, etc. are global constants from engine.js
@@ -55,11 +58,21 @@ class Main {
 	initialize(settings) {
 		if (settings) this.applySettings(settings);
 		this.setup();
+
+		// Color scheme
 		const preferredScheme = this.getPreferredColorScheme();
 		this.setColorScheme(preferredScheme);
 		$(`#${preferredScheme}-scheme`).prop('checked', true);
+
+		// Difficulty
 		const difficulty = this.getDifficulty();
 		this.$difficultySlider.val(difficulty);
+
+		// Highlighting
+		const highlighting = this.getHighlighting();
+		this.$highlightSwitch.prop('checked', highlighting);
+		this.setHighlighting(highlighting);
+
 		this.startNewGame();
 	}
 
@@ -83,6 +96,7 @@ class Main {
 		this.$okButton = $("#ok-button");
 		this.$difficultySlider = $("#difficulty-slider");
 		this.$newGameButton = $("#new-game-button");
+		this.$highlightSwitch = $("#highlight-switch");
 	}
 
 	setupEventListeners() {
@@ -102,7 +116,6 @@ class Main {
 			this.startNewGame();
 			this.$menuContainer.removeClass("open");
 		});
-
 		$('input[name="color-scheme"]').on('change', (e) => {
 			this.setColorScheme(e.target.id.split('-')[0]);
 		});
@@ -110,7 +123,9 @@ class Main {
 			this.depth = e.target.value;
 			localStorage.setItem('difficulty', this.depth);
 		});
-
+		this.$highlightSwitch.on('change', (e) => {
+			this.setHighlighting(e.target.checked);
+		});
 		this.$board.on("click", ".square", (e) => this.handleSquareClick(e.currentTarget));
 	}
 
@@ -141,6 +156,25 @@ class Main {
 			return parseInt(savedDifficulty, 10);
 		} else {
 			return 0; // Easy
+		}
+	}
+
+	getHighlighting() {
+		const savedHighlighting = localStorage.getItem('highlighting');
+		if (savedHighlighting) {
+			return savedHighlighting === 'true';
+		} else {
+			return true; // Default to true
+		}
+	}
+
+	setHighlighting(enabled) {
+		this.highlighting = enabled;
+		localStorage.setItem('highlighting', enabled);
+		if (enabled) {
+			this.$board.removeClass('no-highlight');
+		} else {
+			this.$board.addClass('no-highlight');
 		}
 	}
 
@@ -197,19 +231,21 @@ class Main {
 		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move, .highlight-selected, .highlight-check')
 			.removeClass('highlight-from-white highlight-to-white highlight-from-black highlight-to-black highlight-possible-move highlight-selected highlight-check');
 
-		if (this.lastMoveWhite) {
-			const { from, to, color } = this.lastMoveWhite;
-			this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
-			this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
-		}
+		if (this.highlighting) {
+			if (this.lastMoveWhite) {
+				const { from, to, color } = this.lastMoveWhite;
+				this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
+				this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
+			}
 
-		if (this.lastMoveBlack) {
-			const { from, to, color } = this.lastMoveBlack;
-			this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
-			this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
-		}
+			if (this.lastMoveBlack) {
+				const { from, to, color } = this.lastMoveBlack;
+				this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
+				this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
+			}
 
-		this.highlightCheck();
+			this.highlightCheck();
+		}
 
 		// Clear all piece spans from the board squares
 		this.$board.find(".square span").remove();
@@ -379,26 +415,31 @@ class Main {
 			start: (event, ui) => {
 				const el = this.allElementsFromPoint(event.pageX, event.pageY);
 				this.dragged_from_square = $(el).filter(".square").not(ui.helper).first().data("square");
-				p4_maybe_prepare(this.state);
-				const moves = p4_parse(this.state, this.state.to_play, this.state.enpassant, 0);
-				const from_square_p4 = p4_destringify_point(this.dragged_from_square);
-				for (const move of moves) {
-					if (move[1] === from_square_p4) {
-						const to_square = p4_stringify_point(move[2]);
-						this.$board.find(`[data-square=${to_square}]`).addClass('highlight-possible-move');
+				if (this.highlighting) {
+					p4_maybe_prepare(this.state);
+					const moves = p4_parse(this.state, this.state.to_play, this.state.enpassant, 0);
+					const from_square_p4 = p4_destringify_point(this.dragged_from_square);
+					for (const move of moves) {
+						if (move[1] === from_square_p4) {
+							const to_square = p4_stringify_point(move[2]);
+							this.$board.find(`[data-square=${to_square}]`).addClass('highlight-possible-move');
+						}
 					}
 				}
 			},
 			stop: (event, ui) => {
-				this.$board.find('.highlight-possible-move').removeClass('highlight-possible-move');
+				if (this.highlighting) {
+					this.$board.find('.highlight-possible-move').removeClass('highlight-possible-move');
+				}
 				const el = this.allElementsFromPoint(event.pageX, event.pageY);
 				this.dragged_over_square = $(el).filter(".square").not(ui.helper).first().data("square");
+				const movedColor = this.state.to_play === 0 ? this.class_white : this.class_black;
 				let result = this.state.move(`${this.dragged_from_square}-${this.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
 				if (result.ok) {
 					const lastMove = {
 						from: this.dragged_from_square,
 						to: this.dragged_over_square,
-						color: this.state.to_play === 0 ? this.class_white : this.class_black
+						color: movedColor
 					};
 					if (lastMove.color === this.class_white) {
 						this.lastMoveWhite = lastMove;
@@ -471,12 +512,13 @@ class Main {
 			gameOverModal.show();
 			return;
 		}
+		const movedColor = this.state.to_play === 0 ? this.class_white : this.class_black;
 		let result = this.state.move(moves[0], moves[1]);
 		if (result.ok) {
 			const lastMove = {
 				from: p4_stringify_point(moves[0]),
 				to: p4_stringify_point(moves[1]),
-				color: this.state.to_play === 0 ? this.class_white : this.class_black
+				color: movedColor
 			};
 			if (lastMove.color === this.class_white) {
 				this.lastMoveWhite = lastMove;
@@ -529,35 +571,40 @@ class Main {
 		if (pieceColor === currentPlayerColor) {
 			this.selected_square = squareData;
 			this.selected_square_node = squareElement;
-			$(this.selected_square_node).addClass('highlight-selected');
+			if (this.highlighting) {
+				$(this.selected_square_node).addClass('highlight-selected');
 
-			p4_maybe_prepare(this.state);
-			const moves = p4_parse(this.state, this.state.to_play, this.state.enpassant, 0);
-			const from_square_p4 = p4_destringify_point(this.selected_square);
+				p4_maybe_prepare(this.state);
+				const moves = p4_parse(this.state, this.state.to_play, this.state.enpassant, 0);
+				const from_square_p4 = p4_destringify_point(this.selected_square);
 
-			for (const move of moves) {
-				if (move[1] === from_square_p4) {
-					const to_square = p4_stringify_point(move[2]);
-					this.$board.find(`[data-square=${to_square}]`).addClass('highlight-possible-move');
+				for (const move of moves) {
+					if (move[1] === from_square_p4) {
+						const to_square = p4_stringify_point(move[2]);
+						this.$board.find(`[data-square=${to_square}]`).addClass('highlight-possible-move');
+					}
 				}
 			}
 		}
 	}
 
 	deselectPiece() {
-		$(this.selected_square_node).removeClass('highlight-selected');
-		this.$board.find('.highlight-possible-move').removeClass('highlight-possible-move');
+		if (this.highlighting) {
+			$(this.selected_square_node).removeClass('highlight-selected');
+			this.$board.find('.highlight-possible-move').removeClass('highlight-possible-move');
+		}
 		this.selected_square = "";
 		this.selected_square_node = null;
 	}
 
 	movePiece(from, to) {
+		const movedColor = this.state.to_play === 0 ? this.class_white : this.class_black;
 		let result = this.state.move(`${from}-${to}`);
 		if (result.ok) {
 			const lastMove = {
 				from: from,
 				to: to,
-				color: this.state.to_play === 0 ? this.class_white : this.class_black
+				color: movedColor
 			};
 			if (lastMove.color === this.class_white) {
 				this.lastMoveWhite = lastMove;

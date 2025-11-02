@@ -67,6 +67,12 @@ body {
 	width: 60%;
 }
 
+.highlight-switch-div .form-switch {
+	margin-bottom: -.5em;
+    padding: 0 0 0 3em;
+    width: 60%;
+}
+
 .difficulty-labels {
 	cursor: default;
     font-size: 0.75rem;
@@ -208,4 +214,15 @@ span.black {
 .highlight-check {
     outline: .05em solid red;
     outline-offset: -.05em;
+}
+
+.board.no-highlight .highlight-from-white,
+.board.no-highlight .highlight-to-white,
+.board.no-highlight .highlight-from-black,
+.board.no-highlight .highlight-to-black,
+.board.no-highlight .highlight-possible-move,
+.board.no-highlight .highlight-selected,
+.board.no-highlight .highlight-check {
+    outline: none;
+    box-shadow: none;
 }
