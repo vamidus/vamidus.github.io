@@ -15,7 +15,7 @@
 		<script src="Scripts/main.js" defer></script>
 		<script defer>
 			$(function () {
-				Main.CreateInstance({
+				window.chessGame = Main.CreateInstance({
 					square_size: 64,
 					square_black: "grey",
 					square_white: "linen",
@@ -72,7 +72,7 @@
 					<div class="tab-pane fade" id="advanced" role="tabpanel" aria-labelledby="advanced-tab">Some advanced content</div>
 				</div>
 				<div class="menu-buttons float-end">
-					<!-- <button type="button" class="btn btn-secondary" id="cancel-button">Cancel</button> -->
+					<button type="button" class="btn btn-success me-2" id="new-game-button">New Game</button>
 					<button type="button" class="btn btn-primary" id="ok-button">Close</button>
 				</div>
 			</div>
@@ -86,7 +86,7 @@
 					</div>
 					<div class="modal-body" id="game-over-modal-body"></div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" onclick="location.reload()">Play Again</button>
+						<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="window.chessGame.startNewGame()">Play Again</button>
 					</div>
 				</div>
 			</div>

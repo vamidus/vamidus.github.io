@@ -182,3 +182,22 @@ span.black {
 		width: 85%;
 	}
 }
+
+.highlight-from-white,
+.highlight-to-white {
+	outline: 4px dotted #444;
+	outline-offset: -4px;
+	mix-blend-mode: difference;
+}
+
+.highlight-from-black,
+.highlight-to-black {
+	outline: 4px dotted #ddd;
+	outline-offset: -4px;
+	mix-blend-mode: difference;
+}
+
+.highlight-possible-move {
+    outline: 4px solid green;
+    outline-offset: -4px;
+}

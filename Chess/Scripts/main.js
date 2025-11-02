@@ -29,10 +29,11 @@ class Main {
 		this.depth = 0;
 
 		this.dragged_from_square = "";
-		this.dragged_over_square = "";
-
-		this.timeout_handle = null;
-
+		        this.dragged_over_square = "";
+		
+		        this.timeout_handle = null;
+		this.lastMoveWhite = null;
+		this.lastMoveBlack = null;
 		// Selectors
 		// Map p4wn engine piece types to their character index in this.pieces strings
 		// P4_PAWN, P4_ROOK, etc. are global constants from engine.js
@@ -75,6 +76,7 @@ class Main {
 		this.$menu = $(".menu");
 		this.$okButton = $("#ok-button");
 		this.$difficultySlider = $("#difficulty-slider");
+		this.$newGameButton = $("#new-game-button");
 		// this.$cancelButton = $("#cancel-button");
 	}
 	setupEventListeners() {
@@ -85,7 +87,16 @@ class Main {
 		this.$okButton.on("click", () => {
 			this.$menuContainer.removeClass("open");
 		});
-		// this.$cancelButton.on("click", () => {
+		this.$menuContainer.on("click", (e) => {
+			if (e.target === this.$menuContainer[0]) {
+				this.$menuContainer.removeClass("open");
+			}
+		});
+		this.$newGameButton.on("click", () => {
+			this.startNewGame();
+			this.$menuContainer.removeClass("open");
+		});
+		// this.$cancelButton = $("click", () => {
 		// 	this.$menuContainer.removeClass("open");
 		// });
 
@@ -171,6 +182,21 @@ class Main {
 		}
 	}
 	updateBoardUI(setupDraggable = true) {
+		// Clear previous highlights
+		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move').removeClass('highlight-from-white highlight-to-white highlight-from-black highlight-to-black highlight-possible-move');
+
+		if (this.lastMoveWhite) {
+			const { from, to, color } = this.lastMoveWhite;
+			this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
+			this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
+		}
+
+		if (this.lastMoveBlack) {
+			const { from, to, color } = this.lastMoveBlack;
+			this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
+			this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
+		}
+
 		// Clear all piece spans from the board squares
 		this.$board.find(".square span").remove();
 		// Redraw pieces based on the current game state
@@ -179,6 +205,8 @@ class Main {
 		if (setupDraggable) this.setupDraggable();
 	}
 	startNewGame() {
+		this.lastMoveWhite = null;
+		this.lastMoveBlack = null;
 		this.state = p4_new_game();
 		this.setGameParameters(); // This sets current_player_types and depth
 		this.updateBoardUI();
@@ -235,14 +263,34 @@ class Main {
 			start: (event, ui) => {
 				const el = this.allElementsFromPoint(event.pageX, event.pageY);
 				this.dragged_from_square = $(el).filter(".square").not(ui.helper).first().data("square");
+				p4_maybe_prepare(this.state);
+				const moves = p4_parse(this.state, this.state.to_play, this.state.enpassant, 0);
+				const from_square_p4 = p4_destringify_point(this.dragged_from_square);
+				for (const move of moves) {
+					if (move[1] === from_square_p4) {
+						const to_square = p4_stringify_point(move[2]);
+						this.$board.find(`[data-square=${to_square}]`).addClass('highlight-possible-move');
+					}
+				}
 			},
 			stop: (event, ui) => {
+				this.$board.find('.highlight-possible-move').removeClass('highlight-possible-move');
 				const el = this.allElementsFromPoint(event.pageX, event.pageY);
 				this.dragged_over_square = $(el).filter(".square").not(ui.helper).first().data("square");
 				let result = this.state.move(`${this.dragged_from_square}-${this.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
 				// console.log("Human move:", result); // todo: disable debug when done
-				this.updateBoardUI();
 				if (result.ok) {
+					const lastMove = {
+						from: this.dragged_from_square,
+						to: this.dragged_over_square,
+						color: this.state.to_play === 0 ? this.class_white : this.class_black
+					};
+					if (lastMove.color === this.class_white) {
+						this.lastMoveWhite = lastMove;
+					} else {
+						this.lastMoveBlack = lastMove;
+					}
+					this.updateBoardUI();
 					if (result.flags & P4_MOVE_FLAG_MATE) {
 						this.updateBoardUI(false);
 						setTimeout(() => {
@@ -256,6 +304,8 @@ class Main {
 							this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 						}
 					}
+				} else {
+					this.updateBoardUI();
 				}
 			}
 		});
@@ -296,28 +346,38 @@ class Main {
 		// console.log("Moves:", moves);
 		// console.log("Computer move:", result); // todo: disable debug when done
 		// console.log("State:", this.state);
-		this.updateBoardUI();
 		if (result.ok) {
-			clearTimeout(this.timeout_handle);
-			this.timeout_handle = null;
-			if (result.flags & P4_MOVE_FLAG_MATE) {
-				this.updateBoardUI(false);
-				setTimeout(() => {
-					const modalBody = document.getElementById('game-over-modal-body');
-					modalBody.innerHTML = "Checkmate!";
-					const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
-					gameOverModal.show();
-				}, 10);
+			const lastMove = {
+				from: p4_stringify_point(moves[0]),
+				to: p4_stringify_point(moves[1]),
+				color: this.state.to_play === 0 ? this.class_white : this.class_black
+			};
+			if (lastMove.color === this.class_white) {
+				this.lastMoveWhite = lastMove;
 			} else {
-				if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
-					this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
-				}
-			}
-		}
-		return result;
-	}
+														this.lastMoveBlack = lastMove;
+													}
+												this.updateBoardUI();
+												clearTimeout(this.timeout_handle);
+												this.timeout_handle = null;
+												if (result.flags & P4_MOVE_FLAG_MATE) {
+													this.updateBoardUI(false);
+													setTimeout(() => {
+														const modalBody = document.getElementById('game-over-modal-body');
+														modalBody.innerHTML = "Checkmate!";
+														const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
+														gameOverModal.show();
+													}, 10);
+												} else {
+													if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
+														this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
+													}
+												}
+											}
+											return result;	}
 	static CreateInstance(settings) {
 		var instance = new Main();
 		instance.initialize(settings);
+		return instance;
 	}
 }
