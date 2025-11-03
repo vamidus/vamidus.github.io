@@ -676,14 +676,22 @@ class Main {
 		return instance;
 	}
 
+	showToast(message) {
+		const toastLiveExample = document.getElementById('liveToast');
+		const toastBody = toastLiveExample.querySelector('.toast-body');
+		toastBody.textContent = message;
+		const toast = new bootstrap.Toast(toastLiveExample);
+		toast.show();
+	}
+
 	exportGameState() {
 		const fen = p4_state2fen(this.state);
 		this.$gameStateTextarea.val(fen);
 		navigator.clipboard.writeText(fen).then(() => {
-			alert("Game state (FEN) copied to clipboard!");
+			this.showToast("Game state (FEN) copied to clipboard!");
 		}).catch(err => {
 			console.error("Failed to copy game state: ", err);
-			alert("Failed to copy game state to clipboard.");
+			this.showToast("Failed to copy game state to clipboard.");
 		});
 	}
 
@@ -695,13 +703,13 @@ class Main {
 				this.clearMoveHistory();
 				this.updateBoardUI();
 				this.$menuContainer.removeClass("open");
-				alert("Game state imported successfully!");
+				this.showToast("Game state imported successfully!");
 			} catch (e) {
 				console.error("Failed to import game state: ", e);
-				alert("Invalid game state (FEN) provided.");
+				this.showToast("Invalid game state (FEN) provided.");
 			}
 		} else {
-			alert("Please paste a game state (FEN) into the text area.");
+			this.showToast("Please paste a game state (FEN) into the text area.");
 		}
 	}
 }
