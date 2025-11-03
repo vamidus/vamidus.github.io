@@ -101,6 +101,9 @@ class Main {
 		this.$highlightSwitch = $("#highlight-switch");
 		this.$moveHistoryBody = $("#move-history-body");
 		this.$moveHistoryContainer = $(".move-history-container");
+		this.$gameStateTextarea = $("#game-state-textarea");
+		this.$exportGameStateButton = $("#export-game-state-button");
+		this.$importGameStateButton = $("#import-game-state-button");
 	}
 
 	setupEventListeners() {
@@ -131,6 +134,8 @@ class Main {
 			this.setHighlighting(e.target.checked);
 		});
 		this.$board.on("click", ".square", (e) => this.handleSquareClick(e.currentTarget));
+		this.$exportGameStateButton.on("click", () => this.exportGameState());
+		this.$importGameStateButton.on("click", () => this.importGameState());
 	}
 
 	setColorScheme(scheme) {
@@ -669,5 +674,34 @@ class Main {
 		var instance = new Main();
 		instance.initialize(settings);
 		return instance;
+	}
+
+	exportGameState() {
+		const fen = p4_state2fen(this.state);
+		this.$gameStateTextarea.val(fen);
+		navigator.clipboard.writeText(fen).then(() => {
+			alert("Game state (FEN) copied to clipboard!");
+		}).catch(err => {
+			console.error("Failed to copy game state: ", err);
+			alert("Failed to copy game state to clipboard.");
+		});
+	}
+
+	importGameState() {
+		const fen = this.$gameStateTextarea.val();
+		if (fen) {
+			try {
+				this.state = p4_fen2state(fen);
+				this.clearMoveHistory();
+				this.updateBoardUI();
+				this.$menuContainer.removeClass("open");
+				alert("Game state imported successfully!");
+			} catch (e) {
+				console.error("Failed to import game state: ", e);
+				alert("Invalid game state (FEN) provided.");
+			}
+		} else {
+			alert("Please paste a game state (FEN) into the text area.");
+		}
 	}
 }

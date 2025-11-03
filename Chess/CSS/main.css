@@ -204,15 +204,15 @@ span.black {
 
 .highlight-from-white,
 .highlight-to-white {
-	outline: .08em dotted orange;
-	outline-offset: -.08em;
+	outline: .1em dotted orange;
+	outline-offset: -.1em;
 	mix-blend-mode: difference;
 }
 
 .highlight-from-black,
 .highlight-to-black {
-	outline: .08em dotted orange;
-	outline-offset: -.08em;
+	outline: .1em dotted orange;
+	outline-offset: -.1em;
 	mix-blend-mode: difference;
 }
 
@@ -221,12 +221,13 @@ span.black {
 }
 
 .highlight-selected {
-    box-shadow: inset 0 0 .025em .08em rgba(27, 244, 3, 0.5);
+    outline: .1em solid green;
+    outline-offset: -.1em;
 }
 
 .highlight-check {
-    outline: .08em solid red;
-    outline-offset: -.08em;
+    outline: .1em solid red;
+    outline-offset: -.1em;
 }
 
 .board.no-highlight .highlight-from-white,
@@ -243,4 +244,15 @@ span.black {
 .move-history-container {
     max-height: 200px;
     overflow-y: auto;
+}
+
+.game-state-controls {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+}
+
+.game-state-controls textarea {
+    width: 100%;
+    resize: vertical;
 }
