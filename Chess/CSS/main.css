@@ -210,14 +210,12 @@ span.black {
 .highlight-to-white {
 	outline: .1em dotted orange;
 	outline-offset: -.1em;
-	mix-blend-mode: difference;
 }
 
 .highlight-from-black,
 .highlight-to-black {
 	outline: .1em dotted orange;
 	outline-offset: -.1em;
-	mix-blend-mode: difference;
 }
 
 .highlight-possible-move {

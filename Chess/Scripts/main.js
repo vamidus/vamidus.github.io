@@ -261,8 +261,6 @@ class Main {
 	}
 
 	startNewGame() {
-		this.lastMoveWhite = null;
-		this.lastMoveBlack = null;
 		this.state = p4_new_game();
 		this.clearMoveHistory();
 		this.setGameParameters(); // This sets current_player_types and depth
@@ -637,6 +635,8 @@ class Main {
 	}
 
 	clearMoveHistory() {
+		this.lastMoveWhite = null;
+		this.lastMoveBlack = null;
 		this.moveHistory = [];
 		this.$moveHistoryBody.empty();
 	}
