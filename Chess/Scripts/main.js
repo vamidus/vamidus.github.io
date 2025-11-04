@@ -33,7 +33,6 @@ class Main {
 		// Variables
 		this.state = null;
 
-		this.aiIsBlack = true;
 		this.player_type = ["Human", "Computer"];
 		this.current_player_types = [0, 0];
 		this.depth = 0;
@@ -272,16 +271,15 @@ class Main {
 	startNewGame() {
 		this.state = p4_new_game();
 		this.clearMoveHistory();
-		this.setGameParameters(); // This sets current_player_types and depth
+		this.setGameParameters();
 		this.updateBoardUI();
-		if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
+		if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") { // true if human is playing black
 			this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 		}
 	}
 
 	setGameParameters() {
-		// TODO: get all this from menu
-		this.current_player_types = [0, 1]; 
+		this.current_player_types = [0, 1]; // Human plays white, computer playes black
 		this.depth = this.$difficultySlider.val();
 	}
 
@@ -419,9 +417,9 @@ class Main {
 	setupDraggable() {
 		let draggableSelector = "";
 		let humanPlayerType = this.player_type.indexOf("Human");
-		if (this.state.to_play === 0 && this.current_player_types[0] === humanPlayerType) {
+		if (this.state.to_play === 0 && this.current_player_types[0] === humanPlayerType) { // White's turn and human is playing white
 			draggableSelector = `span.${this.class_white}`;
-		} else if (this.state.to_play === 1 && this.current_player_types[1] === humanPlayerType) {
+		} else if (this.state.to_play === 1 && this.current_player_types[1] === humanPlayerType) { // Black's turn and human is playing black
 			draggableSelector = `span.${this.class_black}`;
 		}
 		this.$board.find(`${draggableSelector}`).draggable({
@@ -468,8 +466,8 @@ class Main {
 							const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
 							gameOverModal.show();
 						}, 10);
-					} else if (this.timeout_handle === null) { // TODO: pass this on to next player
-						if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
+					} else if (this.timeout_handle === null) {
+						if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") { // Computer's turn
 							this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 						}
 					}
@@ -554,7 +552,7 @@ class Main {
 					gameOverModal.show();
 				}, 10);
 			} else {
-				if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
+				if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") { // Computer's turn (again?)
 					this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 				}
 			}
@@ -564,8 +562,8 @@ class Main {
 
 	handleSquareClick(clickedSquare) {
 		const humanPlayerType = this.player_type.indexOf("Human");
-		if (this.current_player_types[this.state.to_play] !== humanPlayerType) {
-			return; // Not human player's turn
+		if (this.current_player_types[this.state.to_play] !== humanPlayerType) { // Not human player's turn
+			return;
 		}
 
 		const clickedSquareData = $(clickedSquare).data("square");
@@ -638,7 +636,7 @@ class Main {
 					const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
 					gameOverModal.show();
 				}, 10);
-			} else if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") {
+			} else if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") { // Computer's turn
 				this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 			}
 		} else {
