@@ -453,10 +453,11 @@ class Main {
 					};
 					if (lastMove.color === this.class_white) {
 						this.lastMoveWhite = lastMove;
+						this.moveHistory.push([lastMove.notation]);
 					} else {
 						this.lastMoveBlack = lastMove;
+						this.moveHistory[this.moveHistory.length - 1].push(lastMove.notation);
 					}
-					this.moveHistory.push(lastMove.notation);
 					this.updateBoardUI();
 					this.updateMoveHistory();
 					if (result.flags & P4_MOVE_FLAG_MATE) {
@@ -535,10 +536,11 @@ class Main {
 			};
 			if (lastMove.color === this.class_white) {
 				this.lastMoveWhite = lastMove;
+				this.moveHistory.push([lastMove.notation]);
 			} else {
 				this.lastMoveBlack = lastMove;
+				this.moveHistory[this.moveHistory.length - 1].push(lastMove.notation);
 			}
-			this.moveHistory.push(lastMove.notation);
 			this.updateBoardUI();
 			this.updateMoveHistory();
 			clearTimeout(this.timeout_handle);
@@ -620,10 +622,11 @@ class Main {
 			};
 			if (lastMove.color === this.class_white) {
 				this.lastMoveWhite = lastMove;
+				this.moveHistory.push([lastMove.notation]);
 			} else {
 				this.lastMoveBlack = lastMove;
+				this.moveHistory[this.moveHistory.length - 1].push(lastMove.notation);
 			}
-			this.moveHistory.push(lastMove.notation);
 			this.deselectPiece();
 			this.updateBoardUI();
 			this.updateMoveHistory();
@@ -651,16 +654,14 @@ class Main {
 	}
 
 	updateMoveHistory() {
-		const lastMoveIndex = this.moveHistory.length - 1;
-		const lastMove = this.moveHistory[lastMoveIndex];
-		if (lastMoveIndex % 2 === 0) { // White's move
-			const moveNumber = lastMoveIndex / 2 + 1;
-			const row = `<tr><th scope="row">${moveNumber}</th><td>${lastMove}</td><td></td></tr>`;
+		this.$moveHistoryBody.empty();
+		this.moveHistory.forEach((movePair, index) => {
+			const moveNumber = index + 1;
+			const whiteMove = movePair[0] || '';
+			const blackMove = movePair[1] || '';
+			const row = `<tr><th scope="row">${moveNumber}</th><td>${whiteMove}</td><td>${blackMove}</td></tr>`;
 			this.$moveHistoryBody.append(row);
-		} else { // Black's move
-			const lastRow = this.$moveHistoryBody.find("tr:last");
-			lastRow.find("td:last").text(lastMove);
-		}
+		});
 		const container = this.$moveHistoryContainer;
 		if (container[0].scrollHeight > container[0].clientHeight) {
 			container.scrollTop(container[0].scrollHeight);

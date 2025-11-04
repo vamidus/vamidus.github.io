@@ -61,6 +61,10 @@ body {
 	padding-left: 10px;
 }
 
+.play-as-group {
+	padding-left: 10px;
+}
+
 .difficulty-slider-container {
 	display: inline-block;
 	padding: 10px;

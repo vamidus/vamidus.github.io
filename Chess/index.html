@@ -43,6 +43,17 @@
 				</ul>
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active" id="game" role="tabpanel" aria-labelledby="game-tab">
+						<div class="d-none">
+							<label for="play-as">Play as:</label>
+							<div class="btn-group play-as-group" role="group" aria-label="Play as switcher">
+								<input type="radio" class="btn-check" name="play-as" id="play-as-white" autocomplete="off" checked>
+								<label class="btn btn-outline-primary" for="play-as-white">White</label>				
+								<input type="radio" class="btn-check" name="play-as" id="play-as-random" autocomplete="off">
+								<label class="btn btn-outline-primary" for="play-as-random">Random</label>				
+								<input type="radio" class="btn-check" name="play-as" id="play-as-black" autocomplete="off">
+								<label class="btn btn-outline-primary" for="play-as-black">Black</label>
+							</div>
+						</div>
 						<div>
 							<label for="difficulty-slider" class="form-label">Difficulty:</label>
 							<div class="difficulty-slider-container">
@@ -68,10 +79,8 @@
 							<div class="btn-group color-scheme-group" role="group" aria-label="Color scheme switcher">
 								<input type="radio" class="btn-check" name="color-scheme" id="light-scheme" autocomplete="off" checked>
 								<label class="btn btn-outline-primary" for="light-scheme">Light</label>
-
 								<input type="radio" class="btn-check" name="color-scheme" id="dark-scheme" autocomplete="off">
 								<label class="btn btn-outline-primary" for="dark-scheme">Dark</label>
-
 								<input type="radio" class="btn-check" name="color-scheme" id="auto-scheme" autocomplete="off">
 								<label class="btn btn-outline-primary" for="auto-scheme">Auto</label>
 							</div>
