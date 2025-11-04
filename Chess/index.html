@@ -35,11 +35,34 @@
 						<button class="nav-link active" id="game-tab" data-bs-toggle="tab" data-bs-target="#game" type="button" role="tab" aria-controls="game" aria-selected="true">Game</button>
 					</li>
 					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="appearance-tab" data-bs-toggle="tab" data-bs-target="#appearance" type="button" role="tab" aria-controls="appearance" aria-selected="false">Appearance</button>
+					</li>
+					<li class="nav-item" role="presentation">
 						<button class="nav-link" id="advanced-tab" data-bs-toggle="tab" data-bs-target="#advanced" type="button" role="tab" aria-controls="advanced" aria-selected="false">Advanced</button>
 					</li>
 				</ul>
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active" id="game" role="tabpanel" aria-labelledby="game-tab">
+						<div>
+							<label for="difficulty-slider" class="form-label">Difficulty:</label>
+							<div class="difficulty-slider-container">
+								<input type="range" class="form-range" min="0" max="6" id="difficulty-slider" list="difficulty-levels">
+								<datalist id="difficulty-levels">
+									<option value="0" label="1"></option>
+									<option value="1" label="2"></option>
+									<option value="2" label="3"></option>
+									<option value="3" label="4"></option>
+									<option value="4" label="5"></option>
+									<option value="5" label="6"></option>
+									<option value="6" label="7"></option>
+								</datalist>
+							</div>
+						</div>
+						<div class="text-center">
+							<button type="button" class="btn btn-success me-2" id="new-game-button">New Game</button>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="appearance" role="tabpanel" aria-labelledby="appearance-tab">
 						<div>
 							<label for="color-scheme">Color scheme:</label>
 							<div class="btn-group color-scheme-group" role="group" aria-label="Color scheme switcher">
@@ -57,21 +80,6 @@
 							<label for="highlight-switch">Highlighting:</label>
 							<div class="form-check form-switch d-inline-block">
 								<input class="form-check-input" type="checkbox" id="highlight-switch" checked>
-							</div>
-						</div>
-						<div>
-							<label for="difficulty-slider" class="form-label">Difficulty:</label>
-							<div class="difficulty-slider-container">
-								<input type="range" class="form-range" min="0" max="6" id="difficulty-slider" list="difficulty-levels">
-								<datalist id="difficulty-levels">
-									<option value="0" label="1"></option>
-									<option value="1" label="2"></option>
-									<option value="2" label="3"></option>
-									<option value="3" label="4"></option>
-									<option value="4" label="5"></option>
-									<option value="5" label="6"></option>
-									<option value="6" label="7"></option>
-								</datalist>
 							</div>
 						</div>
 					</div>
@@ -97,7 +105,6 @@
 					</div>
 				</div>
 				<div class="menu-buttons float-end">
-					<button type="button" class="btn btn-success me-2" id="new-game-button">New Game</button>
 					<button type="button" class="btn btn-primary" id="ok-button">Close</button>
 				</div>
 			</div>
