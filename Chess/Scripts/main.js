@@ -1,13 +1,6 @@
 class Main {
 	constructor() {
 		// Configs
-		this.square_size = 64;
-		this.square_black = "grey";
-		this.square_white = "white";
-
-		// Variables
-		this.aiIsBlack = true;
-
 		this.board_height = 8;
 		this.board_width = 8;
 
@@ -17,13 +10,30 @@ class Main {
 		this.class_square = "square";
 		this.class_rank = "rank";
 
+		this.scale_range = 1 / 720;
+
 		this.pieces = ["♔♕♖♗♘♙", "♚♛♜♝♞♟︎"];
 		this.square_files = "abcdefgh";
 		this.square_ranks = "87654321";
+		this.square_size = 64;
+		this.square_black = "grey";
+		this.square_white = "white";
 
-		this.scale_range = 1 / 720;
+		// Map p4wn engine piece types to their character index in this.pieces strings
+		// P4_PAWN, P4_ROOK, etc. are global constants from engine.js
+		this.pieceCharIndexMap = {
+			2: 5,   // P4_PAWN -> ♙ / ♟︎ (index 5 in "♔♕♖♗♘♙" and "♚♛♜♝♞♟︎")
+			4: 2,   // P4_ROOK -> ♖ / ♜ (index 2)
+			6: 4,   // P4_KNIGHT -> ♘ / ♞ (index 4)
+			8: 3,   // P4_BISHOP -> ♗ / ♝ (index 3)
+			10: 0,  // P4_KING -> ♔ / ♚ (index 0)
+			12: 1   // P4_QUEEN -> ♕ / ♛ (index 1)
+		};
 
+		// Variables
 		this.state = null;
+
+		this.aiIsBlack = true;
 		this.player_type = ["Human", "Computer"];
 		this.current_player_types = [0, 0];
 		this.depth = 0;
@@ -35,25 +45,24 @@ class Main {
 		
 		this.lastMoveWhite = null;
 		this.lastMoveBlack = null;
+		this.moveHistory = [];		
 
 		this.timeout_handle = null;
 
-		this.moveHistory = [];		
-
 		// Selectors
-		// Map p4wn engine piece types to their character index in this.pieces strings
-		// P4_PAWN, P4_ROOK, etc. are global constants from engine.js
-		this.pieceCharIndexMap = {
-			2: 5,   // P4_PAWN -> ♙ / ♟︎ (index 5 in "♔♕♖♗♘♙" and "♚♛♜♝♞♟︎")
-			4: 2,   // P4_ROOK -> ♖ / ♜ (index 2)
-			6: 4,   // P4_KNIGHT -> ♘ / ♞ (index 4)
-			8: 3,   // P4_BISHOP -> ♗ / ♝ (index 3)
-			10: 0,  // P4_KING -> ♔ / ♚ (index 0)
-			12: 1   // P4_QUEEN -> ♕ / ♛ (index 1)
-		};
 		this.$board = null;
 		this.$menuIcon = null;
+		this.$menuContainer = null;
 		this.$menu = null;
+		this.$okButton = null;
+		this.$difficultySlider = null;
+		this.$newGameButton = null;
+		this.$highlightSwitch = null;
+		this.$moveHistoryBody = null;
+		this.$moveHistoryContainer = null;
+		this.$gameStateTextarea = null;
+		this.$exportGameStateButton = null;
+		this.$importGameStateButton = null;
 	}
 	
 	initialize(settings) {
