@@ -199,8 +199,8 @@ class Main {
 	}
 
 	scaleBoard() {
-		let $container = this.$board.parent();
-		let scale = this.scale_range * Math.min($container.innerWidth(), $container.innerHeight());
+		const $container = this.$board.parent();
+		const scale = this.scale_range * Math.min($container.innerWidth(), $container.innerHeight());
 		document.documentElement.style.setProperty("--square-size", `${this.square_size * scale}px`);
 	}
 
@@ -286,15 +286,15 @@ class Main {
 	drawBoard() {
 		for (let y = 9; y > 1; y--) {
 			for (let x = 1; x < 9; x++) {
-				let i = y * 10 + x;
-				let piece = this.getPieceFromP4Index(this.state.board[i]);
-				let pieceColor = this.getPieceColorFromP4Index(this.state.board[i]);
+				const i = y * 10 + x;
+				const piece = this.getPieceFromP4Index(this.state.board[i]);
+				const pieceColor = this.getPieceColorFromP4Index(this.state.board[i]);
 				if (piece && pieceColor) {
-					let file = this.square_files.charAt(x - 1);
+					const file = this.square_files.charAt(x - 1);
 					// Map p4wn engine's 1-9 rank to 0-7 for square_ranks string (87654321)
 					// e.g., p4wn y=8 (rank 1) -> square_ranks.charAt(7)
 					// p4wn y=2 (rank 7) -> square_ranks.charAt(1)
-					let rank = this.square_ranks.charAt(9 - y);
+					const rank = this.square_ranks.charAt(9 - y);
 					$(`[data-square='${file}${rank}']`).html(`<span class='${pieceColor}'>${piece}</span>`);
 				}
 			}
@@ -416,7 +416,7 @@ class Main {
 
 	setupDraggable() {
 		let draggableSelector = "";
-		let humanPlayerType = this.player_type.indexOf("Human");
+		const humanPlayerType = this.player_type.indexOf("Human");
 		if (this.state.to_play === 0 && this.current_player_types[0] === humanPlayerType) { // White's turn and human is playing white
 			draggableSelector = `span.${this.class_white}`;
 		} else if (this.state.to_play === 1 && this.current_player_types[1] === humanPlayerType) { // Black's turn and human is playing black
@@ -441,7 +441,7 @@ class Main {
 				const el = this.allElementsFromPoint(event.pageX, event.pageY);
 				this.dragged_over_square = $(el).filter(".square").not(ui.helper).first().data("square");
 				const movedColor = this.state.to_play === 0 ? this.class_white : this.class_black;
-				let result = this.state.move(`${this.dragged_from_square}-${this.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
+				const result = this.state.move(`${this.dragged_from_square}-${this.dragged_over_square}`); // TODO: add optional promotion argument when hitting last row (Qq, Rr, Bb, Nn)
 				if (result.ok) {
 					const lastMove = {
 						from: this.dragged_from_square,
@@ -479,8 +479,9 @@ class Main {
 	}
 
 	allElementsFromPoint(x, y) {
-		let element, elements = [];
-		let old_visibility = [];
+		let element;
+		const elements = [];
+		const old_visibility = [];
 		while (true) {
 			element = document.elementFromPoint(x, y);
 			if (!element || element === document.documentElement) {
@@ -499,12 +500,12 @@ class Main {
 	}
 
 	getComputerMove() {
-		let startTime = Date.now();
+		const startTime = Date.now();
 		let localDepth = this.depth;
 		let moves = this.state.findmove(localDepth);
 		let delta = Date.now() - startTime;
 		if (localDepth > 2) {
-			let minTime = 25 * localDepth;
+			const minTime = 25 * localDepth;
 			while (delta < minTime) {
 				localDepth++;
 				moves = this.state.findmove(localDepth);
@@ -524,7 +525,7 @@ class Main {
 			return;
 		}
 		const movedColor = this.state.to_play === 0 ? this.class_white : this.class_black;
-		let result = this.state.move(moves[0], moves[1]);
+		const result = this.state.move(moves[0], moves[1]);
 		if (result.ok) {
 			const lastMove = {
 				from: p4_stringify_point(moves[0]),
@@ -610,7 +611,7 @@ class Main {
 
 	movePiece(from, to) {
 		const movedColor = this.state.to_play === 0 ? this.class_white : this.class_black;
-		let result = this.state.move(`${from}-${to}`);
+		const result = this.state.move(`${from}-${to}`);
 		if (result.ok) {
 			const lastMove = {
 				from: from,
@@ -667,7 +668,7 @@ class Main {
 	}
 
 	static CreateInstance(settings) {
-		var instance = new Main();
+		const instance = new Main();
 		instance.initialize(settings);
 		return instance;
 	}
