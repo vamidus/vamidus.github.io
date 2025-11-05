@@ -1,3 +1,4 @@
+/* General Styles */
 html,
 body {
 	background-color: inherit;
@@ -5,19 +6,31 @@ body {
 	height: 100%;
 }
 
+:root {
+    --font-stack: Arial, Helvetica, sans-serif;
+    --menu-background-color: #f0f0f0;
+    --menu-border-color: #ccc;
+    --menu-box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    --highlight-move-color: rgba(27, 244, 3, 0.125);
+    --highlight-select-color: green;
+    --highlight-check-color: red;
+    --highlight-last-move-color: orange;
+}
+
 .container-global {
 	align-items: center;
 	display: flex;
-	font: calc(var(--square-size) / 2.5) Arial, Helvetica, sans-serif;
+	font: calc(var(--square-size) / 2.5) var(--font-stack);
 	justify-content: center;
 	height: 100%;
 	overflow: hidden;
 }
 
+/* Menu Styles */
 #menu-icon {
 	background: none;
 	border: none;
-	font: calc(var(--square-size) / 1.8) Arial, Helvetica, sans-serif;
+	font: calc(var(--square-size) / 1.8) var(--font-stack);
 	padding: .2em .4em;
 	position: absolute;
 	right: .5em;
@@ -26,10 +39,10 @@ body {
 }
 
 .menu {
-	background-color: #f0f0f0;
-	border: 1px solid #ccc;
+	background-color: var(--menu-background-color);
+	border: 1px solid var(--menu-border-color);
 	border-radius: 4px;
-	box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+	box-shadow: var(--menu-box-shadow);
 	opacity: .9;
 	padding: 10px;
 	width: 50%;
@@ -115,6 +128,7 @@ label[for="difficulty-slider"] {
 	color: black;
 }
 
+/* Board Styles */
 .rank {
 	display: flex;
 }
@@ -192,6 +206,7 @@ span.black {
 	--border-color: black;
 }
 
+/* Media Queries */
 @media (prefers-color-scheme: dark) {
 	:root:not(.light-theme) {
 		background-color: black;
@@ -210,29 +225,26 @@ span.black {
 	}
 }
 
+/* Highlighting Styles */
 .highlight-from-white,
-.highlight-to-white {
-	outline: .1em dotted orange;
-	outline-offset: -.1em;
-}
-
+.highlight-to-white,
 .highlight-from-black,
 .highlight-to-black {
-	outline: .1em dotted orange;
+	outline: .1em dotted var(--highlight-last-move-color);
 	outline-offset: -.1em;
 }
 
 .highlight-possible-move {
-    box-shadow: inset 0 0 1em 1em rgba(27, 244, 3, 0.125);
+    box-shadow: inset 0 0 1em 1em var(--highlight-move-color);
 }
 
 .highlight-selected {
-    outline: .1em solid green;
+    outline: .1em solid var(--highlight-select-color);
     outline-offset: -.1em;
 }
 
 .highlight-check {
-    outline: .1em solid red;
+    outline: .1em solid var(--highlight-check-color);
     outline-offset: -.1em;
 }
 
