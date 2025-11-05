@@ -34,7 +34,7 @@ class Main {
 		this.state = null;
 
 		this.player_type = ["Human", "Computer"];
-		this.current_player_types = [0, 0];
+		this.current_player_types = [0, 0]; // 1st element ot the array will play as White, 2nd element ot the array will play as Black
 		this.depth = 0;
 
 		this.dragged_from_square = "";
@@ -81,6 +81,10 @@ class Main {
 		const highlighting = this.getHighlighting();
 		this.$highlightSwitch.prop('checked', highlighting);
 		this.setHighlighting(highlighting);
+
+		// Play as
+		const playAs = this.getPlayAs();
+		$(`#${playAs}`).prop('checked', true);
 
 		this.startNewGame();
 	}
@@ -140,9 +144,21 @@ class Main {
 		this.$highlightSwitch.on('change', (e) => {
 			this.setHighlighting(e.target.checked);
 		});
+		$('input[name="play-as"]').on('change', (e) => {
+			localStorage.setItem('play-as', e.target.id);
+		});
 		this.$board.on("click", ".square", (e) => this.handleSquareClick(e.currentTarget));
 		this.$exportGameStateButton.on("click", () => this.exportGameState());
 		this.$importGameStateButton.on("click", () => this.importGameState());
+	}
+
+	getPlayAs() {
+		const savedPlayAs = localStorage.getItem('play-as');
+		if (savedPlayAs) {
+			return savedPlayAs;
+		} else {
+			return 'play-as-white';
+		}
 	}
 
 	setColorScheme(scheme) {
@@ -279,8 +295,19 @@ class Main {
 	}
 
 	setGameParameters() {
-		this.current_player_types = [0, 1]; // Human plays white, computer playes black
+		this.current_player_types = this.getCurrentPlayerTypes();
 		this.depth = this.$difficultySlider.val();
+	}
+
+	getCurrentPlayerTypes() {
+		switch ($('input[name="play-as"]:checked').attr('id')) {
+			case 'play-as-white':
+				return [0, 1];
+			case 'play-as-black':
+				return [1, 0];
+			case 'play-as-random':
+				return Math.random() < 0.5 ? [0, 1] : [1, 0];
+		}
 	}
 
 	drawBoard() {
