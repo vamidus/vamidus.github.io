@@ -68,23 +68,23 @@ class Main {
 		if (settings) this.applySettings(settings);
 		this.setup();
 
-		// Color scheme
-		const preferredScheme = this.getPreferredColorScheme();
-		this.setColorScheme(preferredScheme);
-		$(`#${preferredScheme}-scheme`).prop('checked', true);
+		// Play as
+		const playAs = this.getPlayAs();
+		$(`#${playAs}`).prop('checked', true);
 
 		// Difficulty
 		const difficulty = this.getDifficulty();
 		this.$difficultySlider.val(difficulty);
 
+		// Color scheme
+		const preferredScheme = this.getPreferredColorScheme();
+		this.setColorScheme(preferredScheme);
+		$(`#${preferredScheme}-scheme`).prop('checked', true);
+
 		// Highlighting
 		const highlighting = this.getHighlighting();
 		this.$highlightSwitch.prop('checked', highlighting);
 		this.setHighlighting(highlighting);
-
-		// Play as
-		const playAs = this.getPlayAs();
-		$(`#${playAs}`).prop('checked', true);
 
 		this.startNewGame();
 	}
@@ -98,7 +98,6 @@ class Main {
 		this.setupEventListeners();
 		this.setCssVariables();
 		this.scaleBoard();
-		this.setupBoard();
 	}
 
 	setupElementSelectors() {
@@ -220,6 +219,44 @@ class Main {
 		document.documentElement.style.setProperty("--square-size", `${this.square_size * scale}px`);
 	}
 
+	updateBoardUI(setupDraggable = true) {
+		// Clear previous highlights
+		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move, .highlight-selected, .highlight-check')
+			.removeClass('highlight-from-white highlight-to-white highlight-from-black highlight-to-black highlight-possible-move highlight-selected highlight-check');
+
+		if (this.lastMoveWhite) {
+			const { from, to, color } = this.lastMoveWhite;
+			this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
+			this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
+		}
+
+		if (this.lastMoveBlack) {
+			const { from, to, color } = this.lastMoveBlack;
+			this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
+			this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
+		}
+
+		this.highlightCheck();
+
+		// Clear all piece spans from the board squares
+		this.$board.find(".square span").remove();
+		// Redraw pieces based on the current game state
+		this.drawBoard();
+		// Re-enable dragging for the current player's pieces, unless asked not to
+		if (setupDraggable) this.setupDraggable();
+	}
+
+	startNewGame() {
+		this.clearMoveHistory();
+		this.setupBoard();
+		this.state = p4_new_game();
+		this.setGameParameters();
+		this.updateBoardUI();
+		if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") { // true if human is playing black
+			this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
+		}
+	}
+
 	setupBoard() {
 		let colorIsBlack = true;
 		this.$board.empty();
@@ -254,43 +291,6 @@ class Main {
 			}
 			$newRow.appendTo(this.$board);
 			colorIsBlack = !colorIsBlack;
-		}
-	}
-
-	updateBoardUI(setupDraggable = true) {
-		// Clear previous highlights
-		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move, .highlight-selected, .highlight-check')
-			.removeClass('highlight-from-white highlight-to-white highlight-from-black highlight-to-black highlight-possible-move highlight-selected highlight-check');
-
-		if (this.lastMoveWhite) {
-			const { from, to, color } = this.lastMoveWhite;
-			this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
-			this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
-		}
-
-		if (this.lastMoveBlack) {
-			const { from, to, color } = this.lastMoveBlack;
-			this.$board.find(`[data-square=${from}]`).addClass(`highlight-from-${color}`);
-			this.$board.find(`[data-square=${to}]`).addClass(`highlight-to-${color}`);
-		}
-
-		this.highlightCheck();
-
-		// Clear all piece spans from the board squares
-		this.$board.find(".square span").remove();
-		// Redraw pieces based on the current game state
-		this.drawBoard();
-		// Re-enable dragging for the current player's pieces, unless asked not to
-		if (setupDraggable) this.setupDraggable();
-	}
-
-	startNewGame() {
-		this.state = p4_new_game();
-		this.clearMoveHistory();
-		this.setGameParameters();
-		this.updateBoardUI();
-		if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") { // true if human is playing black
-			this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
 		}
 	}
 
