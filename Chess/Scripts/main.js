@@ -249,7 +249,7 @@ class Main {
 		this.clearMoveHistory();
 		this.setGameParameters();
 		this.setupBoard();
-		this.state = p4_new_game(this.current_player_types[0] === 1);
+		this.state = p4_new_game();
 		this.updateBoardUI();
 		if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") { // true if human is playing black
 			this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
