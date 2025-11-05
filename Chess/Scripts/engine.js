@@ -78,7 +78,6 @@ var P4_WIN_DECAY = 300;
 var P4_WIN_NOW = P4_KING_VALUE - 250;
 
 /* P4_{MAX,MIN}_SCORE should be beyond any possible evaluated score */
-
 var P4_MAX_SCORE = 9999;    // extremes of evaluation range
 var P4_MIN_SCORE = -P4_MAX_SCORE;
 
@@ -90,6 +89,7 @@ var P4_KNIGHT_WEIGHTS;
 /*P4_DEBUG turns on debugging features */
 var P4_DEBUG = 0;
 var P4_INITIAL_BOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 1 1";
+var P4_INITIAL_BOARD_FLIPPED = "RNBKQBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbkqbnr w QKqk - 1 1";
 
 /*use javascript typed arrays rather than plain arrays
  * (faster in some browsers, unsupported in others, possibly slower elsewhere) */
@@ -111,7 +111,6 @@ var P4_PIECE_LUT = { /*for FEN, PGN interpretation */
 };
 
 var P4_ENCODE_LUT = '  PPRRNNBBKKQQ';
-
 
 function p4_alphabeta_treeclimber(state, count, colour, score, s, e, alpha, beta){
     var move = p4_make_move(state, s, e, P4_QUEEN);
@@ -1415,8 +1414,8 @@ function p4_initialise_state(){
     return state;
 }
 
-function p4_new_game(){
-    return p4_fen2state(P4_INITIAL_BOARD);
+function p4_new_game(flipped = false){
+    return p4_fen2state(flipped ? P4_INITIAL_BOARD_FLIPPED : P4_INITIAL_BOARD);
 }
 
 /*convert an arbitrary movestring into a pair of integers offsets into

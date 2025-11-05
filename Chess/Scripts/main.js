@@ -247,9 +247,9 @@ class Main {
 
 	startNewGame() {
 		this.clearMoveHistory();
-		this.setupBoard();
-		this.state = p4_new_game();
 		this.setGameParameters();
+		this.setupBoard();
+		this.state = p4_new_game(this.current_player_types[0] === 1);
 		this.updateBoardUI();
 		if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") { // true if human is playing black
 			this.timeout_handle = setTimeout(() => this.getComputerMove(), 10);
@@ -320,8 +320,7 @@ class Main {
 	}
 
 	drawBoard() {
-		// If the user is playing as black, reverse the board
-		const isFlipped = this.current_player_types[1] === 0;
+		const isFlipped = this.current_player_types[0] === 1;
 
 		for (let y = 9; y > 1; y--) {
 			for (let x = 1; x < 9; x++) {
@@ -703,12 +702,6 @@ class Main {
 		}
 	}
 
-	static CreateInstance(settings) {
-		const instance = new Main();
-		instance.initialize(settings);
-		return instance;
-	}
-
 	showToast(message) {
 		const toastLiveExample = document.getElementById('liveToast');
 		const toastBody = toastLiveExample.querySelector('.toast-body');
@@ -744,5 +737,11 @@ class Main {
 		} else {
 			this.showToast("Please paste a game state (FEN) into the text area.");
 		}
+	}
+
+	static CreateInstance(settings) {
+		const instance = new Main();
+		instance.initialize(settings);
+		return instance;
 	}
 }
