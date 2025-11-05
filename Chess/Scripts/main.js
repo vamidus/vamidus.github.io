@@ -130,8 +130,7 @@ class Main {
 			}
 		});
 		this.$newGameButton.on("click", () => {
-			this.startNewGame();
-			this.$menuContainer.removeClass("open");
+			window.location.reload();
 		});
 		$('input[name="color-scheme"]').on('change', (e) => {
 			this.setColorScheme(e.target.id.split('-')[0]);
@@ -260,6 +259,16 @@ class Main {
 	setupBoard() {
 		let colorIsBlack = true;
 		this.$board.empty();
+
+		let square_files = this.square_files;
+		let square_ranks = this.square_ranks;
+
+		// If the user is playing as black, reverse the board
+		if (this.current_player_types[0] === 1) {
+			square_files = square_files.split('').reverse().join('');
+			square_ranks = square_ranks.split('').reverse().join('');
+		}
+
 		for (let y = -1; y < this.board_height + 1; y++) {
 			let $newRow = $("<div />").addClass(this.class_rank);
 			for (let x = -1; x < this.board_width + 1; x++) {
@@ -268,7 +277,7 @@ class Main {
 						.addClass(colorIsBlack ? this.class_black : this.class_white)
 						.addClass(this.class_square)
 						.attr("id", "square-x" + x + "-y" + y)
-						.attr("data-square", this.square_files.charAt(x) + this.square_ranks.charAt(y))
+						.attr("data-square", square_files.charAt(x) + square_ranks.charAt(y))
 						.data("x", x)
 						.data("y", y)
 						.appendTo($newRow);
@@ -276,12 +285,12 @@ class Main {
 				} else if ((y === -1 || y === this.board_height) && x > -1 && x < this.board_width) {
 					$("<div />")
 						.addClass(this.class_legend)
-						.text(this.square_files.charAt(x))
+						.text(square_files.charAt(x))
 						.appendTo($newRow);
 				} else if (y > -1 && y < this.board_height && ( x === -1 || x === this.board_width)) {
 					$("<div />")
 						.addClass(this.class_legend)
-						.html(this.square_ranks.charAt(y))
+						.html(square_ranks.charAt(y))
 						.appendTo($newRow);
 				} else {
 					$("<div />")
@@ -311,17 +320,17 @@ class Main {
 	}
 
 	drawBoard() {
+		// If the user is playing as black, reverse the board
+		const isFlipped = this.current_player_types[1] === 0;
+
 		for (let y = 9; y > 1; y--) {
 			for (let x = 1; x < 9; x++) {
 				const i = y * 10 + x;
 				const piece = this.getPieceFromP4Index(this.state.board[i]);
 				const pieceColor = this.getPieceColorFromP4Index(this.state.board[i]);
 				if (piece && pieceColor) {
-					const file = this.square_files.charAt(x - 1);
-					// Map p4wn engine's 1-9 rank to 0-7 for square_ranks string (87654321)
-					// e.g., p4wn y=8 (rank 1) -> square_ranks.charAt(7)
-					// p4wn y=2 (rank 7) -> square_ranks.charAt(1)
-					const rank = this.square_ranks.charAt(9 - y);
+					const file = isFlipped ? this.square_files.charAt(8 - x) : this.square_files.charAt(x - 1);
+					const rank = isFlipped ? this.square_ranks.charAt(y - 2) : this.square_ranks.charAt(9 - y);
 					$(`[data-square='${file}${rank}']`).html(`<span class='${pieceColor}'>${piece}</span>`);
 				}
 			}
