@@ -46,6 +46,8 @@ body {
 	opacity: .9;
 	padding: 10px;
 	width: 50%;
+	max-height: 90vh;
+	overflow-y: auto;
 }
 
 .menu-container {
