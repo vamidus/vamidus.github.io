@@ -54,7 +54,7 @@ let Main = function () {
 	this.$music_toggle_2 = null;
 	this.$start_game = null;
 
-	this.$clear_cookies_dialog = null;
+	this.$clear_storage_dialog = null;
 	this.$help_dialog = null;
 	this.$import_dialog = null;
 	this.$win_dialog = null;
@@ -74,7 +74,7 @@ Main.prototype = {
 		let me = this;
 		me.setupElementSelectors();
 		me.setupLevelSelect();
-		me.getCookies();
+		me.getStore();
 		me.getHighestCompletedLevel();
 		me.getLevelStepsBest();
 		me.setupLevel();
@@ -105,7 +105,7 @@ Main.prototype = {
 		this.$music_toggle_2 = $("#music-toggle-2");
 		this.$start_game = $("#start-game");
 
-		this.$clear_cookies_dialog = $("#clear-cookies-dialog");
+		this.$clear_storage_dialog = $("#clear-storage-dialog");
 		this.$help_dialog = $("#help-dialog");
 		this.$import_dialog = $("#import-dialog");
 		this.$win_dialog = $("#win-dialog");
@@ -177,26 +177,17 @@ Main.prototype = {
 		if (me.show_help_on_startup) me.$button_help.click();
 	},
 
-	getCookies: function () {
+	getStore: function () {
 		let me = this;
-		let completedLevels = me.getCookie("completedLevels");
+		let completedLevels = localStorage.getItem("completedLevels");
 		me.completed_levels = completedLevels === null ? [] : JSON.parse(completedLevels);
-		let showHelpOnStartup = me.getCookie("showHelpOnStartup")
+		let showHelpOnStartup = localStorage.getItem("showHelpOnStartup")
 		me.show_help_on_startup = showHelpOnStartup === null ? true : (showHelpOnStartup === "true");
-		let playMusicOnStartup = me.getCookie("playMusicOnStartup")
+		let playMusicOnStartup = localStorage.getItem("playMusicOnStartup")
 		me.play_music_on_startup = playMusicOnStartup === null ? true : (playMusicOnStartup === "true");
 	},
 
-	getCookie: function (name) {
-		let cookieArray = decodeURIComponent(document.cookie).split(";");
-		for (let i = 0; i < cookieArray.length; i++) {
-			let cookieNameValueArray = cookieArray[i].split("=");
-			if (cookieNameValueArray[0].trim() === name) {
-				return cookieNameValueArray[1].trim();
-			}
-		}
-		return null;
-	},
+
 
 	getHighestCompletedLevel: function () {
 		let me = this;
@@ -230,10 +221,8 @@ Main.prototype = {
 		}
 	},
 	
-	setCookie: function (name, value, daysToExpiration) {
-		const d = new Date();
-		d.setTime(d.getTime() + (daysToExpiration * 24 * 60 * 60 * 1000));
-		document.cookie = `${name}=${value}; expires=${d.toUTCString()}; path=/;`;
+	setStore: function (name, value) {
+		localStorage.setItem(name, value);
 	},
 
 	handleLevelElementClick: function (e) {
@@ -366,7 +355,7 @@ Main.prototype = {
 			me.synth_melodic_steps.play();
 			me.play_music_on_startup = true;
 		}
-		me.setCookie("playMusicOnStartup", me.play_music_on_startup, 365);
+		me.setStore("playMusicOnStartup", me.play_music_on_startup);
 		me.updateMusicToggleButton();
 		me.$music_toggle.blur();
 	},
@@ -421,16 +410,15 @@ Main.prototype = {
 		let me = this;
 		let dialog_width = Math.min($("html, body").innerWidth() - 32, 800);
 
-		me.$clear_cookies_dialog.dialog({
+		me.$clear_storage_dialog.dialog({
 			buttons: [
 				{
 					text: "Yes",
-					title: "Yes, delete all SOKOBAN cookies!",
+					title: "Yes, delete all SOKOBAN data from local storage!",
 					click: function () {
 						$(this).dialog("close");
 						$("#checkbox-show-help")[0].checked = true;
-						me.setCookie("completedLevels", "", -1);
-						me.setCookie("showHelpOnStartup", "", -1);
+						localStorage.clear();
 						me.$button_restart.click()
 						me.$help_dialog.dialog("close");
 						me.$level_select.blur();
@@ -440,7 +428,7 @@ Main.prototype = {
 				},
 				{
 					text: "No",
-					title: "No, I think I'll keep all SOKOBAN cookies!",
+					title: "No, I think I'll keep all SOKOBAN data!",
 					click: function () {
 						$(this).dialog("close");
 					}
@@ -468,7 +456,7 @@ Main.prototype = {
 						if (level !== null && level !== "") {
 							me.custom_level = JSON.parse(level);
 							me.level_steps_current = 0;
-							me.getCookies();
+							me.getStore();
 							me.getLevelStepsBest();
 							me.updateNumberOfSteps();
 							me.setupLevel();
@@ -525,14 +513,14 @@ Main.prototype = {
 	updateShowHelpSetting: function () {
 		let me = this;
 		me.show_help_on_startup = $("#checkbox-show-help")[0].checked;
-		me.setCookie("showHelpOnStartup", me.show_help_on_startup, 365);
+		me.setStore("showHelpOnStartup", me.show_help_on_startup);
 	},
 
 	handleRestartClick: function () {
 		let me = this;
 		me.level_steps_current = 0;
 		me.worker_orientation = "b";
-		me.getCookies();
+		me.getStore();
 		me.getLevelStepsBest();
 		me.setupLevel();
 		me.updateLevelElement();
@@ -742,7 +730,7 @@ Main.prototype = {
 					}
 					me.$level_select.val(me.level_id);
 					me.level_steps_current = 0;
-					me.getCookies();
+					me.getStore();
 					me.getLevelStepsBest();
 					me.updateNumberOfSteps();
 					me.setupLevel();
@@ -800,8 +788,7 @@ Main.prototype = {
 		if (current_level_record !== null) {
 			me.completed_levels.push(current_level_record);
 		}
-		me.setCookie("completedLevels", "", -1);
-		me.setCookie("completedLevels", JSON.stringify(me.completed_levels), 365);
+		me.setStore("completedLevels", JSON.stringify(me.completed_levels));
 	},
 
 	updateNumberOfSteps: function () {
