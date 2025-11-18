@@ -274,3 +274,17 @@ span.black {
     width: 100%;
     resize: vertical;
 }
+
+#about {
+	padding: 10px;
+}
+
+#about p {
+	text-indent: 3em;
+	text-align: justify;
+}
+
+.external-link-indicator {
+	vertical-align: super;
+	font-size: 0.65em;
+}

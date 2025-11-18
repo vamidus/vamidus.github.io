@@ -40,6 +40,9 @@
 					<li class="nav-item" role="presentation">
 						<button class="nav-link" id="advanced-tab" data-bs-toggle="tab" data-bs-target="#advanced" type="button" role="tab" aria-controls="advanced" aria-selected="false">Advanced</button>
 					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="false">About</button>
+					</li>
 				</ul>
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active" id="game" role="tabpanel" aria-labelledby="game-tab">
@@ -111,6 +114,11 @@
 							<button type="button" class="btn btn-secondary me-2" id="export-game-state-button">Export FEN</button>
 							<button type="button" class="btn btn-primary" id="import-game-state-button">Import FEN</button>
 						</div>
+					</div>
+					<div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
+						<p>It is I, <a href="https://github.com/vamidus/" target="_blank">Vamidus <span class="external-link-indicator">⧉</span></a>, who built this little chess game as a fun project to practice my web development skills. I handled the front-end, making the UI work and ensuring it looks decent on your screen. You might notice the computer player is pretty smart; that's thanks to an external chess engine I integrated.</p>
+						<p>It's powered by the "p4wn" engine under the hood, which handles all the deep thinking for the computer's moves. I didn't write that part myself; I simply integrated this awesome open-source technology so you have a challenging opponent to play against!</p>
+						<p>I hope you have a great time playing a few games. If you're interested in checking out the tech that makes the opponent tick, check out the <a href="https://github.com/douglasbagnall/p4wn" target="_blank">p4wn engine GitHub page <span class="external-link-indicator">⧉</span></a> – the folks who built it are the real MVPs behind the AI. Enjoy the game!</p>
 					</div>
 				</div>
 				<div class="menu-buttons float-end">
