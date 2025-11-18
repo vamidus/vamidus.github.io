@@ -290,3 +290,11 @@ span.black {
 	vertical-align: super;
 	font-size: 0.65em;
 }
+
+#language-select {
+    display: inline-block;
+    width: 50%;
+	padding-left: 10px;
+	margin-bottom: 6px;
+	margin-left: 9px;
+}
