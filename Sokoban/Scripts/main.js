@@ -847,7 +847,7 @@ Main.prototype = {
 			.empty()
 			.css({
 				"width": me.level_width * 16 + "px",
-				"transform": "scale(1)"
+				"transform": "scale(0)"
 			});
 		for (let y = 0; y < me.level_height; y++) {
 			let $newRow = $("<div />")
@@ -896,9 +896,9 @@ Main.prototype = {
 		let heightRatio = me.$level_element.parent().height() / me.$level_element.height();
 		let widthRatio = me.$level_element.parent().width() / me.$level_element.width();
 		if (heightRatio < widthRatio) {
-			me.$level_element.css("transform", `scale(${(Math.floor(heightRatio * 8) / 8).toFixed(3)})`);
+			me.$level_element.css("transform", `scale(${(Math.floor(heightRatio * 16) / 16).toFixed(3)})`);
 		} else {
-			me.$level_element.css("transform", `scale(${(Math.floor(widthRatio * 8) / 8).toFixed(3)})`);
+			me.$level_element.css("transform", `scale(${(Math.floor(widthRatio * 16) / 16).toFixed(3)})`);
 		}
 	}, 
 

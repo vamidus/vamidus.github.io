@@ -198,14 +198,12 @@ body {
 	display: flex;
 	flex: 1 1 auto;
 	justify-content: center;
-	line-height: 11px;
 	margin: 9px;
 	padding: 1em;
 }
 
 .level-row {
-	display: block;
-	margin-bottom: -2px;
+	display: flex;
 }
 
 .level-cell {
