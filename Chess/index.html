@@ -27,6 +27,7 @@
 		<div class="container-global">
 			<div class="board"></div>
 		</div>
+		<button id="undo-button">⎌</button>
 		<button id="menu-icon" aria-label="Open menu">☰</button>
 		<div class="menu-container">
 			<div class="menu">
@@ -47,7 +48,7 @@
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active" id="game" role="tabpanel" aria-labelledby="game-tab">
 						<div class="d-none">
-							<label for="play-as" data-translate-key="play_as">Play as:</label>
+							<label class="form-label" for="play-as" data-translate-key="play_as">Play as:</label>
 							<div class="btn-group play-as-group" role="group" aria-label="Play as switcher">
 								<input type="radio" class="btn-check" name="play-as" id="play-as-white" autocomplete="off">
 								<label class="btn btn-outline-primary" for="play-as-white" data-translate-key="white">White</label>				
@@ -78,12 +79,12 @@
 					</div>
 					<div class="tab-pane fade" id="appearance" role="tabpanel" aria-labelledby="appearance-tab">
 						<div class="language-select-div">
-							<label for="language-select" data-translate-key="language">Language:</label>
+							<label class="form-label" for="language-select" data-translate-key="language">Language:</label>
 							<select class="form-select" id="language-select" aria-label="Language selection">
 							</select>
 						</div>
 						<div>
-							<label for="color-scheme" data-translate-key="color_scheme">Color scheme:</label>
+							<label class="form-label" for="color-scheme" data-translate-key="color_scheme">Color scheme:</label>
 							<div class="btn-group color-scheme-group" role="group" aria-label="Color scheme switcher">
 								<input type="radio" class="btn-check" name="color-scheme" id="light-scheme" autocomplete="off" checked>
 								<label class="btn btn-outline-primary" for="light-scheme" data-translate-key="light">Light</label>
@@ -94,7 +95,7 @@
 							</div>
 						</div>
 						<div class="highlight-switch-div">
-							<label for="highlight-switch" data-translate-key="highlighting">Highlighting:</label>
+							<label class="form-label" for="highlight-switch" data-translate-key="highlighting">Highlighting:</label>
 							<div class="form-check form-switch d-inline-block">
 								<input class="form-check-input" type="checkbox" id="highlight-switch" checked>
 							</div>
@@ -121,7 +122,7 @@
 						</div>
 					</div>
 					<div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
-						<p data-translate-key="about_p1">It is I, <a href="https://github.com/vamidus/" target="_blank">Vamidus <span class="external-link-indicator">⧉</span></a>, who built this little chess game as a fun project to practice my web development skills. I handled the front-end, making the UI work and ensuring it looks decent on your screen. You might notice the computer player is pretty smart; that's thanks to an external chess engine I integrated.</p>
+						<p data-translate-key="about_p1">I built this little chess game as a fun project to practice my web development skills. I handled the front-end, making the UI work and ensuring it looks decent on your screen. You might notice the computer player is pretty smart; that's thanks to an external chess engine I integrated.</p>
 						<p data-translate-key="about_p2">It's powered by the "p4wn" engine under the hood, which handles all the deep thinking for the computer's moves. I didn't write that part myself; I simply integrated this awesome open-source technology so you have a challenging opponent to play against!</p>
 						<p data-translate-key="about_p3">I hope you have a great time playing a few games. If you're interested in checking out the tech that makes the opponent tick, check out the <a href="https://github.com/douglasbagnall/p4wn" target="_blank">p4wn engine GitHub page <span class="external-link-indicator">⧉</span></a> – the folks who built it are the real MVPs behind the AI. Enjoy the game!</p>
 					</div>

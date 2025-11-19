@@ -150,11 +150,11 @@ class Main {
 				"uk": "Імпорт FEN"
 			},
 			"about_p1": {
-				"en": "It is I, <a href=\"https://github.com/vamidus/\" target=\"_blank\">Vamidus <span class=\"external-link-indicator\">⧉</span></a>, who built this little chess game as a fun project to practice my web development skills. I handled the front-end, making the UI work and ensuring it looks decent on your screen. You might notice the computer player is pretty smart; that's thanks to an external chess engine I integrated.",
-				"es": "Soy yo, <a href=\"https://github.com/vamidus/\" target=\"_blank\">Vamidus <span class=\"external-link-indicator\">⧉</span></a>, quien construyó este pequeño juego de ajedrez como un proyecto divertido para practicar mis habilidades de desarrollo web. Me encargué del front-end, haciendo que la interfaz de usuario funcione y asegurándome de que se vea decente en tu pantalla. Notarás que el jugador de la computadora es bastante inteligente; eso es gracias a un motor de ajedrez externo que integré.",
-				"ja": "この小さなチェスゲームを作成したのは、ウェブ開発スキルを練習するための楽しいプロジェクトとして、私、<a href=\"https://github.com/vamidus/\" target=\"_blank\">Vamidus <span class=\"external-link-indicator\">⧉</span></a>です。私はフロントエンドを担当し、UIが機能し、画面上で見栄えが良くなるようにしました。コンピュータープレイヤーがかなり賢いことにお気付きかもしれませんが、それは私が統合した外部のチェスエンジンのおかげです。",
-				"ru": "Это я, <a href=\"https://github.com/vamidus/\" target=\"_blank\">Vamidus <span class=\"external-link-indicator\">⧉</span></a>, создал эту маленькую шахматную игру в качестве забавного проекта для практики своих навыков веб-разработки. Я занимался фронтендом, заставляя пользовательский интерфейс работать и обеспечивая его достойный вид на вашем экране. Вы могли заметить, что компьютерный игрок довольно умен; это благодаря внешнему шахматному движку, который я интегрировал.",
-				"uk": "Це я, <a href=\"https://github.com/vamidus/\" target=\"_blank\">Vamidus <span class=\"external-link-indicator\">⧉</span></a>, створив цю маленьку шахову гру як веселий проект для практики своїх навичок у веб-розробці. Я займався фронтендом, змушуючи користувальницький інтерфейс працювати та забезпечуючи його пристойний вигляд на вашому екрані. Ви могли помітити, що комп'ютерний гравець досить розумний; це завдяки зовнішньому шаховому рушію, який я інтегрував."
+				"en": "I built this little chess game as a fun project to practice my web development skills. I handled the front-end, making the UI work and ensuring it looks decent on your screen. You might notice the computer player is pretty smart; that's thanks to an external chess engine I integrated.",
+				"es": "Yo quien construyó este pequeño juego de ajedrez como un proyecto divertido para practicar mis habilidades de desarrollo web. Me encargué del front-end, haciendo que la interfaz de usuario funcione y asegurándome de que se vea decente en tu pantalla. Notarás que el jugador de la computadora es bastante inteligente; eso es gracias a un motor de ajedrez externo que integré.",
+				"ja": "この小さなチェスゲームを作成したのは、ウェブ開発スキルを練習するための楽しいプロジェクトとして、私です。私はフロントエンドを担当し、UIが機能し、画面上で見栄えが良くなるようにしました。コンピュータープレイヤーがかなり賢いことにお気付きかもしれませんが、それは私が統合した外部のチェスエンジンのおかげです。",
+				"ru": "Я создал эту маленькую шахматную игру в качестве забавного проекта для практики своих навыков веб-разработки. Я занимался фронтендом, заставляя пользовательский интерфейс работать и обеспечивая его достойный вид на вашем экране. Вы могли заметить, что компьютерный игрок довольно умен; это благодаря внешнему шахматному движку, который я интегрировал.",
+				"uk": "Я створив цю маленьку шахову гру як веселий проект для практики своїх навичок у веб-розробці. Я займався фронтендом, змушуючи користувальницький інтерфейс працювати та забезпечуючи його пристойний вигляд на вашому екрані. Ви могли помітити, що комп'ютерний гравець досить розумний; це завдяки зовнішньому шаховому рушію, який я інтегрував."
 			},
 			"about_p2": {
 				"en": "It's powered by the \"p4wn\" engine under the hood, which handles all the deep thinking for the computer's moves. I didn't write that part myself; I simply integrated this awesome open-source technology so you have a challenging opponent to play against!",
@@ -329,6 +329,7 @@ class Main {
 		this.$exportGameStateButton = $("#export-game-state-button");
 		this.$importGameStateButton = $("#import-game-state-button");
 		this.$languageSelect = $("#language-select");
+		this.$undoButton = $("#undo-button");
 	}
 
 	setupEventListeners() {
@@ -366,6 +367,7 @@ class Main {
 		this.$languageSelect.on('change', (e) => {
 			this.setLanguage(e.target.value);
 		});
+		this.$undoButton.on("click", () => this.undo());
 	}
 
 	getPlayAs() {
@@ -476,6 +478,12 @@ class Main {
 		document.documentElement.style.setProperty("--square-size", `${this.square_size * scale}px`);
 	}
 
+	updateUndoButtonState() {
+		const allowUndo = this.state.moveno > 1;
+		this.$undoButton.prop('disabled', !allowUndo);
+		this.$undoButton.toggleClass('d-none', !allowUndo);
+	}
+
 	updateBoardUI(setupDraggable = true) {
 		// Clear previous highlights
 		this.$board.find('.highlight-from-white, .highlight-to-white, .highlight-from-black, .highlight-to-black, .highlight-possible-move, .highlight-selected, .highlight-check')
@@ -501,6 +509,7 @@ class Main {
 		this.drawBoard();
 		// Re-enable dragging for the current player's pieces, unless asked not to
 		if (setupDraggable) this.setupDraggable();
+		this.updateUndoButtonState();
 	}
 
 	startNewGame() {
@@ -936,6 +945,19 @@ class Main {
 		} else {
 			this.deselectPiece();
 		}
+	}
+
+	undo() {
+		if (this.state.moveno < 2) return;
+
+		this.state.jump_to_moveno(-2);
+		this.moveHistory.pop();
+
+		this.lastMoveWhite = null;
+		this.lastMoveBlack = null;
+
+		this.updateBoardUI();
+		this.updateMoveHistory();
 	}
 
 	clearMoveHistory() {
