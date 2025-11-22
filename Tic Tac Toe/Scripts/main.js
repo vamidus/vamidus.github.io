@@ -21,14 +21,21 @@ class Main {
 		this.$winner = null; // win message
 		this.$draw = null; // draw message
 		this.$loser = null; // lose message
+
+		// AI settings
+		this.aiDifficulty = 'medium'; // 'easy' | 'medium' | 'hard' | 'insane'
+		this.aiTimeLimitMs = 1000; // ms time budget for 'insane' iterative deepening
 	}
+	
 	initialize(settings) {
 		if (settings) this.applySettings(settings);
 		this.setup();
 	}
+
 	applySettings(settings) {
 		$.extend(this, settings);
 	}
+
 	setup() {
 		this.setupElementSelectors();
 		this.initConfigs();
@@ -37,6 +44,7 @@ class Main {
 		this.setupClickHandlers();
 		this.computerMove();
 	}
+
 	setupElementSelectors() {
 		this.$setup = $("form[name='setup']");
 		this.$field = $("#field");
@@ -44,12 +52,16 @@ class Main {
 		this.$draw = $("#draw");
 		this.$loser = $("#loser");
 	}
+
 	initConfigs() {
+		const aiParam = this.getUrlParameter("ai");
+		this.aiDifficulty = (aiParam === false) ? this.aiDifficulty : aiParam;
 		this.fieldWidth = this.getUrlParameter("width") - 0;
 		this.fieldHeight = this.getUrlParameter("height") - 0;
 		this.fieldPlayers = this.getUrlParameter("players") - 0;
 		this.fieldWin = this.getUrlParameter("win") - 0;
 	}
+
 	initVisibility() {
 		if (this.fieldPlayers > 1) {
 			this.$setup.hide();
@@ -60,6 +72,7 @@ class Main {
 			this.$field.hide();
 		}
 	}
+
 	getUrlParameter(paramName) {
 		const query = window.location.search.substring(1);
 		const parameters = query.split("&");
@@ -72,6 +85,7 @@ class Main {
 		}
 		return false;
 	}
+
 	setupField() {
 		if (this.fieldPlayers > 0) {
 			this.$field.empty();
@@ -93,6 +107,7 @@ class Main {
 			$("<div />").attr("id", "strike").appendTo(this.$field);
 		}
 	}
+
 	setupClickHandlers() {
 		if (this.fieldPlayers > 0) {
 			const me = this;
@@ -101,6 +116,7 @@ class Main {
 				.click(me.fieldClickHandler.bind(me));
 		}
 	}
+
 	fieldClickHandler(event) {
 		let x = $(event.target).attr("x") - 0;
 		let y = $(event.target).attr("y") - 0;
@@ -110,6 +126,7 @@ class Main {
 			}
 		}
 	}
+
 	makeMove(x, y) {
 		this.field[y][x].player = this.currentPlayer;
 		this.$field
@@ -134,6 +151,7 @@ class Main {
 			this.nextPlayer();
 		}
 	}
+
 	countMyCells(x, y, dirX, dirY, player) {
 		if (x < 0 || x >= this.fieldWidth
 			|| y < 0 || y >= this.fieldHeight
@@ -142,6 +160,7 @@ class Main {
 		}
 		return 1 + this.countMyCells(x + dirX, y + dirY, dirX, dirY, player);
 	}
+
 	getWinningCombination(x, y) {
 		const directions = [
 			{ x: 0, y: -1 }, // N
@@ -162,6 +181,7 @@ class Main {
 
 		return null;
 	}
+
 	getCellsInARow(x, y, dirX, dirY, player) {
 		if (x < 0 || x >= this.fieldWidth || y < 0 || y >= this.fieldHeight || this.field[y][x].player !== player) {
 			return [];
@@ -169,6 +189,7 @@ class Main {
 		const result = [{ x: x, y: y }];
 		return result.concat(this.getCellsInARow(x + dirX, y + dirY, dirX, dirY, player));
 	}
+
 	drawWinningLine(combination) {
 		const fieldOffset = this.$field.offset();
 		let maxDist = -1, idxA = 0, idxB = 0;
@@ -223,11 +244,13 @@ class Main {
 			"background-color": strikeColor
 		});
 	}
+
 	nextPlayer() {
 		this.currentPlayer = (this.currentPlayer + 1 === this.fieldPlayers) ? 0 : this.currentPlayer + 1;
 		$("#current").attr("player", this.currentPlayer);
 		this.computerMove();
 	}
+
 	isDraw() {
 		for (let y = 0; y < this.fieldHeight; y++) {
 			for (let x = 0; x < this.fieldWidth; x++) {
@@ -238,101 +261,147 @@ class Main {
 		}
 		return true;
 	}
-	computerMove() {
-		if (this.fieldPlayers > 1 && this.computerPlayers.includes(this.currentPlayer)) {
-			this.win3x3();
-		}
+
+	boardCopy(board) {
+		return board.map(function (row) { return row.map(function (c) { return ({ player: c.player }); }); });
 	}
-	win3x3() {
-		for (let player = 0; player < this.fieldPlayers; player++) {
-			if (this.checkFill(player)) {
-				return;
+
+	getAvailableMoves(board) {
+		const moves = [];
+		for (let y = 0; y < board.length; y++) {
+			for (let x = 0; x < board[0].length; x++) {
+				if (board[y][x].player === null) moves.push({ x: x, y: y });
 			}
 		}
-		if (this.blindHoard(1)) {
-			return;
-		}
-		else if (this.blindHoard(2)) {
-			return;
-		}
-		else if (this.blindHoard(3)) {
-			return;
-		}
-		this.randomMove();
+		return moves;
 	}
-	checkFill(player) {
-		const originalPlayer = this.currentPlayer;
-		this.currentPlayer = player;
 
-		for (let y = 0; y < this.fieldHeight; y++) {
-			for (let x = 0; x < this.fieldWidth; x++) {
-				if (this.field[y][x].player === null) {
-					this.field[y][x].player = player;
-					let winningCombination = this.getWinningCombination(x, y);
-					this.field[y][x].player = null;
-
-					if (winningCombination) {
-						this.currentPlayer = originalPlayer;
-						this.makeMove(x, y);
-						return true;
+	isWinFor(board, width, height, winLen, player) {
+		const dirs = [ {x:1,y:0}, {x:0,y:1}, {x:1,y:1}, {x:1,y:-1} ];
+		for (let y = 0; y < height; y++) {
+			for (let x = 0; x < width; x++) {
+				if (board[y][x].player !== player) continue;
+				for (let d = 0; d < dirs.length; d++) {
+					let dx = dirs[d].x, dy = dirs[d].y;
+					let cx = x, cy = y, count = 0;
+					while (cx >= 0 && cx < width && cy >= 0 && cy < height && board[cy][cx].player === player) {
+						count++;
+						if (count >= winLen) return true;
+						cx += dx; cy += dy;
 					}
 				}
 			}
 		}
-		this.currentPlayer = originalPlayer;
 		return false;
 	}
-	blindHoard(r) {
-		const centerX = Math.floor((this.fieldWidth - 1) / 2);
-		const centerY = Math.floor((this.fieldHeight - 1) / 2);
-		if (this.checkComputerMove(centerX, centerY)) { // checking this doesn't make much sense after the corner checks
-			return true; // center
+
+	evaluateBoard(board, width, height, winLen, playerId) {
+		const oppId = (playerId + 1) % this.fieldPlayers;
+		let score = 0;
+		const dirs = [ {x:1,y:0}, {x:0,y:1}, {x:1,y:1}, {x:1,y:-1} ];
+		for (let y = 0; y < height; y++) {
+			for (let x = 0; x < width; x++) {
+				for (let d = 0; d < dirs.length; d++) {
+					let dx = dirs[d].x, dy = dirs[d].y;
+					let countP = 0, countO = 0, empties = 0;
+					for (let k = 0; k < winLen; k++) {
+						let cx = x + k * dx, cy = y + k * dy;
+						if (cx < 0 || cx >= width || cy < 0 || cy >= height) { empties = -1; break; }
+						const v = board[cy][cx].player;
+						if (v === playerId) countP++; else if (v === oppId) countO++; else empties++;
+					}
+					if (empties === -1) continue;
+					if (countO === 0 && countP > 0) score += Math.pow(10, countP);
+					if (countP === 0 && countO > 0) score -= Math.pow(10, countO);
+				}
+			}
 		}
-		if (this.checkComputerMove(centerX - r, centerY - r)) {
-			return true; // NW
-		}
-		if (this.checkComputerMove(centerX + r, centerY + r)) {
-			return true; // SE
-		}
-		if (this.checkComputerMove(centerX + r, centerY - r)) {
-			return true; // NE
-		}
-		if (this.checkComputerMove(centerX - r, centerY + r)) {
-			return true; // SW
-		}
-		if (this.checkComputerMove(centerX, centerY - r)) {
-			return true; // N
-		}
-		if (this.checkComputerMove(centerX, centerY + r)) {
-			return true; // S
-		}
-		if (this.checkComputerMove(centerX + r, centerY)) {
-			return true; // E
-		}
-		if (this.checkComputerMove(centerX - r, centerY)) {
-			return true; // W
-		}
-		return false;
+		return score;
 	}
-	checkComputerMove(x, y) {
-		if (x < 0 || x >= this.fieldWidth
-			|| y < 0 || y >= this.fieldHeight
-			|| this.field[y][x].player !== null) {
-			return false;
+
+	minimax(board, width, height, winLen, depth, alpha, beta, maximizingPlayer, playerId, originalPlayerId) {
+		const moves = this.getAvailableMoves(board);
+		if (this.isWinFor(board, width, height, winLen, originalPlayerId)) return { score: Infinity };
+		const oppId = (originalPlayerId + 1) % this.fieldPlayers;
+		if (this.isWinFor(board, width, height, winLen, oppId)) return { score: -Infinity };
+		if (moves.length === 0) return { score: 0 };
+		if (depth === 0) {
+			const val = this.evaluateBoard(board, width, height, winLen, originalPlayerId);
+			return { score: val };
 		}
-		this.makeMove(x, y);
-		return true;
-	}
-	randomMove() {
-		let y = 0;
-		let x = 0;
-		do {
-			y = Math.floor(Math.random() * this.fieldHeight);
-			x = Math.floor(Math.random() * this.fieldWidth);
+		let bestMove = null;
+		if (maximizingPlayer) {
+			let value = -Infinity;
+			for (let i = 0; i < moves.length; i++) {
+				const m = moves[i];
+				board[m.y][m.x].player = playerId;
+				const res = this.minimax(board, width, height, winLen, depth - 1, alpha, beta, false, (playerId + 1) % this.fieldPlayers, originalPlayerId);
+				board[m.y][m.x].player = null;
+				if (res.score > value) { value = res.score; bestMove = m; }
+				alpha = Math.max(alpha, value);
+				if (alpha >= beta) break;
+			}
+			return { score: value, move: bestMove };
+		} else {
+			let value = Infinity;
+			for (let i = 0; i < moves.length; i++) {
+				const m = moves[i];
+				board[m.y][m.x].player = playerId;
+				const res = this.minimax(board, width, height, winLen, depth - 1, alpha, beta, true, (playerId + 1) % this.fieldPlayers, originalPlayerId);
+				board[m.y][m.x].player = null;
+				if (res.score < value) { value = res.score; bestMove = m; }
+				beta = Math.min(beta, value);
+				if (alpha >= beta) break;
+			}
+			return { score: value, move: bestMove };
 		}
-		while (this.field[y][x].player !== null);
-		this.makeMove(x, y);
 	}
+
+	computeMove() {
+		const width = this.fieldWidth;
+		const height = this.fieldHeight;
+		const winLen = this.fieldWin;
+		const board = this.boardCopy(this.field);
+		const playerId = this.currentPlayer;
+		const moves = this.getAvailableMoves(board);
+		if (moves.length === 0) return null;
+		if (this.aiDifficulty === 'easy') return moves[Math.floor(Math.random() * moves.length)];
+		for (let i = 0; i < moves.length; i++) {
+			const m = moves[i]; board[m.y][m.x].player = playerId;
+			if (this.isWinFor(board, width, height, winLen, playerId)) { board[m.y][m.x].player = null; return m; }
+			board[m.y][m.x].player = null;
+		}
+		const oppId = (playerId + 1) % this.fieldPlayers;
+		for (let i = 0; i < moves.length; i++) {
+			const m = moves[i]; board[m.y][m.x].player = oppId;
+			if (this.isWinFor(board, width, height, winLen, oppId)) { board[m.y][m.x].player = null; return m; }
+			board[m.y][m.x].player = null;
+		}
+		let depth = 3;
+		if (this.aiDifficulty === 'medium') depth = Math.min(4, moves.length, 4);
+		if (this.aiDifficulty === 'hard') depth = (width * height <= 9) ? moves.length : Math.min(6, moves.length);
+		if (this.aiDifficulty === 'insane') {
+			const start = Date.now(); let best = null;
+			for (let d = 1; d <= moves.length; d++) {
+				const res = this.minimax(board, width, height, winLen, d, -Infinity, Infinity, true, playerId, playerId);
+				if (res.move) best = res.move;
+				if (Date.now() - start > this.aiTimeLimitMs) break;
+			}
+			if (best) return best;
+			depth = Math.min(6, moves.length);
+		}
+		const result = this.minimax(board, width, height, winLen, depth, -Infinity, Infinity, true, playerId, playerId);
+		if (result && result.move) return result.move;
+		return moves[Math.floor(Math.random() * moves.length)];
+	}
+
+	computerMove() {
+		if (this.fieldPlayers > 1 && this.computerPlayers.includes(this.currentPlayer)) {
+			const mv = this.computeMove();
+			if (mv) this.makeMove(mv.x, mv.y);
+		}
+	}
+
 	static CreateInstance(settings) {
 		const instance = new Main();
 		instance.initialize(settings);
