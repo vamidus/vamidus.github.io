@@ -1,11 +1,12 @@
+html,
 body {
-	padding: 5em;
+	height: 100%;
 }
 
 legend {
-	width: auto;
-	padding: .5em;
 	cursor: default;
+	padding: .5em;
+	width: auto;
 }
 
 #field table {
@@ -25,9 +26,9 @@ legend {
 }
 
 #field td {
-	width: 48px;
-	height: 48px;
 	border: 3px solid black;
+	height: 48px;
+	width: 48px;
 }
 
 #field tr td:first-of-type {
@@ -40,10 +41,10 @@ legend {
 
 #field td[player] {
 	background-color: transparent;
-	text-align: center;
-	vertical-align: middle;
 	font-size: 28px;
 	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
 }
 
 #field td[player="0"]::before {
@@ -86,6 +87,6 @@ legend {
 }
 
 .alert {
-	position: fixed;
 	bottom: 0;
+	position: fixed;
 }

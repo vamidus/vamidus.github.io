@@ -100,20 +100,20 @@ class Main {
 				this.field.push(fieldRow);
 			}
 			$table.appendTo(this.$field);
-			this.setupLegend();
-			this.setupScoreBoard();
+			//this.setupLegend();
+			//this.setupScoreBoard();
 		}
 	}
-	setupLegend() {
-		var $legend = $("<table />");
-		var $row = $("<tr />");
-		$("<td />").html("Current&nbsp;player:").appendTo($row);
-		$("<td />").attr("id", "current").attr("player", 0).appendTo($row);
-		$row.appendTo($legend);
-		$legend.addClass("legend").appendTo(this.$field);
-	}
-	setupScoreBoard() {
-	}
+	// setupLegend() {
+	// 	var $legend = $("<table />");
+	// 	var $row = $("<tr />");
+	// 	$("<td />").html("Current&nbsp;player:").appendTo($row);
+	// 	$("<td />").attr("id", "current").attr("player", 0).appendTo($row);
+	// 	$row.appendTo($legend);
+	// 	$legend.addClass("legend").appendTo(this.$field);
+	// }
+	// setupScoreBoard() {
+	// }
 	setupClickHandlers() {
 		if (this.fieldPlayers > 0) {
 			var me = this;
