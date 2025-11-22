@@ -6,19 +6,14 @@ class Main {
 		this.fieldWin = 0; // least fields captured in a row to win
 		this.fieldPlayers = 0; // max players - 1
 
-
 		//this.computerPlayers = []; // players to use AI
 		//this.computerPlayers = [0, 1, 2, 3, 4, 5]; // players to use AI
 		this.computerPlayers = [0]; // players to use AI
-
-
-
 		//this.computerPlayers = [1, 3, 5]; // players to use AI
+
 		// Variables
 		this.field = []; // array representing the playing filed
 		this.currentPlayer = 0; // currint player id
-		this.scores = []; // scoreboard winnigs
-
 
 		// Selectors
 		this.$setup = null; // setup form
@@ -26,7 +21,6 @@ class Main {
 		this.$winner = null; // win message
 		this.$draw = null; // draw message
 		this.$loser = null; // lose message
-		this.$scoreBoard = null; // scorboard container
 	}
 	initialize(settings) {
 		if (settings) this.applySettings(settings);
@@ -49,14 +43,12 @@ class Main {
 		this.$winner = $("#winner");
 		this.$draw = $("#draw");
 		this.$loser = $("#loser");
-		this.$scoreBoard = $("#score-board");
 	}
 	initConfigs() {
 		this.fieldWidth = this.getUrlParameter("width") - 0;
 		this.fieldHeight = this.getUrlParameter("height") - 0;
-		this.fieldWin = this.getUrlParameter("win") - 0;
 		this.fieldPlayers = this.getUrlParameter("players") - 0;
-		this.scores = this.getUrlParameter("scores");
+		this.fieldWin = this.getUrlParameter("win") - 0;
 	}
 	initVisibility() {
 		if (this.fieldPlayers > 1) {
@@ -69,11 +61,11 @@ class Main {
 		}
 	}
 	getUrlParameter(paramName) {
-		var query = window.location.search.substring(1);
-		var parameters = query.split("&");
+		const query = window.location.search.substring(1);
+		const parameters = query.split("&");
 
-		for (var i = 0; i < parameters.length; i++) {
-			var parameter = parameters[i].split("=");
+		for (let i = 0; i < parameters.length; i++) {
+			const parameter = parameters[i].split("=");
 			if (parameter[0] === paramName) {
 				return parameter[1] === undefined ? true : decodeURIComponent(parameter[1]);
 			}
@@ -83,49 +75,35 @@ class Main {
 	setupField() {
 		if (this.fieldPlayers > 0) {
 			this.$field.empty();
-			var $table = $("<table />");
-			for (var y = 0; y < this.fieldHeight; y++) {
-				var $row = $("<tr />");
-				var fieldRow = [];
-				for (var x = 0; x < this.fieldWidth; x++) {
+			const $table = $("<table />");
+			for (let y = 0; y < this.fieldHeight; y++) {
+				const $row = $("<tr />");
+				let fieldRow = [];
+				for (let x = 0; x < this.fieldWidth; x++) {
 					$("<td />")
 						.attr("x", x)
 						.attr("y", y)
 						.appendTo($row);
-					fieldRow.push({
-						player: null
-					});
+					fieldRow.push({ player: null });
 				}
 				$row.appendTo($table);
 				this.field.push(fieldRow);
 			}
 			$table.appendTo(this.$field);
 			$("<div />").attr("id", "strike").appendTo(this.$field);
-			//this.setupLegend();
-			//this.setupScoreBoard();
 		}
 	}
-	// setupLegend() {
-	// 	var $legend = $("<table />");
-	// 	var $row = $("<tr />");
-	// 	$("<td />").html("Current&nbsp;player:").appendTo($row);
-	// 	$("<td />").attr("id", "current").attr("player", 0).appendTo($row);
-	// 	$row.appendTo($legend);
-	// 	$legend.addClass("legend").appendTo(this.$field);
-	// }
-	// setupScoreBoard() {
-	// }
 	setupClickHandlers() {
 		if (this.fieldPlayers > 0) {
-			var me = this;
+			const me = this;
 			this.$field
 				.find("td")
 				.click(me.fieldClickHandler.bind(me));
 		}
 	}
 	fieldClickHandler(event) {
-		var x = $(event.target).attr("x") - 0;
-		var y = $(event.target).attr("y") - 0;
+		let x = $(event.target).attr("x") - 0;
+		let y = $(event.target).attr("y") - 0;
 		if (x > -1 && y > -1) {
 			if (this.field[y][x].player === null) {
 				this.makeMove(x, y);
@@ -137,7 +115,7 @@ class Main {
 		this.$field
 			.find("td[x=" + x + "][y=" + y + "]")
 			.attr("player", this.currentPlayer);
-		var winningCombination = this.getWinningCombination(x, y);
+		let winningCombination = this.getWinningCombination(x, y);
 		if (winningCombination) {
 			this.drawWinningLine(winningCombination);
 			if (this.computerPlayers.includes(this.currentPlayer)) {
@@ -165,16 +143,16 @@ class Main {
 		return 1 + this.countMyCells(x + dirX, y + dirY, dirX, dirY, player);
 	}
 	getWinningCombination(x, y) {
-		var directions = [
+		const directions = [
 			{ x: 0, y: -1 }, // N
 			{ x: 1, y: 0 }, // E
 			{ x: 1, y: -1 }, // NE
 			{ x: 1, y: 1 } // SE
 		];
 
-		for (var i = 0; i < directions.length; i++) {
-			var dir = directions[i];
-			var line = this.getCellsInARow(x, y, dir.x, dir.y, this.currentPlayer)
+		for (let i = 0; i < directions.length; i++) {
+			const dir = directions[i];
+			let line = this.getCellsInARow(x, y, dir.x, dir.y, this.currentPlayer)
 				.concat(this.getCellsInARow(x, y, -dir.x, -dir.y, this.currentPlayer).slice(1));
 
 			if (line.length >= this.fieldWin) {
@@ -184,24 +162,21 @@ class Main {
 
 		return null;
 	}
-
 	getCellsInARow(x, y, dirX, dirY, player) {
 		if (x < 0 || x >= this.fieldWidth || y < 0 || y >= this.fieldHeight || this.field[y][x].player !== player) {
 			return [];
 		}
-		var result = [{ x: x, y: y }];
+		const result = [{ x: x, y: y }];
 		return result.concat(this.getCellsInARow(x + dirX, y + dirY, dirX, dirY, player));
 	}
-
 	drawWinningLine(combination) {
-		// Find the two farthest-apart cells in the combination
-		var fieldOffset = this.$field.offset();
-		var maxDist = -1, idxA = 0, idxB = 0;
-		for (var i = 0; i < combination.length; i++) {
-			for (var j = i + 1; j < combination.length; j++) {
-				var dx = combination[i].x - combination[j].x;
-				var dy = combination[i].y - combination[j].y;
-				var dist = dx * dx + dy * dy;
+		const fieldOffset = this.$field.offset();
+		let maxDist = -1, idxA = 0, idxB = 0;
+		for (let i = 0; i < combination.length; i++) {
+			for (let j = i + 1; j < combination.length; j++) {
+				const dx = combination[i].x - combination[j].x;
+				const dy = combination[i].y - combination[j].y;
+				const dist = dx * dx + dy * dy;
 				if (dist > maxDist) {
 					maxDist = dist;
 					idxA = i;
@@ -209,28 +184,43 @@ class Main {
 				}
 			}
 		}
-		var cellA = this.$field.find('td[x="' + combination[idxA].x + '"][y="' + combination[idxA].y + '"]');
-		var cellB = this.$field.find('td[x="' + combination[idxB].x + '"][y="' + combination[idxB].y + '"]');
-		var cellAOffset = cellA.offset();
-		var cellBOffset = cellB.offset();
-		var cellACenter = {
-			x: cellAOffset.left - fieldOffset.left + cellA.width() / 2 + 3,
-			y: cellAOffset.top - fieldOffset.top + cellA.height() / 2 + 3
-		};
-		var cellBCenter = {
-			x: cellBOffset.left - fieldOffset.left + cellB.width() / 2 + 3,
-			y: cellBOffset.top - fieldOffset.top + cellB.height() / 2 + 3
-		};
-		var angle = Math.atan2(cellBCenter.y - cellACenter.y, cellBCenter.x - cellACenter.x) * 180 / Math.PI;
-		var length = Math.sqrt(Math.pow(cellBCenter.x - cellACenter.x, 2) + Math.pow(cellBCenter.y - cellACenter.y, 2));
-		var $strike = this.$field.find("#strike");
+		const cellA = this.$field.find('td[x="' + combination[idxA].x + '"][y="' + combination[idxA].y + '"]');
+		const cellB = this.$field.find('td[x="' + combination[idxB].x + '"][y="' + combination[idxB].y + '"]');
+		const cellAOffset = cellA.offset();
+		const cellBOffset = cellB.offset();
+		function getCellCenter(cell, cellOffset, fieldOffset) {
+			const style = window.getComputedStyle(cell[0]);
+			const borderLeft = parseFloat(style.borderLeftWidth) || 1.5;
+			const borderTop = parseFloat(style.borderTopWidth) || 1.5;
+			return {
+				x: cellOffset.left - fieldOffset.left + cell.width() / 2 + borderLeft,
+				y: cellOffset.top - fieldOffset.top + cell.height() / 2 + borderTop
+			};
+		}
+		const cellACenter = getCellCenter(cellA, cellAOffset, fieldOffset);
+		const cellBCenter = getCellCenter(cellB, cellBOffset, fieldOffset);
+		const angle = Math.atan2(cellBCenter.y - cellACenter.y, cellBCenter.x - cellACenter.x) * 180 / Math.PI;
+		const length = Math.sqrt(Math.pow(cellBCenter.x - cellACenter.x, 2) + Math.pow(cellBCenter.y - cellACenter.y, 2));
+		const $strike = this.$field.find("#strike");
+		const strikeHeight = $strike.outerHeight() || 0;
+		const winningPlayer = this.field[combination[0].y][combination[0].x].player;
+		const playerColors = [
+			'red',    // 0
+			'blue',   // 1
+			'yellow', // 2
+			'green',  // 3
+			'aqua',   // 4
+			'fuchsia' // 5
+		];
+		const strikeColor = playerColors[winningPlayer] || 'black';
 		$strike.css({
-			width: length,
-			top: cellACenter.y,
-			left: cellACenter.x,
+			width: (length + strikeHeight) + 'px',
+			top: (cellACenter.y - strikeHeight / 2) + 'px',
+			left: (cellACenter.x - strikeHeight / 2) + 'px',
 			transform: "rotate(" + angle + "deg)",
-			"transform-origin": "0 0",
-			display: "block"
+			"transform-origin": (strikeHeight / 2) + 'px ' + (strikeHeight / 2) + 'px',
+			display: "block",
+			"background-color": strikeColor
 		});
 	}
 	nextPlayer() {
@@ -239,8 +229,8 @@ class Main {
 		this.computerMove();
 	}
 	isDraw() {
-		for (var y = 0; y < this.fieldHeight; y++) {
-			for (var x = 0; x < this.fieldWidth; x++) {
+		for (let y = 0; y < this.fieldHeight; y++) {
+			for (let x = 0; x < this.fieldWidth; x++) {
 				if (this.field[y][x].player === null) {
 					return false;
 				}
@@ -254,7 +244,7 @@ class Main {
 		}
 	}
 	win3x3() {
-		for (var player = 0; player < this.fieldPlayers; player++) {
+		for (let player = 0; player < this.fieldPlayers; player++) {
 			if (this.checkFill(player)) {
 				return;
 			}
@@ -271,14 +261,14 @@ class Main {
 		this.randomMove();
 	}
 	checkFill(player) {
-		var originalPlayer = this.currentPlayer;
+		const originalPlayer = this.currentPlayer;
 		this.currentPlayer = player;
 
-		for (var y = 0; y < this.fieldHeight; y++) {
-			for (var x = 0; x < this.fieldWidth; x++) {
+		for (let y = 0; y < this.fieldHeight; y++) {
+			for (let x = 0; x < this.fieldWidth; x++) {
 				if (this.field[y][x].player === null) {
 					this.field[y][x].player = player;
-					var winningCombination = this.getWinningCombination(x, y);
+					let winningCombination = this.getWinningCombination(x, y);
 					this.field[y][x].player = null;
 
 					if (winningCombination) {
@@ -293,8 +283,8 @@ class Main {
 		return false;
 	}
 	blindHoard(r) {
-		var centerX = Math.floor((this.fieldWidth - 1) / 2);
-		var centerY = Math.floor((this.fieldHeight - 1) / 2);
+		const centerX = Math.floor((this.fieldWidth - 1) / 2);
+		const centerY = Math.floor((this.fieldHeight - 1) / 2);
 		if (this.checkComputerMove(centerX, centerY)) { // checking this doesn't make much sense after the corner checks
 			return true; // center
 		}
@@ -334,8 +324,8 @@ class Main {
 		return true;
 	}
 	randomMove() {
-		var y = 0;
-		var x = 0;
+		let y = 0;
+		let x = 0;
 		do {
 			y = Math.floor(Math.random() * this.fieldHeight);
 			x = Math.floor(Math.random() * this.fieldWidth);
@@ -344,7 +334,7 @@ class Main {
 		this.makeMove(x, y);
 	}
 	static CreateInstance(settings) {
-		var instance = new Main();
+		const instance = new Main();
 		instance.initialize(settings);
 	}
 }

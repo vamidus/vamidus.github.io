@@ -14,7 +14,10 @@ legend {
 }
 
 #field table {
+	border-spacing: 0;
 	margin: auto;
+	margin-bottom: 0;
+	padding: 0;
 }
 
 #field table.legend {
@@ -31,7 +34,10 @@ legend {
 
 #field td {
 	border: 3px solid black;
+	box-sizing: border-box;
 	height: 48px;
+	margin: 0;
+	padding: 0;
 	width: 48px;
 }
 
@@ -92,9 +98,10 @@ legend {
 
 #strike {
 	background-color: black;
-	border-radius: 2px;
+	border-radius: 16px;
 	display: none;
-	height: 3px;
+	height: 10px;
+	opacity: 0.5;
 	pointer-events: none;
 	position: absolute;
 }
