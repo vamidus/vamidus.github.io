@@ -38,28 +38,42 @@ legend {
 	border-right: none;
 }
 
-#field td[player="0"] {
-	background-color: red;
+#field td[player] {
+	background-color: transparent;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 28px;
+	font-weight: bold;
 }
 
-#field td[player="1"] {
-	background-color: blue;
+#field td[player="0"]::before {
+	color: red;
+	content: "✕";
 }
 
-#field td[player="2"] {
-	background-color: yellow;
+#field td[player="1"]::before {
+	color: blue;
+	content: "◯";
 }
 
-#field td[player="3"] {
-	background-color: lime;
+#field td[player="2"]::before {
+	color: yellow;
+	content: "★";
 }
 
-#field td[player="4"] {
-	background-color: aqua;
+#field td[player="3"]::before {
+	color: green;
+	content: "❦";
 }
 
-#field td[player="5"] {
-	background-color: fuchsia;
+#field td[player="4"]::before {
+	color: aqua;
+	content: "❅";
+}
+
+#field td[player="5"]::before {
+	color: fuchsia;
+	content: "❀";
 }
 
 #field table.legend tr td {
