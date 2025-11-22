@@ -100,6 +100,7 @@ class Main {
 				this.field.push(fieldRow);
 			}
 			$table.appendTo(this.$field);
+			$("<div />").attr("id", "strike").appendTo(this.$field);
 			//this.setupLegend();
 			//this.setupScoreBoard();
 		}
@@ -136,10 +137,9 @@ class Main {
 		this.$field
 			.find("td[x=" + x + "][y=" + y + "]")
 			.attr("player", this.currentPlayer);
-		if (this.countMyCells(x, y - 1, 0, -1, this.currentPlayer) + this.countMyCells(x, y + 1, 0, 1, this.currentPlayer) + 1 >= this.fieldWin // W-E
-			|| this.countMyCells(x - 1, y, -1, 0, this.currentPlayer) + this.countMyCells(x + 1, y, 1, 0, this.currentPlayer) + 1 >= this.fieldWin // N-S
-			|| this.countMyCells(x - 1, y - 1, -1, -1, this.currentPlayer) + this.countMyCells(x + 1, y + 1, 1, 1, this.currentPlayer) + 1 >= this.fieldWin // NW-SE
-			|| this.countMyCells(x + 1, y - 1, 1, -1, this.currentPlayer) + this.countMyCells(x - 1, y + 1, -1, 1, this.currentPlayer) + 1 >= this.fieldWin) { // NE-SW
+		var winningCombination = this.getWinningCombination(x, y);
+		if (winningCombination) {
+			this.drawWinningLine(winningCombination);
 			if (this.computerPlayers.includes(this.currentPlayer)) {
 				this.$loser.show().addClass("show");
 			}
@@ -163,6 +163,75 @@ class Main {
 			return 0;
 		}
 		return 1 + this.countMyCells(x + dirX, y + dirY, dirX, dirY, player);
+	}
+	getWinningCombination(x, y) {
+		var directions = [
+			{ x: 0, y: -1 }, // N
+			{ x: 1, y: 0 }, // E
+			{ x: 1, y: -1 }, // NE
+			{ x: 1, y: 1 } // SE
+		];
+
+		for (var i = 0; i < directions.length; i++) {
+			var dir = directions[i];
+			var line = this.getCellsInARow(x, y, dir.x, dir.y, this.currentPlayer)
+				.concat(this.getCellsInARow(x, y, -dir.x, -dir.y, this.currentPlayer).slice(1));
+
+			if (line.length >= this.fieldWin) {
+				return line;
+			}
+		}
+
+		return null;
+	}
+
+	getCellsInARow(x, y, dirX, dirY, player) {
+		if (x < 0 || x >= this.fieldWidth || y < 0 || y >= this.fieldHeight || this.field[y][x].player !== player) {
+			return [];
+		}
+		var result = [{ x: x, y: y }];
+		return result.concat(this.getCellsInARow(x + dirX, y + dirY, dirX, dirY, player));
+	}
+
+	drawWinningLine(combination) {
+		// Find the two farthest-apart cells in the combination
+		var fieldOffset = this.$field.offset();
+		var maxDist = -1, idxA = 0, idxB = 0;
+		for (var i = 0; i < combination.length; i++) {
+			for (var j = i + 1; j < combination.length; j++) {
+				var dx = combination[i].x - combination[j].x;
+				var dy = combination[i].y - combination[j].y;
+				var dist = dx * dx + dy * dy;
+				if (dist > maxDist) {
+					maxDist = dist;
+					idxA = i;
+					idxB = j;
+				}
+			}
+		}
+		var cellA = this.$field.find('td[x="' + combination[idxA].x + '"][y="' + combination[idxA].y + '"]');
+		var cellB = this.$field.find('td[x="' + combination[idxB].x + '"][y="' + combination[idxB].y + '"]');
+		var cellAOffset = cellA.offset();
+		var cellBOffset = cellB.offset();
+		var cellACenter = {
+			x: cellAOffset.left - fieldOffset.left + cellA.width() / 2 + 3,
+			y: cellAOffset.top - fieldOffset.top + cellA.height() / 2 + 3
+		};
+		var cellBCenter = {
+			x: cellBOffset.left - fieldOffset.left + cellB.width() / 2 + 3,
+			y: cellBOffset.top - fieldOffset.top + cellB.height() / 2 + 3
+		};
+		var angle = Math.atan2(cellBCenter.y - cellACenter.y, cellBCenter.x - cellACenter.x) * 180 / Math.PI;
+		var length = Math.sqrt(Math.pow(cellBCenter.x - cellACenter.x, 2) + Math.pow(cellBCenter.y - cellACenter.y, 2));
+		var $strike = this.$field.find("#strike");
+		$strike.css({
+			width: length,
+			top: cellACenter.y,
+			left: cellACenter.x,
+			transform: "rotate(" + angle + "deg)",
+			"transform-origin": "0 0",
+			display: "block"
+		});
 	}
 	nextPlayer() {
 		this.currentPlayer = (this.currentPlayer + 1 === this.fieldPlayers) ? 0 : this.currentPlayer + 1;
@@ -202,19 +271,25 @@ class Main {
 		this.randomMove();
 	}
 	checkFill(player) {
+		var originalPlayer = this.currentPlayer;
+		this.currentPlayer = player;
+
 		for (var y = 0; y < this.fieldHeight; y++) {
 			for (var x = 0; x < this.fieldWidth; x++) {
 				if (this.field[y][x].player === null) {
-					if (this.countMyCells(x, y - 1, 0, -1, player) + this.countMyCells(x, y + 1, 0, 1, player) + 1 >= this.fieldWin // W-E
-						|| this.countMyCells(x - 1, y, -1, 0, player) + this.countMyCells(x + 1, y, 1, 0, player) + 1 >= this.fieldWin // N-S
-						|| this.countMyCells(x - 1, y - 1, -1, -1, player) + this.countMyCells(x + 1, y + 1, 1, 1, player) + 1 >= this.fieldWin // NW-SE
-						|| this.countMyCells(x + 1, y - 1, 1, -1, player) + this.countMyCells(x - 1, y + 1, -1, 1, player) + 1 >= this.fieldWin) { // NE-SW
+					this.field[y][x].player = player;
+					var winningCombination = this.getWinningCombination(x, y);
+					this.field[y][x].player = null;
+
+					if (winningCombination) {
+						this.currentPlayer = originalPlayer;
 						this.makeMove(x, y);
 						return true;
 					}
 				}
 			}
 		}
+		this.currentPlayer = originalPlayer;
 		return false;
 	}
 	blindHoard(r) {

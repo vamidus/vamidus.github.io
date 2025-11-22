@@ -9,6 +9,10 @@ legend {
 	width: auto;
 }
 
+#field {
+	position: relative;
+}
+
 #field table {
 	margin: auto;
 }
@@ -84,6 +88,15 @@ legend {
 #field table.legend tr td:first-child {
 	padding-left: 1em;
 	padding-right: 1em;
+}
+
+#strike {
+	background-color: black;
+	border-radius: 2px;
+	display: none;
+	height: 3px;
+	pointer-events: none;
+	position: absolute;
 }
 
 .alert {
