@@ -50,6 +50,10 @@ body {
 	font-weight: 700;
 	color: #ffffff;
 	cursor: default;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 /* Tile states for tiles that contain letters. These are applied by JS

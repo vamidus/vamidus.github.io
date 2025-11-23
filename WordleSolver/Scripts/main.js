@@ -176,7 +176,30 @@ class Main {
 	}
 
 	onBackspace() {
-		if (this.currentCol === 0) return; // nothing to delete in this row
+		// If at the start of the row, move back to the previous row that has
+		// any filled tiles and delete the last filled tile there.
+		if (this.currentCol === 0) {
+			if (this.currentRow === 0) return; // nothing to delete anywhere
+			// Walk backwards to find the previous row that contains a filled tile
+			let found = false;
+			let r = this.currentRow - 1;
+			for (; r >= 0; r--) {
+				// find last filled column in row r
+				let lastFilled = -1;
+				for (let c = 4; c >= 0; c--) {
+					const $t = this.getTile(r, c);
+					if ($t.length && ($t.text() || '').trim()) { lastFilled = c; break; }
+				}
+				if (lastFilled >= 0) {
+					this.currentRow = r;
+					this.currentCol = lastFilled + 1; // next free slot after lastFilled
+					found = true;
+					break;
+				}
+			}
+			if (!found) return; // nothing to delete in any previous rows
+		}
+		// Now remove the previous letter in the current row
 		this.currentCol = Math.max(0, this.currentCol - 1);
 		const $tile = this.getTile(this.currentRow, this.currentCol);
 		if ($tile.length) {
