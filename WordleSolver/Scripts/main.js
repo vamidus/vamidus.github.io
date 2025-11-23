@@ -128,6 +128,12 @@ class Main {
 				state = 'present';
 				$tile.attr('data-state', state).removeClass('state-not-present state-guessed').addClass('state-present');
 				self.updateKeyStates();
+				// If this was a tile in the last submitted row and that row is full,
+				// regenerate the regex so the user sees the effect immediately.
+				const row = parseInt($tile.attr('data-row'), 10);
+				if (self.currentRow > 0 && row === self.currentRow - 1 && self.rowIsFull(row)) {
+					self.computeAndRenderForRow(row);
+				}
 				return;
 			}
 
@@ -135,6 +141,10 @@ class Main {
 				state = 'guessed';
 				$tile.attr('data-state', state).removeClass('state-not-present state-present').addClass('state-guessed');
 				self.updateKeyStates();
+				const row = parseInt($tile.attr('data-row'), 10);
+				if (self.currentRow > 0 && row === self.currentRow - 1 && self.rowIsFull(row)) {
+					self.computeAndRenderForRow(row);
+				}
 				return;
 			}
 
@@ -143,6 +153,10 @@ class Main {
 				state = 'not-present';
 				$tile.attr('data-state', state).removeClass('state-present state-guessed').addClass('state-not-present');
 				self.updateKeyStates();
+				const row = parseInt($tile.attr('data-row'), 10);
+				if (self.currentRow > 0 && row === self.currentRow - 1 && self.rowIsFull(row)) {
+					self.computeAndRenderForRow(row);
+				}
 				return;
 			}
 		});
@@ -176,24 +190,31 @@ class Main {
 	}
 
 	onEnter() {
-		if (this.currentCol < 5) return; // only allow enter when row full
-		if (this.currentRow >= 5) return; // already at last row
-		// Compute and display regex for the row being submitted
-		const regexLiteral = this.updateRegexForRow(this.currentRow);
-
-		// Try to parse the literal into a RegExp and search the provided wordlist
-		const regex = this.parseRegexLiteral(regexLiteral);
-		if (regex) {
-			const matches = this.searchWordsWithRegex(regex);
-			this.renderMatches(matches);
+		// Allow submitting active row when full, or re-generating for the
+		// previously submitted row if it is still full.
+		if (this.currentCol === 5 && this.currentRow < 6) {
+			// Compute and display regex for the active row
+			const rowToCompute = this.currentRow;
+			this.computeAndRenderForRow(rowToCompute);
+			// Update key visuals after a submission in case tile states changed
+			this.updateKeyStates();
+			// Advance to next row only if not at the final row index
+			if (this.currentRow < 5) {
+				this.currentRow++;
+				this.currentCol = 0;
+			}
+			this.updateEnterState();
+			return;
 		}
-
-		// Update key visuals after a submission in case tile states changed
-		this.updateKeyStates();
-
-		this.currentRow++;
-		this.currentCol = 0;
-		this.updateEnterState();
+		// If active row not full, allow regenerating the regex for last submitted row
+		if (this.currentRow > 0 && this.rowIsFull(this.currentRow - 1)) {
+			this.computeAndRenderForRow(this.currentRow - 1);
+			this.updateKeyStates();
+			this.updateEnterState();
+			return;
+		}
+		// otherwise nothing to do
+		return;
 	}
 
 	// Parse a string that looks like a JS regex literal, e.g. '/^ABC$/i'
@@ -206,6 +227,27 @@ class Main {
 		} catch (e) {
 			console.error('Invalid regex literal:', literal, e);
 			return null;
+		}
+	}
+
+	// Check whether a given row has all 5 tiles filled with letters
+	rowIsFull(row) {
+		for (let c = 0; c < 5; c++) {
+			const $t = this.getTile(row, c);
+			if (!$t.length) return false;
+			const ch = ($t.text() || '').trim();
+			if (!ch) return false;
+		}
+		return true;
+	}
+
+	// Compute regex for a row, parse it and render matches
+	computeAndRenderForRow(row) {
+		const regexLiteral = this.updateRegexForRow(row);
+		const regex = this.parseRegexLiteral(regexLiteral);
+		if (regex) {
+			const matches = this.searchWordsWithRegex(regex);
+			this.renderMatches(matches);
 		}
 	}
 
@@ -420,10 +462,15 @@ class Main {
 	}
 
 	updateEnterState() {
-		const enabled = this.currentCol === 5;
+		// Enable enter when the active row is full OR when the last submitted
+		// row (currentRow-1) exists and is full so the user can regenerate.
+		const activeFull = this.currentCol === 5;
+		const lastFull = this.currentRow > 0 && this.rowIsFull(this.currentRow - 1);
+		const enabled = activeFull || lastFull;
 		this.$enter.prop('disabled', !enabled);
 		if (enabled) this.$enter.addClass('enabled'); else this.$enter.removeClass('enabled');
 	}
+
 
 	static CreateInstance(settings) {
 		const instance = new Main();
