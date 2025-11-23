@@ -282,10 +282,6 @@ class Main {
 		this.setLanguage(language);
 		this.$languageSelect.val(language);
 
-		// Play as
-		const playAs = this.getPlayAs();
-		$(`#${playAs}`).prop('checked', true);
-
 		// Difficulty
 		const difficulty = this.getDifficulty();
 		this.$difficultySlider.val(difficulty);
@@ -358,9 +354,6 @@ class Main {
 		this.$highlightSwitch.on('change', (e) => {
 			this.setHighlighting(e.target.checked);
 		});
-		$('input[name="play-as"]').on('change', (e) => {
-			localStorage.setItem('play-as', e.target.id);
-		});
 		this.$board.on("click", ".square", (e) => this.handleSquareClick(e.currentTarget));
 		this.$exportGameStateButton.on("click", () => this.exportGameState());
 		this.$importGameStateButton.on("click", () => this.importGameState());
@@ -368,15 +361,6 @@ class Main {
 			this.setLanguage(e.target.value);
 		});
 		this.$undoButton.on("click", () => this.undo());
-	}
-
-	getPlayAs() {
-		const savedPlayAs = localStorage.getItem('play-as');
-		if (savedPlayAs) {
-			return savedPlayAs;
-		} else {
-			return 'play-as-white';
-		}
 	}
 
 	setColorScheme(scheme) {
@@ -530,12 +514,6 @@ class Main {
 		let square_files = this.square_files;
 		let square_ranks = this.square_ranks;
 
-		// If the user is playing as black, reverse the board
-		if (this.current_player_types[0] === 1) {
-			square_files = square_files.split('').reverse().join('');
-			square_ranks = square_ranks.split('').reverse().join('');
-		}
-
 		for (let y = -1; y < this.board_height + 1; y++) {
 			let $newRow = $("<div />").addClass(this.class_rank);
 			for (let x = -1; x < this.board_width + 1; x++) {
@@ -571,19 +549,8 @@ class Main {
 	}
 
 	setGameParameters() {
-		this.current_player_types = this.getCurrentPlayerTypes();
+		this.current_player_types = [0, 1];
 		this.depth = this.$difficultySlider.val();
-	}
-
-	getCurrentPlayerTypes() {
-		switch ($('input[name="play-as"]:checked').attr('id')) {
-			case 'play-as-white':
-				return [0, 1];
-			case 'play-as-black':
-				return [1, 0];
-			case 'play-as-random':
-				return Math.random() < 0.5 ? [0, 1] : [1, 0];
-		}
 	}
 
 	drawBoard() {
