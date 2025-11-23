@@ -125,6 +125,8 @@ class Main {
 		this.fieldPlayers = p;
 		this.fieldWin = win;
 		this.aiDifficulty = aiDifficulty;
+		// Reset AI turn to default (second player) when user starts a new game
+		this.aiPlayers = [1];
 		this.saveConfigsToLocalStorage();
 		this.startGame();
 	}
@@ -225,12 +227,15 @@ class Main {
 		let winningCombination = this.getWinningCombination(x, y);
 		if (winningCombination) {
 			this.drawWinningLine(winningCombination);
-			if (this.aiPlayers.includes(this.currentPlayer)) {
+			const aiWon = this.aiPlayers.includes(this.currentPlayer);
+			if (aiWon) {
 				this.$loser.show().addClass("show");
 			}
 			else {
 				this.$winner.show().addClass("show");
 			}
+			// Adjust which player the AI controls for the next game
+			this.adjustAiPlayerAfterGame(aiWon);
 			this.$field.find("td").off();
 		}
 		else if (this.isDraw()) {
@@ -490,6 +495,22 @@ class Main {
 			const mv = this.computeMove();
 			if (mv) this.makeMove(mv.x, mv.y);
 		}
+	}
+
+	adjustAiPlayerAfterGame(aiWon) {
+		// aiWon: true if AI won this game; false if human won
+		if (!Array.isArray(this.aiPlayers) || this.aiPlayers.length === 0) this.aiPlayers = [1];
+		let idx = parseInt(this.aiPlayers[0], 10) || 0;
+		if (aiWon) {
+			// move AI turn down (earlier player) but not below 0
+			if (idx > 0) idx--;
+		} else {
+			// AI lost: move AI turn up but not above last player index
+			const maxIdx = Math.max(0, this.fieldPlayers - 1);
+			if (idx < maxIdx) idx++;
+		}
+		this.aiPlayers[0] = idx;
+		// optional: persist aiPlayers[0] so next page load keeps it (not requested, so only in-memory)
 	}
 
 	static CreateInstance(settings) {
