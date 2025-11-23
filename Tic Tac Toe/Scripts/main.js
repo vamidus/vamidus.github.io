@@ -21,6 +21,11 @@ class Main {
 		// AI settings
 		this.aiDifficulty = 'medium'; // 'easy' | 'medium' | 'hard' | 'insane'
 		this.aiTimeLimitMs = 1000; // ms time budget for 'insane' iterative deepening
+
+		// Internal helpers for AI speedups
+		this._transposition = new Map();
+		this._aiStopTime = 0; // timestamp in ms when AI must stop
+		this._lastCompletedBest = null; // for iterative deepening fallback
 	}
 
 	initialize(settings) {
@@ -414,7 +419,22 @@ class Main {
 		return score;
 	}
 
+	hashBoard(board) {
+		// simple string hash of board rows; fast and deterministic
+		return board.map(function (row) { return row.map(function (c) { return (c.player === null ? '.' : String(c.player)); }).join(''); }).join('|');
+	}
+
 	minimax(board, width, height, winLen, depth, alpha, beta, maximizingPlayer, playerId, originalPlayerId) {
+		// Time cutoff for `insane` mode
+		if (this._aiStopTime && Date.now() > this._aiStopTime) return { aborted: true };
+
+		const boardHash = this.hashBoard(board);
+		const key = boardHash + '|' + playerId + '|' + depth + '|' + (maximizingPlayer ? '1' : '0');
+		if (this._transposition.has(key)) {
+			const e = this._transposition.get(key);
+			if (e.depth >= depth) return { score: e.score, move: e.move };
+		}
+
 		const moves = this.getAvailableMoves(board);
 		if (this.isWinFor(board, width, height, winLen, originalPlayerId)) return { score: Infinity };
 		const oppId = (originalPlayerId + 1) % this.fieldPlayers;
@@ -424,30 +444,46 @@ class Main {
 			const val = this.evaluateBoard(board, width, height, winLen, originalPlayerId);
 			return { score: val };
 		}
+
+		// Move ordering: lightweight heuristic — evaluate board after making the move
+		const scored = moves.map(m => {
+			board[m.y][m.x].player = playerId;
+			const s = this.evaluateBoard(board, width, height, winLen, originalPlayerId);
+			board[m.y][m.x].player = null;
+			return { move: m, score: s };
+		});
+		scored.sort((a, b) => (maximizingPlayer ? b.score - a.score : a.score - b.score));
+
 		let bestMove = null;
 		if (maximizingPlayer) {
 			let value = -Infinity;
-			for (let i = 0; i < moves.length; i++) {
-				const m = moves[i];
+			for (let i = 0; i < scored.length; i++) {
+				if (this._aiStopTime && Date.now() > this._aiStopTime) return { aborted: true };
+				const m = scored[i].move;
 				board[m.y][m.x].player = playerId;
 				const res = this.minimax(board, width, height, winLen, depth - 1, alpha, beta, false, (playerId + 1) % this.fieldPlayers, originalPlayerId);
 				board[m.y][m.x].player = null;
+				if (res.aborted) return { aborted: true };
 				if (res.score > value) { value = res.score; bestMove = m; }
 				alpha = Math.max(alpha, value);
 				if (alpha >= beta) break;
 			}
+			this._transposition.set(key, { score: value, move: bestMove, depth: depth });
 			return { score: value, move: bestMove };
 		} else {
 			let value = Infinity;
-			for (let i = 0; i < moves.length; i++) {
-				const m = moves[i];
+			for (let i = 0; i < scored.length; i++) {
+				if (this._aiStopTime && Date.now() > this._aiStopTime) return { aborted: true };
+				const m = scored[i].move;
 				board[m.y][m.x].player = playerId;
 				const res = this.minimax(board, width, height, winLen, depth - 1, alpha, beta, true, (playerId + 1) % this.fieldPlayers, originalPlayerId);
 				board[m.y][m.x].player = null;
+				if (res.aborted) return { aborted: true };
 				if (res.score < value) { value = res.score; bestMove = m; }
 				beta = Math.min(beta, value);
 				if (alpha >= beta) break;
 			}
+			this._transposition.set(key, { score: value, move: bestMove, depth: depth });
 			return { score: value, move: bestMove };
 		}
 	}
@@ -473,16 +509,26 @@ class Main {
 			board[m.y][m.x].player = null;
 		}
 		let depth = 3;
-		if (this.aiDifficulty === 'medium') depth = Math.min(4, moves.length, 4);
+		if (this.aiDifficulty === 'medium') {
+			// 10% of medium moves should be random to make the AI beatable
+			if (Math.random() < 0.10) return moves[Math.floor(Math.random() * moves.length)];
+			depth = Math.min(4, moves.length, 4);
+		}
 		if (this.aiDifficulty === 'hard') depth = (width * height <= 9) ? moves.length : Math.min(6, moves.length);
 		if (this.aiDifficulty === 'insane') {
-			const start = Date.now(); let best = null;
+			// Clear transposition table and set stop time for iterative deepening
+			this._transposition.clear();
+			this._aiStopTime = Date.now() + this.aiTimeLimitMs;
+			this._lastCompletedBest = null;
 			for (let d = 1; d <= moves.length; d++) {
 				const res = this.minimax(board, width, height, winLen, d, -Infinity, Infinity, true, playerId, playerId);
-				if (res.move) best = res.move;
-				if (Date.now() - start > this.aiTimeLimitMs) break;
+				if (res && !res.aborted && res.move) {
+					this._lastCompletedBest = res.move;
+				}
+				if (res && res.aborted) break; // time ran out
 			}
-			if (best) return best;
+			this._aiStopTime = 0;
+			if (this._lastCompletedBest) return this._lastCompletedBest;
 			depth = Math.min(6, moves.length);
 		}
 		const result = this.minimax(board, width, height, winLen, depth, -Infinity, Infinity, true, playerId, playerId);
