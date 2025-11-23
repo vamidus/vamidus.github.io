@@ -295,11 +295,12 @@ class Main {
 		if (!$out || !$out.length) return;
 		$out.empty();
 		if (!matches || matches.length === 0) {
-			$out.text('No matches');
+			$out.text('No matches found in our 5757-word list.');
 			return;
 		}
 		// Show count first
-		$out.append(`<div class="match-count">${matches.length} matches</div>`);
+		const outMessage = matches.length === 1 ? 'Only 1 match!' : `${matches.length} matches`;
+		$out.append(`<div class="match-count">${outMessage}</div>`);
 		const $wrap = $('<div class="match-list"></div>');
 		for (const m of matches) {
 			const $it = $('<div class="match-item"></div>').text(m);
