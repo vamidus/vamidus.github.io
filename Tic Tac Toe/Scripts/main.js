@@ -5,7 +5,6 @@ class Main {
 		this.fieldHeight = 0; // max y + 1
 		this.fieldWin = 0; // least fields captured in a row to win
 		this.fieldPlayers = 0; // max players - 1
-
 		this.aiPlayers = [1]; // players to use AI
 
 		// Variables
@@ -35,11 +34,10 @@ class Main {
 
 	setup() {
 		this.setupElementSelectors();
+		this.setupEventHandlers();
 		this.initConfigs();
+		this.populateFormFromConfigs();
 		this.initVisibility();
-		this.setupField();
-		this.setupClickHandlers();
-		this.computerMove();
 	}
 
 	setupElementSelectors() {
@@ -50,24 +48,119 @@ class Main {
 		this.$loser = $("#loser");
 	}
 
+	setupEventHandlers() {
+		const me = this;
+		if (me.$setup && me.$setup.length) {
+			me.$setup.on('submit', me.onSetupSubmit.bind(me));
+			me.$setup.on('reset', me.onSetupReset.bind(me));
+		}
+
+		$(document).on('click', 'a.new-game', function (e) {
+			e.preventDefault();
+			me.startGame();
+		});
+
+		$(document).on('click', 'a.change-config', function (e) {
+			e.preventDefault();
+			me.$field.hide();
+			me.$setup.show();
+			me.populateFormFromConfigs(); // not sure if this is necessary...
+		});
+	}
+
 	initConfigs() {
-		const aiDifficulty = this.getUrlParameter("ai-difficulty");
-		this.aiDifficulty = (aiDifficulty === false) ? 'medium' : aiDifficulty;
-		this.fieldWidth = this.getUrlParameter("width") - 0;
-		this.fieldHeight = this.getUrlParameter("height") - 0;
-		this.fieldPlayers = this.getUrlParameter("players") - 0;
-		this.fieldWin = this.getUrlParameter("win") - 0;
+		const stored = this.loadConfigsFromLocalStorage();
+		this.aiDifficulty = stored.aiDifficulty;
+		this.fieldWidth = stored.fieldWidth;
+		this.fieldHeight = stored.fieldHeight;
+		this.fieldPlayers = stored.fieldPlayers;
+		this.fieldWin = stored.fieldWin;
+	}
+
+	loadConfigsFromLocalStorage() {
+		const prefix = 'ttt_';
+		const get = (k, parseIntFallback) => {
+			const v = localStorage.getItem(prefix + k);
+			if (v === null || v === undefined) return parseIntFallback;
+			if (typeof parseIntFallback === 'number') return parseInt(v, 10) || parseIntFallback;
+			return v;
+		};
+		return {
+			aiDifficulty: get('aiDifficulty', 'medium'),
+			fieldWidth: get('fieldWidth', 3),
+			fieldHeight: get('fieldHeight', 3),
+			fieldPlayers: get('fieldPlayers', 2),
+			fieldWin: get('fieldWin', 3)
+		};
+	}
+
+	saveConfigsToLocalStorage() {
+		const prefix = 'ttt_';
+		localStorage.setItem(prefix + 'aiDifficulty', this.aiDifficulty);
+		localStorage.setItem(prefix + 'fieldWidth', String(this.fieldWidth));
+		localStorage.setItem(prefix + 'fieldHeight', String(this.fieldHeight));
+		localStorage.setItem(prefix + 'fieldPlayers', String(this.fieldPlayers));
+		localStorage.setItem(prefix + 'fieldWin', String(this.fieldWin));
+	}
+
+	populateFormFromConfigs() {
+		if (!this.$setup || !this.$setup.length) return;
+		this.$setup.find("[name='width']").val(this.fieldWidth);
+		this.$setup.find("[name='height']").val(this.fieldHeight);
+		this.$setup.find("[name='players']").val(this.fieldPlayers);
+		this.$setup.find("[name='win']").val(this.fieldWin);
+		this.$setup.find("[name='ai-difficulty']").val(this.aiDifficulty);
+	}
+
+	onSetupSubmit(event) {
+		event.preventDefault();
+		// Read values from the form controls and apply
+		const w = parseInt(this.$setup.find("[name='width']").val(), 10) || 3;
+		const h = parseInt(this.$setup.find("[name='height']").val(), 10) || 3;
+		const p = parseInt(this.$setup.find("[name='players']").val(), 10) || 2;
+		const win = parseInt(this.$setup.find("[name='win']").val(), 10) || 3;
+		const aiDifficulty = this.$setup.find("[name='ai-difficulty']").val() || 'medium';
+		this.fieldWidth = w;
+		this.fieldHeight = h;
+		this.fieldPlayers = p;
+		this.fieldWin = win;
+		this.aiDifficulty = aiDifficulty;
+		this.saveConfigsToLocalStorage();
+		this.startGame();
+	}
+
+	onSetupReset(event) {
+		event.preventDefault();
+		const stored = this.loadConfigsFromLocalStorage();
+		this.aiDifficulty = stored.aiDifficulty;
+		this.fieldWidth = stored.fieldWidth;
+		this.fieldHeight = stored.fieldHeight;
+		this.fieldPlayers = stored.fieldPlayers;
+		this.fieldWin = stored.fieldWin;
+		this.populateFormFromConfigs();
+	}
+
+	startGame() {
+		// Prepare the UI and internal structures for a new game
+		this.$winner.hide().removeClass('show');
+		this.$draw.hide().removeClass('show');
+		this.$loser.hide().removeClass('show');
+		this.$field.find('#strike').remove();
+		this.$field.find('.debug-center-box').remove();
+		this.$setup.hide();
+		this.$field.show();
+		this.field = [];
+		this.currentPlayer = 0;
+		$("#current").attr("player", this.currentPlayer);
+		this.setupField();
+		this.setupClickHandlers();
+		this.computerMove();
 	}
 
 	initVisibility() {
-		if (this.fieldPlayers > 1) {
-			this.$setup.hide();
-			this.$field.show();
-		}
-		else {
-			this.$setup.show();
-			this.$field.hide();
-		}
+		// Always show the setup form on load so the user can change settings
+		this.$setup.show();
+		this.$field.hide();
 	}
 
 	getUrlParameter(paramName) {
