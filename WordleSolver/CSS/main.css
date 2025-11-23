@@ -1,0 +1,172 @@
+body {
+	margin: 0;
+	padding: 48px 12px;
+	min-height: 100vh;
+	box-sizing: border-box;
+	background-color: #0b0b0b;
+	color: #ffffff;
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+	display: flex;
+	justify-content: center;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 28px;
+	width: 100%;
+	max-width: 540px;
+}
+
+/* Board */
+.board {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.row {
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+}
+
+.tile {
+	--tile-size: 72px;
+	width: var(--tile-size);
+	aspect-ratio: 1 / 1;
+	border: 3px solid #3a3a3a;
+	background: #0e0e0e;
+	box-sizing: border-box;
+	border-radius: 6px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 32px;
+	font-weight: 700;
+	color: #ffffff;
+	cursor: default;
+}
+
+/* Tile states for tiles that contain letters. These are applied by JS
+   when the user clicks a tile to cycle through states. */
+.tile.state-not-present {
+	background: transparent;
+	border-color: #3a3a3a;
+}
+.tile.state-present {
+	background: darkgoldenrod;
+	border-color: darkgoldenrod;
+}
+.tile.state-guessed {
+	background: darkolivegreen;
+	border-color: darkolivegreen;
+}
+
+/* Only tiles that contain letters should show a pointer cursor to indicate
+   they are clickable to toggle their state. JS will add/remove the
+   `clickable` class based on whether a tile has a letter. */
+.tile.clickable { cursor: pointer; }
+
+/* Keyboard */
+.keyboard {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
+	align-items: center;
+}
+
+.keyboard-row {
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+	width: 100%;
+	max-width: 540px;
+}
+
+.key {
+	background: #8a8a8a;
+	color: #ffffff;
+	border-radius: 8px;
+	padding: 14px 12px;
+	min-width: 44px;
+	height: 56px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 700;
+	user-select: none;
+}
+
+/* Key state colors */
+.key.key--not-present {
+    background: #444 !important;
+    color: #ccc;
+}
+.key.key--present {
+    background: darkgoldenrod !important;
+    color: #fff;
+}
+.key.key--guessed {
+    background: darkolivegreen !important;
+    color: #fff;
+}
+.key.pressed { transform: translateY(1px); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.15); }
+
+.key--wide {
+	min-width: 86px;
+	padding: 14px 18px;
+}
+
+.spacer {
+	visibility: hidden;
+	width: 16px;
+}
+
+/* Regex output box */
+.regex-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.regex-box {
+	width: 100%;
+	max-width: 540px;
+	padding: 10px 12px;
+	border-radius: 6px;
+	border: 2px solid #333;
+	background: #0f0f0f;
+	color: #fff;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace;
+	font-size: 14px;
+}
+
+.matches-container {
+	margin-top: .5rem;
+}
+
+.matches {
+	max-height: 12rem;
+	overflow: auto;
+	padding: .5rem;
+	border-radius: 6px;
+	font-family: monospace;
+	white-space: pre-wrap;
+}
+
+.match-item {
+	display: inline-block;
+	margin: 0 .5rem .5rem 0;
+	padding: .25rem .5rem;
+	border-radius: 6px;
+	border: 2px solid #333;
+}
+
+@media (max-width: 480px) {
+	.tile { --tile-size: 52px; font-size: 24px; }
+	.key { height: 48px; padding: 10px; }
+	.key--wide { min-width: 64px; }
+}
