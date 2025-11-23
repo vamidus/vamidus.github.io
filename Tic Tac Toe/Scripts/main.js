@@ -52,7 +52,7 @@ class Main {
 
 	initConfigs() {
 		const aiDifficulty = this.getUrlParameter("ai-difficulty");
-		this.aiDifficulty = (aiDifficulty === false) ? this.aiDifficulty : aiDifficulty;
+		this.aiDifficulty = (aiDifficulty === false) ? 'medium' : aiDifficulty;
 		this.fieldWidth = this.getUrlParameter("width") - 0;
 		this.fieldHeight = this.getUrlParameter("height") - 0;
 		this.fieldPlayers = this.getUrlParameter("players") - 0;
