@@ -6,11 +6,7 @@ class Main {
 		this.fieldWin = 0; // least fields captured in a row to win
 		this.fieldPlayers = 0; // max players - 1
 
-		//this.computerPlayers = []; // players to use AI
-		//this.computerPlayers = [0, 1, 2, 3, 4, 5]; // players to use AI
-		//this.computerPlayers = [0]; // players to use AI
-		this.computerPlayers = [1];
-		//this.computerPlayers = [1, 3, 5]; // players to use AI
+		this.aiPlayers = [1]; // players to use AI
 
 		// Variables
 		this.field = []; // array representing the playing filed
@@ -55,8 +51,8 @@ class Main {
 	}
 
 	initConfigs() {
-		const aiParam = this.getUrlParameter("ai");
-		this.aiDifficulty = (aiParam === false) ? this.aiDifficulty : aiParam;
+		const aiDifficulty = this.getUrlParameter("ai-difficulty");
+		this.aiDifficulty = (aiDifficulty === false) ? this.aiDifficulty : aiDifficulty;
 		this.fieldWidth = this.getUrlParameter("width") - 0;
 		this.fieldHeight = this.getUrlParameter("height") - 0;
 		this.fieldPlayers = this.getUrlParameter("players") - 0;
@@ -136,7 +132,7 @@ class Main {
 		let winningCombination = this.getWinningCombination(x, y);
 		if (winningCombination) {
 			this.drawWinningLine(winningCombination);
-			if (this.computerPlayers.includes(this.currentPlayer)) {
+			if (this.aiPlayers.includes(this.currentPlayer)) {
 				this.$loser.show().addClass("show");
 			}
 			else {
@@ -397,7 +393,7 @@ class Main {
 	}
 
 	computerMove() {
-		if (this.fieldPlayers > 1 && this.computerPlayers.includes(this.currentPlayer)) {
+		if (this.fieldPlayers > 1 && this.aiPlayers.includes(this.currentPlayer)) {
 			const mv = this.computeMove();
 			if (mv) this.makeMove(mv.x, mv.y);
 		}
