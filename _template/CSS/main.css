@@ -4,9 +4,9 @@ body {
 }
 
 .container {
-	display: inline-block;
 	background-color: white;
 	border: 3px outset #eee;
-	padding: 32px;
+	display: inline-block;
 	margin: 32px;
+	padding: 32px;
 }
