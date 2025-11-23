@@ -8,7 +8,8 @@ class Main {
 
 		//this.computerPlayers = []; // players to use AI
 		//this.computerPlayers = [0, 1, 2, 3, 4, 5]; // players to use AI
-		this.computerPlayers = [0]; // players to use AI
+		//this.computerPlayers = [0]; // players to use AI
+		this.computerPlayers = [1];
 		//this.computerPlayers = [1, 3, 5]; // players to use AI
 
 		// Variables
@@ -26,7 +27,7 @@ class Main {
 		this.aiDifficulty = 'medium'; // 'easy' | 'medium' | 'hard' | 'insane'
 		this.aiTimeLimitMs = 1000; // ms time budget for 'insane' iterative deepening
 	}
-	
+
 	initialize(settings) {
 		if (settings) this.applySettings(settings);
 		this.setup();
