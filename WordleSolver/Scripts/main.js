@@ -3,6 +3,7 @@ class Main {
 		// Board state
 		this.currentRow = 0;
 		this.currentCol = 0;
+		this.cookieName = 'ws_intro_dontshow';
 
 		// Selectors
 		this.$board = null;
@@ -34,6 +35,9 @@ class Main {
 		this.$board = $('.board');
 		this.$enter = $('.keyboard .key[data-key="Enter"]');
 		this.$help = $('#help-button');
+		this.$introClose = $('#introClose');
+		this.$introDontShow = $('#introDontShow');
+		this.$introModal = $('#introModal');
 		this.$keys = $('.keyboard .key');
 		this.$regexBox = $('#regexBox');
 	}
@@ -41,44 +45,32 @@ class Main {
 	setupEventHandlers() {
 		const self = this;
 		this.$help.on('click', function () {
-			self.$introModal.removeAttr('hidden');
+			self.$introModal.removeClass('d-none');
+		});
+		this.$introModal.on('click', '.intro-overlay', function () {
+			self.$introModal.addClass('d-none');
+		});
+		this.$introClose.on('click', function () {
+			self.$introModal.addClass('d-none');
+		});
+		this.$introDontShow.on('change', function () {
+			if (this.checked) {
+				self.setCookie(self.cookieName, '1', 365);
+			} else {
+				self.eraseCookie(self.cookieName);
+			}
 		});
 	}
 
 	initIntroModal() {
 		const self = this;
-		this.$introModal = $('#introModal');
-		this.$introDontShow = $('#introDontShow');
-		this.$introClose = $('#introClose');
 		if (!this.$introModal || !this.$introModal.length) return;
-		const cookieName = 'ws_intro_dontshow';
-		const val = this.getCookie(cookieName);
-		console.log('Intro modal cookie value:', val);
+		const val = this.getCookie(this.cookieName);
 		if (val === '1') {
-			// user opted out
 			this.$introModal.attr('hidden', 'hidden');
 			return;
 		}
-		// show modal
 		this.$introModal.removeAttr('hidden');
-		// wire events
-		this.$introClose.on('click', function () {
-			self.$introModal.attr('hidden', 'hidden');
-		});
-		this.$introDontShow.on('change', function () {
-			if (this.checked) {
-				self.setCookie(cookieName, '1', 365);
-				console.log('Set intro modal cookie to opt out of future shows');
-				const t1 = self.getCookie(cookieName);
-				console.log('Intro modal cookie value right after saving:', t1);
-			} else {
-				self.eraseCookie(cookieName);
-			}
-		});
-		// clicking overlay closes modal
-		this.$introModal.on('click', '.intro-overlay', function () {
-			self.$introModal.attr('hidden', 'hidden');
-		});
 	}
 
 	getCookie(cname) {
