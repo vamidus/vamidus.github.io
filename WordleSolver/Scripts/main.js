@@ -67,10 +67,10 @@ class Main {
 		if (!this.$introModal || !this.$introModal.length) return;
 		const val = this.getCookie(this.cookieName);
 		if (val === '1') {
-			this.$introModal.attr('hidden', 'hidden');
+			this.$introModal.addClass('d-none');
 			return;
 		}
-		this.$introModal.removeAttr('hidden');
+		this.$introModal.removeClass('d-none');
 	}
 
 	getCookie(cname) {
