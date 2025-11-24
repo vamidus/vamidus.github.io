@@ -191,6 +191,7 @@ body {
 	border: none;
 	background: none;
 	color: inherit;
+	font-size: larger;
 }
 
 @media (max-width: 600px) {

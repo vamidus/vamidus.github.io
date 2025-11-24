@@ -63,12 +63,11 @@ class Main {
 	}
 
 	initIntroModal() {
-		const self = this;
 		if (!this.$introModal || !this.$introModal.length) return;
 		const val = this.getCookie(this.cookieName);
 		if (val === '1') {
-			this.$introModal.addClass('d-none');
-			return;
+			this.$introDontShow.prop('checked', true);
+			return
 		}
 		this.$introModal.removeClass('d-none');
 	}
