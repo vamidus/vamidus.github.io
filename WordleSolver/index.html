@@ -13,6 +13,22 @@
 	</head>
 	<body>
 		<div class="container">
+			<!-- Intro modal (hidden by default) -->
+			<div id="introModal" class="intro-modal" role="dialog" aria-modal="true" aria-labelledby="introTitle" hidden>
+				<div class="intro-overlay"></div>
+				<div class="intro-content">
+					<h2 id="introTitle">Wordle Solver</h2>
+					<img src="./CSS/visual-aid.png" alt="Visual aid" class="intro-image" />
+					<p class="intro-text">Stuck in wordle? About to give up? Don't fret! Just punch in all the words you've entered so far, and select the colors of the letters in your words from wordle in here by clicking on them. This handy tool will give you all the matches it can find in our 5757 word dictionary! Good luck wordling!</p>
+					<label class="intro-toggle">
+						<input id="introDontShow" type="checkbox" />
+						<span>Don't show this again</span>
+					</label>
+					<div class="intro-actions">
+						<button id="introClose" class="btn btn-primary">Close</button>
+					</div>
+				</div>
+			</div>
 			<!-- Wordle-style board: 6 rows x 5 tiles -->
 			<div class="board" aria-label="wordle-board">
 				<!-- rows generated statically: 6 rows, each with 5 tiles -->
@@ -108,5 +124,6 @@
 				<div id="matches" class="matches" aria-live="polite"></div>
 			</div>
 		</div>
+		<button id="help-button">ⓘ</button>
 	</body>
 </html>

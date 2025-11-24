@@ -21,11 +21,91 @@ class Main {
 
 	setup() {
 		this.setupElementSelectors();
+		this.setupEventHandlers();
+		this.initIntroModal();
 		this.bindKeyboard();
 		this.bindPhysicalKeyboard();
 		this.bindTileClicks();
 		this.initializeTileStates();
 		this.updateEnterState();
+	}
+
+	setupElementSelectors() {
+		this.$board = $('.board');
+		this.$enter = $('.keyboard .key[data-key="Enter"]');
+		this.$help = $('#help-button');
+		this.$keys = $('.keyboard .key');
+		this.$regexBox = $('#regexBox');
+	}
+
+	setupEventHandlers() {
+		const self = this;
+		this.$help.on('click', function () {
+			self.$introModal.removeAttr('hidden');
+		});
+	}
+
+	initIntroModal() {
+		const self = this;
+		this.$introModal = $('#introModal');
+		this.$introDontShow = $('#introDontShow');
+		this.$introClose = $('#introClose');
+		if (!this.$introModal || !this.$introModal.length) return;
+		const cookieName = 'ws_intro_dontshow';
+		const val = this.getCookie(cookieName);
+		console.log('Intro modal cookie value:', val);
+		if (val === '1') {
+			// user opted out
+			this.$introModal.attr('hidden', 'hidden');
+			return;
+		}
+		// show modal
+		this.$introModal.removeAttr('hidden');
+		// wire events
+		this.$introClose.on('click', function () {
+			self.$introModal.attr('hidden', 'hidden');
+		});
+		this.$introDontShow.on('change', function () {
+			if (this.checked) {
+				self.setCookie(cookieName, '1', 365);
+				console.log('Set intro modal cookie to opt out of future shows');
+				const t1 = self.getCookie(cookieName);
+				console.log('Intro modal cookie value right after saving:', t1);
+			} else {
+				self.eraseCookie(cookieName);
+			}
+		});
+		// clicking overlay closes modal
+		this.$introModal.on('click', '.intro-overlay', function () {
+			self.$introModal.attr('hidden', 'hidden');
+		});
+	}
+
+	getCookie(cname) {
+		let name = cname + "=";
+		let decodedCookie = decodeURIComponent(document.cookie);
+		let ca = decodedCookie.split(';');
+		for(let i = 0; i < ca.length; i++) {
+			let c = ca[i];
+			while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+			}
+		}
+		return "";
+	}
+
+	setCookie(cname, cvalue, exdays) {
+		const d = new Date();
+		d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+		let expires = "expires=" + d.toUTCString();
+		document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+	}
+
+	eraseCookie(cname) {
+		this.setCookie(cname, '', -1);
 	}
 
 	// Bind physical keyboard events so the on-screen keyboard reacts to hardware keys
@@ -71,13 +151,6 @@ class Main {
 				try { self.$keys.filter(selector).removeClass('pressed'); } catch (err) {}
 			}
 		});
-	}
-
-	setupElementSelectors() {
-		this.$board = $('.board');
-		this.$keys = $('.keyboard .key');
-		this.$enter = $('.keyboard .key[data-key="Enter"]');
-		this.$regexBox = $('#regexBox');
 	}
 
 	// Initialize all tiles to the default state 'not-present'. They will
