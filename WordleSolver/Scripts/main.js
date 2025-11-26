@@ -359,7 +359,7 @@ class Main {
 		if (!$out || !$out.length) return;
 		$out.empty();
 		if (!matches || matches.length === 0) {
-			$out.text('No matches found in our 5757-word list.');
+			$out.text('No matches found in our word list.');
 			return;
 		}
 		// Show count first
