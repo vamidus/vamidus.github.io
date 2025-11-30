@@ -440,14 +440,12 @@ class Main {
 		}
 		const combinedPresentList = presentList.concat(globalPresentList);
 
-		// Remove any letters from the global not-present set that were marked
-		// present/guessed elsewhere so they aren't wrongly excluded.
-		for (const ch of combinedPresentList) globalNotPresentSet.delete(ch);
-		for (const ch of globalFixed) if (ch) globalNotPresentSet.delete(ch);
-
-		// Helper to escape char for character class / regex
-		function escapeForClass(s) {
-			return s.replace(/[-\\\\\]\\^]/g, '\\$&');
+		// Remove letters from the global not-present set that are marked as "green" (present)
+		for (const ch of globalFixed) {
+			if (ch) {
+				globalNotPresentSet.delete(ch);
+				break;
+			}
 		}
 
 		// Positive lookaheads for present letters (ensure they exist somewhere)
