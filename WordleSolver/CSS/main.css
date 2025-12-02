@@ -112,15 +112,21 @@ body {
     background: #444 !important;
     color: #ccc;
 }
+
 .key.key--present {
     background: darkgoldenrod !important;
     color: #fff;
 }
+
 .key.key--guessed {
     background: darkolivegreen !important;
     color: #fff;
 }
-.key.pressed { transform: translateY(1px); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.15); }
+
+.key.pressed { 
+	transform: translateY(1px); 
+	box-shadow: inset 0 0 0 2px rgba(0,0,0,0.15); 
+}
 
 .key--wide {
 	min-width: 86px;
