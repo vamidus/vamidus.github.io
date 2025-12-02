@@ -478,10 +478,15 @@ class Main {
 				const ch = ($t.text() || '').trim().toUpperCase();
 				const st = ($t.attr('data-state') || 'not-present');
 				if (!ch) continue;
-				if (st === 'present') perPositionExcludes[c].add(ch);
+				if (st === 'present') {
+					perPositionExcludes[c].add(ch);
+				} else if (st === 'not-present') {
+					for (let i = 0; i < 5; i++) {
+						perPositionExcludes[i].add(ch);
+					}
+				}
 			}
 		}
-
 		// Build pattern for each position using the per-position excludes
 		let pattern = '';
 		for (let i = 0; i < 5; i++) {
