@@ -122,13 +122,11 @@
 					<button type="button" class="key key--wide" data-key="Backspace">⌫</button>
 				</div>
 			</div>
-
-			<!-- Regex output box: shows a regex based on the most recently submitted row -->
-			<div class="regex-container">
-				<input id="regexBox" class="regex-box" type="text" readonly aria-label="regex-output" placeholder="Regex will appear here when you press Enter" />
-			</div>
 			<div class="matches-container">
 				<div id="matches" class="matches" aria-live="polite"></div>
+			</div>
+			<div class="regex-container d-none">
+				<input id="regexBox" class="regex-box" type="text" readonly aria-label="regex-output" placeholder="Regex will appear here when you press Enter" />
 			</div>
 		</div>
 		<button id="help-button">ⓘ</button>
