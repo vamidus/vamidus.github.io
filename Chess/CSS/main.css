@@ -293,6 +293,15 @@ span.black {
 	font-size: 0.65em;
 }
 
+.version-indicator {
+    position: absolute;
+    bottom: -32px;
+    left: 10px;
+    color: #6c757d;
+    font-size: 0.8em;
+    opacity: 0.7;
+}
+
 /* Themes */
 :root.dark-theme {
 	background-color: black;
