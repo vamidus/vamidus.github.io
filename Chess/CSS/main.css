@@ -112,8 +112,12 @@ body {
 	padding-left: 10px;
 }
 
-.play-as-group {
-	padding-left: 10px;
+.player-type-group {
+    padding-left: 10px;
+}
+
+.player-type-group .btn {
+    min-width: 80px;
 }
 
 .difficulty-slider-container {

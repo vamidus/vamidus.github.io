@@ -82,8 +82,8 @@ class Main {
 		// Player types
 		const whitePlayerType = localStorage.getItem('whitePlayerType') || 'human';
 		const blackPlayerType = localStorage.getItem('blackPlayerType') || 'ai';
-		this.$whitePlayerType.val(whitePlayerType);
-		this.$blackPlayerType.val(blackPlayerType);
+		$(`#white-${whitePlayerType}`).prop('checked', true);
+		$(`#black-${blackPlayerType}`).prop('checked', true);
 		this.current_player_types[0] = whitePlayerType === 'ai' ? 1 : 0;
 		this.current_player_types[1] = blackPlayerType === 'ai' ? 1 : 0;
 
@@ -127,8 +127,6 @@ class Main {
 		this.$importGameStateButton = $("#import-game-state-button");
 		this.$languageSelect = $("#language-select");
 		this.$undoButton = $("#undo-button");
-		this.$whitePlayerType = $("#white-player-type");
-		this.$blackPlayerType = $("#black-player-type");
 	}
 
 	setupEventListeners() {
@@ -154,12 +152,12 @@ class Main {
 			this.depth = e.target.value;
 			localStorage.setItem('difficulty', this.depth);
 		});		
-		this.$whitePlayerType.on('change', (e) => {
+		$('input[name="white-player-type"]').on('change', (e) => {
 			const playerType = e.target.value;
 			this.current_player_types[0] = playerType === 'ai' ? 1 : 0;
 			localStorage.setItem('whitePlayerType', playerType);
 		});
-		this.$blackPlayerType.on('change', (e) => {
+		$('input[name="black-player-type"]').on('change', (e) => {
 			const playerType = e.target.value;
 			this.current_player_types[1] = playerType === 'ai' ? 1 : 0;
 			localStorage.setItem('blackPlayerType', playerType);
