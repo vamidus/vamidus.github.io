@@ -112,6 +112,10 @@ body {
 	padding-left: 10px;
 }
 
+.color-scheme-group .btn {
+    min-width: 80px;
+}
+
 .player-type-group {
     padding-left: 10px;
 }
