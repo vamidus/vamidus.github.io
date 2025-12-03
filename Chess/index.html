@@ -50,6 +50,20 @@
 				</ul>
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active" id="game" role="tabpanel" aria-labelledby="game-tab">
+						<div class="mb-3 d-none">
+							<label for="white-player-type" class="form-label" data-translate-key="white">White:</label>
+							<select class="form-select" id="white-player-type">
+								<option value="human" data-translate-key="human">Human</option>
+								<option value="ai" data-translate-key="ai">AI</option>
+							</select>
+						</div>
+						<div class="mb-3 d-none">
+							<label for="black-player-type" class="form-label" data-translate-key="black">Black:</label>
+							<select class="form-select" id="black-player-type">
+								<option value="human" data-translate-key="human">Human</option>
+								<option value="ai" data-translate-key="ai" selected>AI</option>
+							</select>
+						</div>
 						<div>
 							<label for="difficulty-slider" class="form-label" data-translate-key="difficulty">Difficulty:</label>
 							<div class="difficulty-slider-container">

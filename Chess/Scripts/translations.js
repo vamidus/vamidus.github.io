@@ -1,150 +1,10 @@
 const translations = {
-	"game": {
-		"en": "Game",
-		"es": "Juego",
-		"ja": "ゲーム",
-		"ru": "Игра",
-		"uk": "Гра"
-	},
-	"appearance": {
-		"en": "Appearance",
-		"es": "Apariencia",
-		"ja": "外観",
-		"ru": "Вид",
-		"uk": "Вигляд"
-	},
-	"advanced": {
-		"en": "Advanced",
-		"es": "Avanzado",
-		"ja": "詳細設定",
-		"ru": "Продвинутые",
-		"uk": "Розширені"
-	},
 	"about": {
 		"en": "About",
 		"es": "Acerca de",
 		"ja": "概要",
 		"ru": "О программе",
 		"uk": "Про програму"
-	},
-	// "play_as": {
-	// 	"en": "Play as:",
-	// 	"es": "Jugar como:",
-	// 	"ja": "プレイヤー:",
-	// 	"ru": "Играть за:",
-	// 	"uk": "Грати за:"
-	// },
-	"white": {
-		"en": "White",
-		"es": "Blancas",
-		"ja": "白",
-		"ru": "Белые",
-		"uk": "Білі"
-	},
-	"random": {
-		"en": "Random",
-		"es": "Aleatorio",
-		"ja": "ランダム",
-		"ru": "Случайно",
-		"uk": "Випадково"
-	},
-	"black": {
-		"en": "Black",
-		"es": "Negras",
-		"ja": "黒",
-		"ru": "Черные",
-		"uk": "Чорні"
-	},
-	"difficulty": {
-		"en": "Difficulty:",
-		"es": "Dificultad:",
-		"ja": "難易度:",
-		"ru": "Сложность:",
-		"uk": "Складність:"
-	},
-	"new_game": {
-		"en": "New Game",
-		"es": "Nuevo Juego",
-		"ja": "新しいゲーム",
-		"ru": "Новая игра",
-		"uk": "Нова гра"
-	},
-	"language": {
-		"en": "Language:",
-		"es": "Idioma:",
-		"ja": "言語:",
-		"ru": "Язык:",
-		"uk": "Мова:"
-	},
-	"color_scheme": {
-		"en": "Color scheme:",
-		"es": "Esquema de colores:",
-		"ja": "配色:",
-		"ru": "Цветовая схема:",
-		"uk": "Колірна схема:"
-	},
-	"light": {
-		"en": "Light",
-		"es": "Claro",
-		"ja": "ライト",
-		"ru": "Светлая",
-		"uk": "Світла"
-	},
-	"dark": {
-		"en": "Dark",
-		"es": "Oscuro",
-		"ja": "ダーク",
-		"ru": "Темная",
-		"uk": "Темна"
-	},
-	"auto": {
-		"en": "Auto",
-		"es": "Auto",
-		"ja": "自動",
-		"ru": "Авто",
-		"uk": "Авто"
-	},
-	"highlighting": {
-		"en": "Highlighting:",
-		"es": "Resaltado:",
-		"ja": "ハイライト:",
-		"ru": "Подсветка:",
-		"uk": "Підсвічування:"
-	},
-	"white_moves": {
-		"en": "White",
-		"es": "Blancas",
-		"ja": "白",
-		"ru": "Белые",
-		"uk": "Білі"
-	},
-	"black_moves": {
-		"en": "Black",
-		"es": "Negras",
-		"ja": "黒",
-		"ru": "Черные",
-		"uk": "Чорні"
-	},
-	"paste_game_state": {
-		"en": "Paste game state here to import or copy from here to export",
-		"es": "Pega el estado del juego aquí para importar o copia desde aquí para exportar",
-		"ja": "ゲームの状態をここに貼り付けてインポートするか、ここからコピーしてエクスポートします",
-		"ru": "Вставьте состояние игры сюда для импорта или скопируйте отсюда для экспорта",
-		"uk": "Вставте стан гри сюди для імпорту або скопіюйте звідси для експорту"
-	},
-	"export_fen": {
-		"en": "Export FEN",
-		"es": "Exportar FEN",
-		"ja": "FENをエクスポート",
-		"ru": "Экспорт FEN",
-		"uk": "Експорт FEN"
-	},
-	"import_fen": {
-		"en": "Import FEN",
-		"es": "Importar FEN",
-		"ja": "FENをインポート",
-		"ru": "Импорт FEN",
-		"uk": "Імпорт FEN"
 	},
 	"about_p1": {
 		"en": "I built this little chess game as a fun project to practice my web development skills. I handled the front-end, making the UI work and ensuring it looks decent on your screen. You might notice the computer player is pretty smart; that's thanks to an external chess engine I integrated.",
@@ -167,12 +27,47 @@ const translations = {
 		"ru": "Надеюсь, вы отлично проведете время, сыграв несколько партий. Если вам интересно ознакомиться с технологией, которая заставляет противника работать, посетите <a href=\"https://github.com/douglasbagnall/p4wn\" target=\"_blank\">страницу движка p4wn на GitHub <span class=\"external-link-indicator\">⧉</span></a> – люди, которые его создали, являются настоящими MVP, стоящими за ИИ. Наслаждайтесь игрой!",
 		"uk": "Сподіваюся, ви чудово проведете час, зігравши кілька партій. Якщо вам цікаво ознайомитися з технологією, яка змушує супротивника працювати, відвідайте <a href=\"https://github.com/douglasbagnall/p4wn\" target=\"_blank\">сторінку рушія p4wn на GitHub <span class=\"external-link-indicator\">⧉</span></a> – люди, які його створили, є справжніми MVP, що стоять за ШІ. Насолоджуйтесь грою!"
 	},
-	"close": {
-		"en": "Close",
-		"es": "Cerrar",
-		"ja": "閉じる",
-		"ru": "Закрыть",
-		"uk": "Закрити"
+	"advanced": {
+		"en": "Advanced",
+		"es": "Avanzado",
+		"ja": "詳細設定",
+		"ru": "Продвинутые",
+		"uk": "Розширені"
+	},
+	"ai": {
+		"en": "AI",
+		"es": "IA",
+		"ja": "AI",
+		"ru": "ИИ",
+		"uk": "ШІ"
+	},
+	"appearance": {
+		"en": "Appearance",
+		"es": "Apariencia",
+		"ja": "外観",
+		"ru": "Вид",
+		"uk": "Вигляд"
+	},
+	"auto": {
+		"en": "Auto",
+		"es": "Auto",
+		"ja": "自動",
+		"ru": "Авто",
+		"uk": "Авто"
+	},
+	"black": {
+		"en": "Black:",
+		"es": "Negras:",
+		"ja": "黒:",
+		"ru": "Черные:",
+		"uk": "Чорні:",
+	},
+	"black_moves": {
+		"en": "Black",
+		"es": "Negras",
+		"ja": "黒",
+		"ru": "Черные",
+		"uk": "Чорні"
 	},
 	"chess_title": {
 		"en": "Chess",
@@ -181,6 +76,104 @@ const translations = {
 		"ru": "Шахматы",
 		"uk": "Шахи"
 	},
+	"chess_toast_title": {
+		"en": "Chess",
+		"es": "Ajedrez",
+		"ja": "チェス",
+		"ru": "Шахматы",
+		"uk": "Шахи"
+	},
+	"close": {
+		"en": "Close",
+		"es": "Cerrar",
+		"ja": "閉じる",
+		"ru": "Закрыть",
+		"uk": "Закрити"
+	},
+	"color_scheme": {
+		"en": "Color scheme:",
+		"es": "Esquema de colores:",
+		"ja": "配色:",
+		"ru": "Цветовая схема:",
+		"uk": "Колірна схема:"
+	},
+	"dark": {
+		"en": "Dark",
+		"es": "Oscuro",
+		"ja": "ダーク",
+		"ru": "Темная",
+		"uk": "Темна"
+	},
+	"difficulty": {
+		"en": "Difficulty:",
+		"es": "Dificultad:",
+		"ja": "難易度:",
+		"ru": "Сложность:",
+		"uk": "Складність:"
+	},
+	"export_fen": {
+		"en": "Export FEN",
+		"es": "Exportar FEN",
+		"ja": "FENをエクスポート",
+		"ru": "Экспорт FEN",
+		"uk": "Експорт FEN"
+	},
+	"game": {
+		"en": "Game",
+		"es": "Juego",
+		"ja": "ゲーム",
+		"ru": "Игра",
+		"uk": "Гра"
+	},
+	"highlighting": {
+		"en": "Highlighting:",
+		"es": "Resaltado:",
+		"ja": "ハイライト:",
+		"ru": "Подсветка:",
+		"uk": "Підсвічування:"
+	},
+	"human": {
+		"en": "Human",
+		"es": "Humano",
+		"ja": "人間",
+		"ru": "Человек",
+		"uk": "Людина"
+	},
+	"import_fen": {
+		"en": "Import FEN",
+		"es": "Importar FEN",
+		"ja": "FENをインポート",
+		"ru": "Импорт FEN",
+		"uk": "Імпорт FEN"
+	},
+	"language": {
+		"en": "Language:",
+		"es": "Idioma:",
+		"ja": "言語:",
+		"ru": "Язык:",
+		"uk": "Мова:"
+	},
+	"light": {
+		"en": "Light",
+		"es": "Claro",
+		"ja": "ライト",
+		"ru": "Светлая",
+		"uk": "Світла"
+	},
+	"new_game": {
+		"en": "New Game",
+		"es": "Nuevo Juego",
+		"ja": "新しいゲーム",
+		"ru": "Новая игра",
+		"uk": "Нова гра"
+	},
+	"paste_game_state": {
+		"en": "Paste game state here to import or copy from here to export",
+		"es": "Pega el estado del juego aquí para importar o copia desde aquí para exportar",
+		"ja": "ゲームの状態をここに貼り付けてインポートするか、ここからコピーしてエクスポートします",
+		"ru": "Вставьте состояние игры сюда для импорта или скопируйте отсюда для экспорта",
+		"uk": "Вставте стан гри сюди для імпорту або скопіюйте звідси для експорту"
+	},
 	"play_again": {
 		"en": "Play Again",
 		"es": "Jugar de Nuevo",
@@ -188,12 +181,26 @@ const translations = {
 		"ru": "Играть снова",
 		"uk": "Грати знову"
 	},
-	"chess_toast_title": {
-		"en": "Chess",
-		"es": "Ajedrez",
-		"ja": "チェス",
-		"ru": "Шахматы",
-		"uk": "Шахи"
+	"random": {
+		"en": "Random",
+		"es": "Aleatorio",
+		"ja": "ランダム",
+		"ru": "Случайно",
+		"uk": "Випадково"
+	},
+	"white": {
+		"en": "White:",
+		"es": "Blancas:",
+		"ja": "白:",
+		"ru": "Белые:",
+		"uk": "Білі:",
+	},
+	"white_moves": {
+		"en": "White",
+		"es": "Blancas",
+		"ja": "白",
+		"ru": "Белые",
+		"uk": "Білі"
 	}
 };
 

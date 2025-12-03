@@ -94,8 +94,18 @@ body {
 }
 
 .tab-content .form-label {
-	width: 37%;
+	width: 100px;
 	text-align: right;
+	margin-right: 10px;
+}
+
+.mb-3 {
+	display: flex;
+	align-items: center;
+}
+
+.mb-3 .form-select {
+	flex: 1;
 }
 
 .color-scheme-group {
@@ -140,12 +150,15 @@ datalist option {
     font-size: 0.75rem;
 }
 
+.language-select-div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
 #language-select {
-    display: inline-block;
-    width: 50%;
-	margin-left: 9px;
-	margin-bottom: 6px;
-	padding-left: 10px;
+    flex: 1;
+    margin-left: 10px;
 }
 
 /* Board Styles */

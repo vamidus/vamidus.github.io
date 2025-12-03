@@ -79,6 +79,14 @@ class Main {
 		const difficulty = this.getDifficulty();
 		this.$difficultySlider.val(difficulty);
 
+		// Player types
+		const whitePlayerType = localStorage.getItem('whitePlayerType') || 'human';
+		const blackPlayerType = localStorage.getItem('blackPlayerType') || 'ai';
+		this.$whitePlayerType.val(whitePlayerType);
+		this.$blackPlayerType.val(blackPlayerType);
+		this.current_player_types[0] = whitePlayerType === 'ai' ? 1 : 0;
+		this.current_player_types[1] = blackPlayerType === 'ai' ? 1 : 0;
+
 		// Color scheme
 		const preferredScheme = this.getPreferredColorScheme();
 		this.setColorScheme(preferredScheme);
@@ -119,6 +127,8 @@ class Main {
 		this.$importGameStateButton = $("#import-game-state-button");
 		this.$languageSelect = $("#language-select");
 		this.$undoButton = $("#undo-button");
+		this.$whitePlayerType = $("#white-player-type");
+		this.$blackPlayerType = $("#black-player-type");
 	}
 
 	setupEventListeners() {
@@ -143,6 +153,16 @@ class Main {
 		this.$difficultySlider.on('input', (e) => {
 			this.depth = e.target.value;
 			localStorage.setItem('difficulty', this.depth);
+		});		
+		this.$whitePlayerType.on('change', (e) => {
+			const playerType = e.target.value;
+			this.current_player_types[0] = playerType === 'ai' ? 1 : 0;
+			localStorage.setItem('whitePlayerType', playerType);
+		});
+		this.$blackPlayerType.on('change', (e) => {
+			const playerType = e.target.value;
+			this.current_player_types[1] = playerType === 'ai' ? 1 : 0;
+			localStorage.setItem('blackPlayerType', playerType);
 		});
 		this.$highlightSwitch.on('change', (e) => {
 			this.setHighlighting(e.target.checked);
