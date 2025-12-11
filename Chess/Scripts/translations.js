@@ -188,6 +188,13 @@ const translations = {
 		"ru": "Случайно",
 		"uk": "Випадково"
 	},
+	"swap_sides": {
+		"en": "Swap Sides",
+		"es": "Cambiar Lados",
+		"ja": "サイドを入れ替え",
+		"ru": "Поменять стороны",
+		"uk": "Змінити сторони"
+	},
 	"white": {
 		"en": "White:",
 		"es": "Blancas:",
