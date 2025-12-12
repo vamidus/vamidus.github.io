@@ -84,6 +84,7 @@ class Main {
         // Player types
         const whitePlayerType = localStorage.getItem('whitePlayerType') || 'human';
         const blackPlayerType = localStorage.getItem('blackPlayerType') || 'ai';
+        console.log("initialize --- White Player Type:", whitePlayerType, "Black Player Type:", blackPlayerType);
         $(`#white-${whitePlayerType}`).prop('checked', true);
         $(`#black-${blackPlayerType}`).prop('checked', true);
         this.current_player_types[0] = whitePlayerType === 'ai' ? 1 : 0;
@@ -247,7 +248,6 @@ class Main {
     swapSides() {
         const whitePlayerType = this.current_player_types[0] === 1 ? 'human' : 'ai';
         const blackPlayerType = this.current_player_types[1] === 1 ? 'human' : 'ai';
-        
         $(`#white-${whitePlayerType}`).prop('checked', true);
         $(`#black-${blackPlayerType}`).prop('checked', true);
         
@@ -324,8 +324,8 @@ class Main {
 
     startNewGame() {
         this.clearMoveHistory();
-        this.setGameParameters();
         this.setupBoard();
+        this.depth = this.$difficultySlider.val();
         this.state = p4_new_game();
         this.updateBoardUI();
         if (this.player_type[this.current_player_types[this.state.to_play]] === "Computer") { // true if human is playing black
@@ -372,11 +372,6 @@ class Main {
             $newRow.appendTo(this.$board);
             colorIsBlack = !colorIsBlack;
         }
-    }
-
-    setGameParameters() {
-        this.current_player_types = [0, 1];
-        this.depth = this.$difficultySlider.val();
     }
 
     drawBoard() {
