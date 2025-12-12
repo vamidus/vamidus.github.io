@@ -195,6 +195,41 @@ const translations = {
 		"ru": "Поменять стороны",
 		"uk": "Змінити сторони"
 	},
+    "toast_game_state_copied": {
+        "en": "Game state (FEN) copied to clipboard!",
+        "es": "¡Estado del juego (FEN) copiado al portapapeles!",
+        "ja": "ゲームの状態（FEN）がクリップボードにコピーされました！",
+        "ru": "Состояние игры (FEN) скопировано в буфер обмена!",
+        "uk": "Стан гри (FEN) скопійовано в буфер обміну!"
+    },
+    "toast_copy_failed": {
+        "en": "Failed to copy game state to clipboard.",
+        "es": "No se pudo copiar el estado del juego al portapapeles.",
+        "ja": "ゲームの状態をクリップボードにコピーできませんでした。",
+        "ru": "Не удалось скопировать состояние игры в буфер обмена.",
+        "uk": "Не вдалося скопіювати стан гри в буфер обміну."
+    },
+    "toast_import_success": {
+        "en": "Game state imported successfully!",
+        "es": "¡Estado del juego importado con éxito!",
+        "ja": "ゲームの状態が正常にインポートされました！",
+        "ru": "Стан игры успешно импортирован!",
+        "uk": "Стан гри успішно імпортовано!"
+    },
+    "toast_invalid_fen": {
+        "en": "Invalid game state (FEN) provided.",
+        "es": "Estado de juego (FEN) no válido proporcionado.",
+        "ja": "無効なゲームの状態（FEN）が提供されました。",
+        "ru": "Предоставлено недопустимое состояние игры (FEN).",
+        "uk": "Надано недійсний стан гри (FEN)."
+    },
+    "toast_paste_fen": {
+        "en": "Please paste a game state (FEN) into the text area.",
+        "es": "Por favor, pegue un estado de juego (FEN) en el área de texto.",
+        "ja": "テキストエリアにゲームの状態（FEN）を貼り付けてください。",
+        "ru": "Пожалуйста, вставьте состояние игры (FEN) в текстовое поле.",
+        "uk": "Будь ласка, вставте стан гри (FEN) у текстове поле."
+    },
 	"white": {
 		"en": "White:",
 		"es": "Blancas:",

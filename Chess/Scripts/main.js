@@ -256,8 +256,6 @@ class Main {
         
         localStorage.setItem('whitePlayerType', whitePlayerType);
         localStorage.setItem('blackPlayerType', blackPlayerType);
-        
-        this.showToast("Player sides have been swapped");
     }
 
     updateSwapSidesButtonState() {
@@ -777,11 +775,12 @@ class Main {
         }
     }
 
-    showToast(message) {
-        const toastLiveExample = document.getElementById('liveToast');
-        const toastBody = toastLiveExample.querySelector('.toast-body');
-        toastBody.textContent = message;
-        const toast = new bootstrap.Toast(toastLiveExample);
+    showToast(messageKey, params = {}) {
+        const liveToast = document.getElementById('liveToast');
+        const toastBody = liveToast.querySelector('.toast-body');
+        const language = this.getLanguage();
+        toastBody.textContent = translations[messageKey]?.[language];
+        const toast = new bootstrap.Toast(liveToast);
         toast.show();
     }
 
@@ -789,10 +788,10 @@ class Main {
         const fen = p4_state2fen(this.state);
         this.$gameStateTextarea.val(fen);
         navigator.clipboard.writeText(fen).then(() => {
-            this.showToast("Game state (FEN) copied to clipboard!");
+            this.showToast("toast_game_state_copied");
         }).catch(err => {
             console.error("Failed to copy game state: ", err);
-            this.showToast("Failed to copy game state to clipboard.");
+            this.showToast("toast_copy_failed");
         });
     }
 
@@ -804,13 +803,13 @@ class Main {
                 this.clearMoveHistory();
                 this.updateBoardUI();
                 this.$menuContainer.removeClass("open");
-                this.showToast("Game state imported successfully!");
+                this.showToast("toast_import_success");
             } catch (e) {
                 console.error("Failed to import game state: ", e);
-                this.showToast("Invalid game state (FEN) provided.");
+                this.showToast("toast_invalid_fen");
             }
         } else {
-            this.showToast("Please paste a game state (FEN) into the text area.");
+            this.showToast("toast_paste_fen");
         }
     }
 
