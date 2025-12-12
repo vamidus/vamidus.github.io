@@ -775,7 +775,7 @@ class Main {
         }
     }
 
-    showToast(messageKey, params = {}) {
+    showToast(messageKey) {
         const liveToast = document.getElementById('liveToast');
         const toastBody = liveToast.querySelector('.toast-body');
         const language = this.getLanguage();

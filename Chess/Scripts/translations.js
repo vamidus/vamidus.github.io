@@ -195,19 +195,19 @@ const translations = {
 		"ru": "Поменять стороны",
 		"uk": "Змінити сторони"
 	},
-    "toast_game_state_copied": {
-        "en": "Game state (FEN) copied to clipboard!",
-        "es": "¡Estado del juego (FEN) copiado al portapapeles!",
-        "ja": "ゲームの状態（FEN）がクリップボードにコピーされました！",
-        "ru": "Состояние игры (FEN) скопировано в буфер обмена!",
-        "uk": "Стан гри (FEN) скопійовано в буфер обміну!"
-    },
     "toast_copy_failed": {
         "en": "Failed to copy game state to clipboard.",
         "es": "No se pudo copiar el estado del juego al portapapeles.",
         "ja": "ゲームの状態をクリップボードにコピーできませんでした。",
         "ru": "Не удалось скопировать состояние игры в буфер обмена.",
         "uk": "Не вдалося скопіювати стан гри в буфер обміну."
+    },
+    "toast_game_state_copied": {
+        "en": "Game state (FEN) copied to clipboard!",
+        "es": "¡Estado del juego (FEN) copiado al portapapeles!",
+        "ja": "ゲームの状態（FEN）がクリップボードにコピーされました！",
+        "ru": "Состояние игры (FEN) скопировано в буфер обмена!",
+        "uk": "Стан гри (FEN) скопійовано в буфер обміну!"
     },
     "toast_import_success": {
         "en": "Game state imported successfully!",
