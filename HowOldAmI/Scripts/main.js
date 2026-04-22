@@ -45,8 +45,7 @@ class Main {
 	}
 	
 	calculateAge() {
-		//const today = new Date();
-		const today = new Date('2026-07-27'); // TODO: Remove this line when not testing
+		const today = new Date();
 		let years = today.getFullYear() - this.dob.getFullYear();
 		let months = today.getMonth() - this.dob.getMonth();
 		let days = today.getDate() - this.dob.getDate();
