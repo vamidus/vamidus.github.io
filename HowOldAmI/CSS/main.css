@@ -1,0 +1,84 @@
+/* Modern dark theme with gradient background */
+body {
+	background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%);
+	color: #e9ecef;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	min-height: 100vh;
+}
+
+/* Age card styling */
+.age-card {
+	transition: all 0.3s ease;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+}
+
+.age-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+	border-color: rgba(255, 255, 255, 0.2);
+}
+
+.age-value {
+	font-size: clamp(1.5rem, 4vw, 2.5rem);
+	line-height: 1;
+	margin-bottom: 0.25rem;
+}
+
+.age-label {
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	font-weight: 600;
+}
+
+/* Card styling */
+.card {
+	background: rgba(33, 37, 41, 0.8) !important;
+	backdrop-filter: blur(20px);
+	border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Title styling */
+.display-4 {
+	background: linear-gradient(45deg, #007bff, #6610f2);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	text-shadow: 0 0 30px rgba(0, 123, 255, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+	.age-card {
+		padding: 1rem !important;
+	}
+	
+	.card-body {
+		padding: 1.5rem !important;
+	}
+	
+	.display-4 {
+		font-size: 2rem !important;
+	}
+}
+
+/* Smooth animations */
+.age-value {
+	animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Subtle glow effect */
+.age-card .age-value {
+	text-shadow: 0 0 10px currentColor;
+}

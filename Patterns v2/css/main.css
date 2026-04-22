@@ -4,14 +4,14 @@ body, html {
 	height: 100%;
 	margin: 0px;
 	overflow: hidden;
-	background-color: black;
+	background-color: white;
 }
 
 #container {
 	border-collapse: collapse;
 	border-spacing: 0;
-	background-color: darkorchid;
-	opacity: 0.75;
+	/* background-color: darkorchid; */
+	opacity: 1;
 }
 
 #container td {
