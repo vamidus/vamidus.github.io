@@ -26,8 +26,7 @@ body {
 }
 
 .age-label {
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
+	font-size: 0.75rem;
 	font-weight: 600;
 }
 
