@@ -69,6 +69,13 @@ const translations = {
 		"ru": "Черные",
 		"uk": "Чорні"
 	},
+	"clear_storage": {
+		"en": "Clear Local Storage",
+		"es": "Limpiar Almacenamiento Local",
+		"ja": "ローカルストレージをクリア",
+		"ru": "Очистить Локальное Хранилище",
+		"uk": "Очистити Локальне Сховище"
+	},
 	"chess_title": {
 		"en": "Chess",
 		"es": "Ajedrez",
@@ -229,6 +236,13 @@ const translations = {
         "ja": "テキストエリアにゲームの状態（FEN）を貼り付けてください。",
         "ru": "Пожалуйста, вставьте состояние игры (FEN) в текстовое поле.",
         "uk": "Будь ласка, вставте стан гри (FEN) у текстове поле."
+    },
+    "toast_storage_cleared": {
+        "en": "Local storage cleared successfully!",
+        "es": "¡Almacenamiento local limpiado con éxito!",
+        "ja": "ローカルストレージが正常にクリアされました！",
+        "ru": "Локальное хранилище успешно очищено!",
+        "uk": "Локальне сховище успішно очищено!"
     },
 	"white": {
 		"en": "White:",

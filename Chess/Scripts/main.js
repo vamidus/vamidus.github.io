@@ -50,6 +50,7 @@ class Main {
 
         // Selectors
         this.$board = null;
+        this.$clearStorageButton = null;
         this.$difficultySlider = null;
         this.$exportGameStateButton = null;
         this.$gameStateTextarea = null;
@@ -119,6 +120,7 @@ class Main {
 
     setupElementSelectors() {
         this.$board = $(".board:first");
+        this.$clearStorageButton = $("#clear-storage-button");
         this.$difficultySlider = $("#difficulty-slider");
         this.$exportGameStateButton = $("#export-game-state-button");
         this.$gameStateTextarea = $("#game-state-textarea");
@@ -170,6 +172,7 @@ class Main {
         this.$languageSelect.on('change', (e) => this.setLanguage(e.target.value));
         this.$undoButton.on("click", () => this.undo());
         this.$swapSidesButton.on("click", () => this.swapSides());
+        this.$clearStorageButton.on("click", () => this.clearLocalStorage());
     }
 
     setColorScheme(scheme) {
@@ -806,6 +809,13 @@ class Main {
         } else {
             this.showToast("toast_paste_fen");
         }
+    }
+
+    clearLocalStorage() {
+        localStorage.clear();
+        const language = this.getLanguage();
+        this.applyTranslations(language);
+        this.showToast("toast_storage_cleared");
     }
 
     static CreateInstance(settings) {
