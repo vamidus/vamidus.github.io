@@ -3,9 +3,14 @@ class Main {
 		// Configs
 		this.dob = new Date();
 
-		// Variables
 		// Selectors
-		this.$container = null;
+		this.$ageCard = null;
+		this.$ageText = null;
+		this.$ageValues = null;
+		this.$card = null;
+		
+		// Timer for midnight updates
+		this.midnightTimer = null;
 	}
 
 	initialize(settings) {
@@ -20,10 +25,14 @@ class Main {
 	setup() {
 		this.setupElementSelectors();
 		this.showAge();
+		this.scheduleMidnightUpdate();
 	}
 
 	setupElementSelectors() {
-		this.$container = $(".container");
+		this.$ageCard = $(".age-card");
+		this.$ageText = $(".age-text");
+		this.$ageValues = $(".age-value");
+		this.$card = $(".card");
 	}
 
 	showAge() {
@@ -31,20 +40,21 @@ class Main {
 		const isBirthday = age.months === 0 && age.days === 0;
 		
 		// Populate individual age cards
-		$('.age-value').eq(0).text(age.years); // Years
-		$('.age-value').eq(1).text(age.months); // Months  
-		$('.age-value').eq(2).text(age.days); // Days
+		this.$ageValues.eq(0).text(age.years); // Years
+		this.$ageValues.eq(1).text(age.months); // Months  
+		this.$ageValues.eq(2).text(age.days); // Days
 		
 		// Set the full age text below
 		if (isBirthday) {
-			$('.age-text').html(`🎉 Happy ${age.years}th Birthday! 🎉`);
+			this.$ageText.html(`🎉 Happy ${age.years}<sup>${this.getOrdinalSuffix(age.years)}</sup> Birthday! 🎉`);
 			this.triggerBirthdayAnimation();
 		} else {
-			$('.age-text').text(`${age.years} years, ${age.months} months, ${age.days} days`);
+			this.$ageText.text(`I am ${age.years} years, ${age.months} months, and ${age.days} days old.`);
 		}
 	}
 	
 	calculateAge() {
+		//const today = new Date('1978-07-27');
 		const today = new Date();
 		let years = today.getFullYear() - this.dob.getFullYear();
 		let months = today.getMonth() - this.dob.getMonth();
@@ -67,22 +77,42 @@ class Main {
 		return {years, months, days};
 	}
 	
+	getOrdinalSuffix(number) {
+		// Handle special cases for English ordinal suffixes
+		const absNumber = Math.abs(number);
+		const lastDigit = absNumber % 10;
+		const lastTwoDigits = absNumber % 100;
+		
+		// 11th, 12th, 13th are exceptions
+		if (lastTwoDigits >= 11 && lastTwoDigits <= 13) {
+			return 'th';
+		}
+		
+		// 1st, 2nd, 3rd
+		switch (lastDigit) {
+			case 1: return 'st';
+			case 2: return 'nd';
+			case 3: return 'rd';
+			default: return 'th';
+		}
+	}
+	
 	triggerBirthdayAnimation() {
 		// Add birthday class to trigger CSS animations
-		$('.card').addClass('birthday-mode');
-		$('.age-card').addClass('birthday-card');
+		this.$card.addClass('birthday-mode');
+		this.$ageCard.addClass('birthday-card');
 		
 		// Create confetti effect
 		this.createConfetti();
 		
 		// Pulse the age values
-		$('.age-value').addClass('birthday-pulse');
+		this.$ageValues.addClass('birthday-pulse');
 		
 		// Remove classes after animation completes
 		setTimeout(() => {
-			$('.card').removeClass('birthday-mode');
-			$('.age-card').removeClass('birthday-card');
-			$('.age-value').removeClass('birthday-pulse');
+			this.$card.removeClass('birthday-mode');
+			this.$ageCard.removeClass('birthday-card');
+			this.$ageValues.removeClass('birthday-pulse');
 		}, 5000);
 	}
 	
@@ -105,6 +135,26 @@ class Main {
 		setTimeout(() => {
 			$('.confetti-piece').remove();
 		}, 15000);
+	}
+	
+	scheduleMidnightUpdate() {
+		// Clear any existing timer
+		if (this.midnightTimer) {
+			clearTimeout(this.midnightTimer);
+		}
+		
+		const now = new Date();
+		const tomorrow = new Date(now);
+		tomorrow.setDate(tomorrow.getDate() + 1);
+		tomorrow.setHours(0, 0, 0, 0); // Set to midnight
+		
+		const msUntilMidnight = tomorrow.getTime() - now.getTime();
+		
+		// Set timer to update at midnight
+		this.midnightTimer = setTimeout(() => {
+			this.showAge();
+			this.scheduleMidnightUpdate(); // Schedule next midnight update
+		}, msUntilMidnight);
 	}
 	
 	static CreateInstance(settings) {

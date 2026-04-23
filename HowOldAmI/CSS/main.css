@@ -1,6 +1,11 @@
+:root {
+  --primary-gradient: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%);
+  --card-bg: rgba(33, 37, 41, 0.8);
+}
+
 /* Modern dark theme with gradient background */
 body {
-	background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%);
+	background: var(--primary-gradient);
 	color: #e9ecef;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	min-height: 100vh;
@@ -32,7 +37,7 @@ body {
 
 /* Card styling */
 .card {
-	background: rgba(33, 37, 41, 0.8) !important;
+	background: var(--card-bg) !important;
 	backdrop-filter: blur(20px);
 	border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
