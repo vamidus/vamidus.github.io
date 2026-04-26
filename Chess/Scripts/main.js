@@ -555,7 +555,7 @@ class Main {
                         this.updateBoardUI(false);
                         setTimeout(() => {
                             const modalBody = document.getElementById('game-over-modal-body');
-                            modalBody.innerHTML = "Congratulations, You won!";
+                            modalBody.innerHTML = this.getTranslatedText("you_won");
                             const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
                             gameOverModal.show();
                         }, 10);
@@ -609,9 +609,9 @@ class Main {
             this.updateBoardUI(false);
             const modalBody = document.getElementById('game-over-modal-body');
             if (p4_check_check(this.state, this.state.to_play)) {
-                modalBody.innerHTML = "Checkmate!";
+                modalBody.innerHTML = this.getTranslatedText("checkmate");
             } else {
-                modalBody.innerHTML = "Stalemate!";
+                modalBody.innerHTML = this.getTranslatedText("stalemate");
             }
             const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
             gameOverModal.show();
@@ -641,7 +641,7 @@ class Main {
                 this.updateBoardUI(false);
                 setTimeout(() => {
                     const modalBody = document.getElementById('game-over-modal-body');
-                    modalBody.innerHTML = "Checkmate!";
+                    modalBody.innerHTML = this.getTranslatedText("checkmate");
                     const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
                     gameOverModal.show();
                 }, 10);
@@ -726,7 +726,7 @@ class Main {
                 this.updateBoardUI(false);
                 setTimeout(() => {
                     const modalBody = document.getElementById('game-over-modal-body');
-                    modalBody.innerHTML = "Congratulations, You won!";
+                    modalBody.innerHTML = this.getTranslatedText("you_won");
                     const gameOverModal = new bootstrap.Modal(document.getElementById('game-over-modal'));
                     gameOverModal.show();
                 }, 10);
@@ -771,6 +771,11 @@ class Main {
         if (container[0].scrollHeight > container[0].clientHeight) {
             container.scrollTop(container[0].scrollHeight);
         }
+    }
+
+    getTranslatedText(key) {
+        const language = this.getLanguage();
+        return translations[key]?.[language] || key;
     }
 
     showToast(messageKey) {

@@ -1,3 +1,11 @@
+const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'es', name: 'Español' },
+    { code: 'ja', name: '日本語' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'uk', name: 'Українська' }
+];
+
 const translations = {
 	"about": {
 		"en": "About",
@@ -69,6 +77,13 @@ const translations = {
 		"ru": "Черные",
 		"uk": "Чорні"
 	},
+    "checkmate": {
+        "en": "Checkmate!",
+        "es": "¡Jaque mate!",
+        "ja": "チェックメイト！",
+        "ru": "Шах и мат!",
+        "uk": "Шах і мат!"
+    },
 	"clear_storage": {
 		"en": "Clear Local Storage",
 		"es": "Limpiar Almacenamiento Local",
@@ -195,6 +210,13 @@ const translations = {
 		"ru": "Случайно",
 		"uk": "Випадково"
 	},
+    "stalemate": {
+        "en": "Stalemate!",
+        "es": "¡Tablas!",
+        "ja": "ステイルメイト！",
+        "ru": "Пат!",
+        "uk": "Пат!"
+    },
 	"swap_sides": {
 		"en": "Swap Sides",
 		"es": "Cambiar Lados",
@@ -244,26 +266,25 @@ const translations = {
         "ru": "Локальное хранилище успешно очищено!",
         "uk": "Локальне сховище успішно очищено!"
     },
-	"white": {
-		"en": "White:",
-		"es": "Blancas:",
-		"ja": "白:",
-		"ru": "Белые:",
-		"uk": "Білі:",
-	},
-	"white_moves": {
-		"en": "White",
-		"es": "Blancas",
-		"ja": "白",
-		"ru": "Белые",
-		"uk": "Білі"
-	}
+    "white": {
+        "en": "White:",
+        "es": "Blancas:",
+        "ja": "白:",
+        "ru": "Белые:",
+        "uk": "Білі:",
+    },
+    "white_moves": {
+        "en": "White",
+        "es": "Blancas",
+        "ja": "白",
+        "ru": "Белые",
+        "uk": "Білі"
+    },
+    "you_won": {
+        "en": "Congratulations, You won!",
+        "es": "¡Felicidades, ganaste!",
+        "ja": "おめでとう、あなたの勝ちです！",
+        "ru": "Поздравляю, вы выиграли!",
+        "uk": "Вітаю, ви виграли!"
+    }
 };
-
-const languages = [
-	{ code: 'en', name: 'English' },
-	{ code: 'es', name: 'Español' },
-	{ code: 'ja', name: '日本語' },
-	{ code: 'ru', name: 'Русский' },
-	{ code: 'uk', name: 'Українська' }
-];
