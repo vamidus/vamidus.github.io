@@ -163,7 +163,7 @@ body {
 }
 
 /* Birthday text styling */
-.age-text:has(🎉) {
+.birthday-text:has(🎉) {
 	font-size: 1.5rem;
 	font-weight: bold;
 	background: linear-gradient(45deg, #ffd700, #ff69b4, #00ff00, #00bfff);

@@ -5,8 +5,8 @@ class Main {
 
 		// Selectors
 		this.$ageCard = null;
-		this.$ageText = null;
 		this.$ageValues = null;
+		this.$birthdayText = null;
 		this.$card = null;
 		
 		// Timer for midnight updates
@@ -30,8 +30,8 @@ class Main {
 
 	setupElementSelectors() {
 		this.$ageCard = $(".age-card");
-		this.$ageText = $(".age-text");
 		this.$ageValues = $(".age-value");
+		this.$birthdayText = $(".birthday-text");
 		this.$card = $(".card");
 	}
 
@@ -44,12 +44,15 @@ class Main {
 		this.$ageValues.eq(1).text(age.months); // Months  
 		this.$ageValues.eq(2).text(age.days); // Days
 		
-		// Set the full age text below
+		// Calculate days until birthday
+		const daysUntilBirthday = this.calculateDaysUntilBirthday();
+
+		// Set the birthday text below
 		if (isBirthday) {
-			this.$ageText.html(`🎉 Happy ${age.years}<sup>${this.getOrdinalSuffix(age.years)}</sup> Birthday! 🎉`);
+			this.$birthdayText.html(`🎉 Happy ${age.years}<sup>${this.getOrdinalSuffix(age.years)}</sup> Birthday! 🎉`);
 			this.triggerBirthdayAnimation();
 		} else {
-			this.$ageText.text(`I am ${age.years} years, ${age.months} months, and ${age.days} days old.`);
+			this.$birthdayText.text(`Next birthday is in ${daysUntilBirthday} days!`);
 		}
 	}
 	
@@ -77,6 +80,20 @@ class Main {
 		return {years, months, days};
 	}
 	
+	calculateDaysUntilBirthday() {
+		const today = new Date();
+		const nextBirthday = new Date(today.getFullYear(), this.dob.getMonth(), this.dob.getDate());
+		
+		// If birthday has already passed this year, calculate for next year
+		if (today > nextBirthday) {
+			nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+		}
+		
+		const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+		const diffDays = Math.ceil((nextBirthday - today) / oneDay);
+		return diffDays;
+	}
+
 	getOrdinalSuffix(number) {
 		// Handle special cases for English ordinal suffixes
 		const absNumber = Math.abs(number);
