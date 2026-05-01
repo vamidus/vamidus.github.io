@@ -8,6 +8,7 @@ class Main {
 		this.$ageValues = null;
 		this.$birthdayText = null;
 		this.$card = null;
+		this.$onThisDayContent = null;
 		
 		// Timer for midnight updates
 		this.midnightTimer = null;
@@ -25,6 +26,7 @@ class Main {
 	setup() {
 		this.setupElementSelectors();
 		this.showAge();
+		this.fetchOnThisDay();
 		this.scheduleMidnightUpdate();
 	}
 
@@ -33,6 +35,7 @@ class Main {
 		this.$ageValues = $(".age-value");
 		this.$birthdayText = $(".birthday-text");
 		this.$card = $(".card");
+		this.$onThisDayContent = $(".on-this-day-content");
 	}
 
 	showAge() {
@@ -154,6 +157,53 @@ class Main {
 		}, 15000);
 	}
 	
+	fetchOnThisDay() {
+		const today = new Date();
+		const year = today.getFullYear();
+		const month = String(today.getMonth() + 1).padStart(2, '0');
+		const day = String(today.getDate()).padStart(2, '0');
+		
+		const apiUrl = `https://api.wikimedia.org/feed/v1/wikipedia/en/featured/${year}/${month}/${day}`;
+		
+		$.ajax({
+			url: apiUrl,
+			method: 'GET',
+			dataType: 'json',
+			success: (data) => {
+				this.displayOnThisDay(data);
+			},
+			error: (xhr, status, error) => {
+				console.error('Error fetching Wikimedia data:', error);
+				this.$onThisDayContent.html('<div class="text-muted">Unable to load historical events for today.</div>');
+			}
+		});
+	}
+	
+	displayOnThisDay(data) {
+		let content = '';
+		
+		// Display selected anniversaries if available
+		if (data.onthisday && data.onthisday.length > 0) {
+			const events = data.onthisday; //.onthisday.slice(0, 3); // Show first 3 events
+			
+			events.forEach(event => {
+				const year = event.year || 'Unknown year';
+				let text = event.text || 'No description available';
+				if (event.pages && event.pages.length > 0) {
+					// Add links to pages
+					event.pages.forEach(page => {
+						text += `<div class="ml-2"><a href="${page.content_urls.desktop.page}" target="_blank">${page.normalizedtitle}</a></div>`;
+					});
+				}
+				content += `<div class="mb-2"><strong>In ${year}:</strong> ${text}</div>`;
+			});
+		} else {
+			content = '<div class="text-muted">No historical events found for today.</div>';
+		}
+		
+		this.$onThisDayContent.html(content);
+	}
+	
 	scheduleMidnightUpdate() {
 		// Clear any existing timer
 		if (this.midnightTimer) {
@@ -170,6 +220,7 @@ class Main {
 		// Set timer to update at midnight
 		this.midnightTimer = setTimeout(() => {
 			this.showAge();
+			this.fetchOnThisDay(); // Also refresh historical events
 			this.scheduleMidnightUpdate(); // Schedule next midnight update
 		}, msUntilMidnight);
 	}
