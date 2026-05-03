@@ -227,7 +227,7 @@ Main.prototype = {
 		var originalX = level.field[y][x].x;
 		var originalY = level.field[y][x].y;
 		var i = originalY * this.fieldWidth + originalX + 1; // only used without background
-		var $tile = this.$tileTemplate
+		this.$tileTemplate
 			.clone()
 			.attr("x", x)
 			.attr("y", y)
@@ -241,13 +241,7 @@ Main.prototype = {
 					"background-image": level.backgroundImage,
 					"background-size": offsetWidth + "px " + offsetHeight + "px",
 				"background-position": (100 / (this.fieldWidth - 1) * originalX) + "% " + (100 / (this.fieldHeight - 1) * originalY) + "%"})})
-			.text(level.backgroundImage === null 
-						? i === 6 
-							? "6." 
-							: i === 9 
-								? "9." 
-								: i 
-						: "")
+			.text(level.backgroundImage === null ? i : "")
 			.appendTo(this.$container);
 	},
 

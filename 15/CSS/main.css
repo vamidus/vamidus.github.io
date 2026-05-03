@@ -1,6 +1,6 @@
 body {
 	background-color: #eee;
-	font: 1.3em Arial, Helvetica, sans-serif;
+	font: 1.3em 'Courier New', monospace;
 	padding: 32px;
 	user-select: none;
 }
