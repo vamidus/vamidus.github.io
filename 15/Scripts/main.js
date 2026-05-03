@@ -101,7 +101,7 @@ var Main = function () {
 	this.fieldHeight = 0;
 	this.fieldWidth = 0;
 	this.animationSpeed = 200;
-	this.animationSpeedShuffle = 10;
+	this.animationSpeedShuffle = 50;
 
 	// Variables
 	this.currentLevel = 1;
@@ -250,36 +250,36 @@ Main.prototype = {
 		this.animationSpeed = this.animationSpeedShuffle;
 		var scrambleIterations = this.fieldWidth * this.fieldHeight * 2 * 10;
 		for (var i = 0; i < scrambleIterations; i++) {
-			var scrambled = false;
+			var thisTileScrambled = false;
 			var noCell = this.getNoCell();
 			if (!noCell) return;
 			do {
 				switch(Math.floor(Math.random() * 4)) {
 					case 0:
 						if (noCell.y > 0 && this.moveTile(noCell.x, noCell.y - 1)) {
-							scrambled = true;
+							thisTileScrambled = true;
 						}
 						break;
 					case 1:
 						if (noCell.y < this.fieldHeight - 1 && this.moveTile(noCell.x, noCell.y + 1)) {
-							scrambled = true;
+							thisTileScrambled = true;
 						}
 						break;
 					case 2:
 						if (noCell.x > 0 && this.moveTile(noCell.x - 1, noCell.y)) {
-							scrambled = true;
+							thisTileScrambled = true;
 						}
 						break;
 					case 3:
 						if (noCell.x < this.fieldWidth - 1 && this.moveTile(noCell.x + 1, noCell.y)) {
-							scrambled = true;
+							thisTileScrambled = true;
 						}
 						break;
 					default:
 						break;
 				}
 			}
-			while (!scrambled);
+			while (!thisTileScrambled);
 		}
 		this.animationSpeed = animationSpeed;
 	},
@@ -310,7 +310,6 @@ Main.prototype = {
 	},
 
 	getRandomCell: function () {
-		var level = this.levels[this.currentLevel].field;
 		var y = Math.floor(Math.random() * this.fieldWidth);
 		var x = Math.floor(Math.random() * this.fieldHeight);
 		return {x, y};
