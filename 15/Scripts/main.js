@@ -96,12 +96,12 @@ var Main = function () {
 	];
 	
 	// Configs
-	this.celldHeight = 0;
-	this.celldWidth = 0;
+	this.cellHeight = 0;
+	this.cellWidth = 0;
 	this.fieldHeight = 0;
 	this.fieldWidth = 0;
-	this.animationSpeed = 200;
-	this.animationSpeedShuffle = 50;
+	this.animationSpeed = 0;
+	this.animationSpeedShuffle = 0;
 
 	// Variables
 	this.currentLevel = 1;
