@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://ia3ply1cgbk8"]
+
+[ext_resource type="Script" uid="uid://c7ckx0hm8x1p4" path="res://box.gd" id="1_bqn3j"]
+
+[node name="Box" type="Node2D" unique_id=1921976232]
+script = ExtResource("1_bqn3j")
+
+[node name="BoxImage" type="Sprite2D" parent="." unique_id=54260224]
+centered = false
+offset = Vector2(51.5, 51.5)
