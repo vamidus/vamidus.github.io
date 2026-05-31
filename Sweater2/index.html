@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Sweater v2</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="CSS/main.css">
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+		<script src="Scripts/main.js"></script>
+		<script>
+			$(function () {
+				Main.CreateInstance();
+			});
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="tabs" role="tablist" aria-label="Main navigation tabs">
+				<button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab1" id="tab1-btn" tabindex="0">
+					Image Viewer
+				</button>
+				<button class="tab-button" role="tab" aria-selected="false" aria-controls="tab2" id="tab2-btn" tabindex="-1">
+					Pixelate
+				</button>
+				<button class="tab-button" role="tab" aria-selected="false" aria-controls="tab3" id="tab3-btn" tabindex="-1">
+					Sweater
+				</button>
+			</div>
+			
+			<div class="tab-content">
+				<div class="tab-panel active" id="tab1" role="tabpanel" aria-labelledby="tab1-btn">
+					<canvas id="imageCanvas" aria-label="Image display canvas"></canvas>
+					
+					<div class="file-selector">
+						<label for="filePath" class="visually-hidden">Image file path</label>
+						<input type="text" id="filePath" class="file-path-input" placeholder="Enter or paste full path to image file" aria-describedby="pathHelp">
+						<input type="file" id="fileInput" accept="image/*" class="visually-hidden" aria-label="Select image file">
+						<button id="browseBtn" class="btn-primary" type="button" aria-label="Browse for image file">
+							Browse
+						</button>
+					</div>
+					<small id="pathHelp" class="form-text text-muted">Enter a file path or click Browse to select an image</small>
+				</div>
+				
+				<div class="tab-panel" id="tab2" role="tabpanel" aria-labelledby="tab2-btn" hidden>
+					<canvas id="pixelatedCanvas" aria-label="Pixelated image display canvas"></canvas>
+					
+					<fieldset class="pixel-controls">
+						<legend>Pixelation Settings</legend>
+						<div class="pixel-inputs">
+							<div class="input-group">
+								<label for="pixelWidth">Pixel Width:</label>
+								<input type="number" id="pixelWidth" class="pixel-input" value="10" min="1" aria-describedby="pixelWidthHelp">
+							</div>
+							<div class="input-group">
+								<label for="pixelHeight">Pixel Height:</label>
+								<input type="number" id="pixelHeight" class="pixel-input" value="10" min="1" aria-describedby="pixelHeightHelp">
+							</div>
+						</div>
+						<small id="pixelWidthHelp" class="form-text text-muted">Width of each pixel block</small>
+						<small id="pixelHeightHelp" class="form-text text-muted">Height of each pixel block</small>
+					</fieldset>
+					
+					<button id="downloadBtn" class="btn-primary download-btn" type="button" aria-label="Download pixelated image">
+						Download Pixelated Image
+					</button>
+				</div>
+				
+				<div class="tab-panel" id="tab3" role="tabpanel" aria-labelledby="tab3-btn" hidden>
+					<canvas id="sweaterCanvas" aria-label="Sweater pattern image display canvas"></canvas>
+					
+					<fieldset class="pixel-controls">
+						<legend>Sweater Pattern Settings</legend>
+						<div class="pixel-inputs">
+							<div class="input-group">
+								<label for="sweaterPixelWidth">Pixel Width:</label>
+								<input type="number" id="sweaterPixelWidth" class="pixel-input" value="10" min="1" aria-describedby="sweaterPixelWidthHelp">
+							</div>
+							<div class="input-group">
+								<label for="sweaterPixelHeight">Pixel Height:</label>
+								<input type="number" id="sweaterPixelHeight" class="pixel-input" value="10" min="1" aria-describedby="sweaterPixelHeightHelp">
+							</div>
+							<div class="input-group">
+								<label for="sweaterGap">Gap:</label>
+								<input type="number" id="sweaterGap" class="pixel-input" value="2" min="0" step="0.5" aria-describedby="sweaterGapHelp">
+							</div>
+							<div class="input-group">
+								<label for="sweaterLineThickness">Line Thickness:</label>
+								<input type="number" id="sweaterLineThickness" class="pixel-input" value="2" min="1" step="0.5" aria-describedby="sweaterLineThicknessHelp">
+							</div>
+							<div class="input-group">
+								<label for="sweaterOverlap">Overlap:</label>
+								<input type="number" id="sweaterOverlap" class="pixel-input" value="0" min="0" step="0.5" aria-describedby="sweaterOverlapHelp">
+							</div>
+							<div class="input-group">
+								<label for="sweaterNumColors">Number of Colors:</label>
+								<input type="number" id="sweaterNumColors" class="pixel-input" value="auto" min="2" aria-describedby="sweaterNumColorsHelp">
+							</div>
+						</div>
+						<small id="sweaterPixelWidthHelp" class="form-text text-muted">Width of each sweater stitch block</small>
+						<small id="sweaterPixelHeightHelp" class="form-text text-muted">Height of each sweater stitch block</small>
+						<small id="sweaterGapHelp" class="form-text text-muted">Gap between stitches (pixels)</small>
+						<small id="sweaterLineThicknessHelp" class="form-text text-muted">Thickness of V lines (pixels)</small>
+						<small id="sweaterOverlapHelp" class="form-text text-muted">Overlap between rows (pixels)</small>
+						<small id="sweaterNumColorsHelp" class="form-text text-muted">Number of colors (2+ or 'auto' for original)</small>
+					</fieldset>
+					
+					<button id="sweaterDownloadBtn" class="btn-primary download-btn" type="button" aria-label="Download sweater pattern image">
+						Download Sweater Pattern
+					</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
