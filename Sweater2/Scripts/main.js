@@ -320,69 +320,73 @@ class Main {
 		if (!imageData || numColors <= 0) return imageData;
 
 		const colors = imageData.data;
-		const pixelCount = colors.length / 4;
 		
 		// If numColors is 'auto' or greater than unique colors, return original
 		if (numColors === 'auto' || numColors >= this.originalColorCount) {
 			return imageData;
 		}
 
-		// Simple quantization using color binning
-		// Group colors into bins based on RGB values
-		const numBins = Math.floor(Math.pow(numColors, 1/3)); // Cube root for even distribution
-		const binSize = Math.floor(256 / numBins);
-		
-		// Create color map
-		const colorMap = {};
-		const binCounts = {};
-		
-		// First pass: bin colors and count frequencies
+		// Use k-means clustering for proper color quantization
+		// Sample pixels to build initial centroids
+		const pixels = [];
 		for (let i = 0; i < colors.length; i += 4) {
-			const r = colors[i];
-			const g = colors[i + 1];
-			const b = colors[i + 2];
 			const a = colors[i + 3];
-			
-			if (a === 0) continue;
-			
-			const rBin = Math.floor(r / binSize);
-			const gBin = Math.floor(g / binSize);
-			const bBin = Math.floor(b / binSize);
-			const binKey = `${rBin},${gBin},${bBin}`;
-			
-			if (!binCounts[binKey]) {
-				binCounts[binKey] = { count: 0, r: 0, g: 0, b: 0 };
+			if (a > 0) {
+				pixels.push([colors[i], colors[i + 1], colors[i + 2]]);
 			}
-			binCounts[binKey].count++;
-			binCounts[binKey].r += r;
-			binCounts[binKey].g += g;
-			binCounts[binKey].b += b;
 		}
 		
-		// Calculate average color for each bin
-		const bins = Object.keys(binCounts).map(key => {
-			const bin = binCounts[key];
-			return {
-				key: key,
-				r: Math.floor(bin.r / bin.count),
-				g: Math.floor(bin.g / bin.count),
-				b: Math.floor(bin.b / bin.count),
-				count: bin.count
-			};
-		});
+		if (pixels.length === 0) return imageData;
 		
-		// Sort bins by frequency and keep top numColors
-		bins.sort((a, b) => b.count - a.count);
-		const topBins = bins.slice(0, numColors);
+		// Initialize centroids using k-means++ for better starting points
+		const centroids = this.initializeCentroids(pixels, numColors);
 		
-		// Create color map from original colors to quantized colors
-		const quantizedMap = {};
-		topBins.forEach(bin => {
-			const [rBin, gBin, bBin] = bin.key.split(',').map(Number);
-			quantizedMap[`${rBin},${gBin},${bBin}`] = { r: bin.r, g: bin.g, b: bin.b };
-		});
+		// Run k-means iterations
+		const maxIterations = 10;
+		for (let iter = 0; iter < maxIterations; iter++) {
+			// Assign pixels to nearest centroid
+			const clusters = Array(numColors).fill(null).map(() => []);
+			
+			for (const pixel of pixels) {
+				let minDist = Infinity;
+				let nearestCentroid = 0;
+				
+				for (let c = 0; c < centroids.length; c++) {
+					const centroid = centroids[c];
+					const dist = Math.sqrt(
+						Math.pow(pixel[0] - centroid[0], 2) +
+						Math.pow(pixel[1] - centroid[1], 2) +
+						Math.pow(pixel[2] - centroid[2], 2)
+					);
+					if (dist < minDist) {
+						minDist = dist;
+						nearestCentroid = c;
+					}
+				}
+				
+				clusters[nearestCentroid].push(pixel);
+			}
+			
+			// Recalculate centroids
+			let converged = true;
+			for (let c = 0; c < centroids.length; c++) {
+				const cluster = clusters[c];
+				if (cluster.length === 0) continue;
+				
+				const newR = Math.floor(cluster.reduce((sum, p) => sum + p[0], 0) / cluster.length);
+				const newG = Math.floor(cluster.reduce((sum, p) => sum + p[1], 0) / cluster.length);
+				const newB = Math.floor(cluster.reduce((sum, p) => sum + p[2], 0) / cluster.length);
+				
+				if (newR !== centroids[c][0] || newG !== centroids[c][1] || newB !== centroids[c][2]) {
+					centroids[c] = [newR, newG, newB];
+					converged = false;
+				}
+			}
+			
+			if (converged) break;
+		}
 		
-		// Second pass: apply quantization
+		// Apply quantization to image data
 		const quantizedData = new Uint8ClampedArray(colors.length);
 		for (let i = 0; i < colors.length; i += 4) {
 			const r = colors[i];
@@ -398,42 +402,77 @@ class Main {
 				continue;
 			}
 			
-			const rBin = Math.floor(r / binSize);
-			const gBin = Math.floor(g / binSize);
-			const bBin = Math.floor(b / binSize);
-			const binKey = `${rBin},${gBin},${bBin}`;
+			// Find nearest centroid
+			let minDist = Infinity;
+			let nearestCentroid = centroids[0];
 			
-			const quantized = quantizedMap[binKey];
-			if (quantized) {
-				quantizedData[i] = quantized.r;
-				quantizedData[i + 1] = quantized.g;
-				quantizedData[i + 2] = quantized.b;
-				quantizedData[i + 3] = a;
-			} else {
-				// Find nearest bin
-				let nearestBin = topBins[0];
-				let minDist = Infinity;
-				
-				topBins.forEach(bin => {
-					const dist = Math.sqrt(
-						Math.pow(r - bin.r, 2) +
-						Math.pow(g - bin.g, 2) +
-						Math.pow(b - bin.b, 2)
-					);
-					if (dist < minDist) {
-						minDist = dist;
-						nearestBin = bin;
-					}
-				});
-				
-				quantizedData[i] = nearestBin.r;
-				quantizedData[i + 1] = nearestBin.g;
-				quantizedData[i + 2] = nearestBin.b;
-				quantizedData[i + 3] = a;
+			for (const centroid of centroids) {
+				const dist = Math.sqrt(
+					Math.pow(r - centroid[0], 2) +
+					Math.pow(g - centroid[1], 2) +
+					Math.pow(b - centroid[2], 2)
+				);
+				if (dist < minDist) {
+					minDist = dist;
+					nearestCentroid = centroid;
+				}
 			}
+			
+			quantizedData[i] = nearestCentroid[0];
+			quantizedData[i + 1] = nearestCentroid[1];
+			quantizedData[i + 2] = nearestCentroid[2];
+			quantizedData[i + 3] = a;
 		}
 		
 		return new ImageData(quantizedData, imageData.width, imageData.height);
+	}
+
+	initializeCentroids(pixels, k) {
+		const centroids = [];
+		
+		// Choose first centroid randomly
+		const firstIndex = Math.floor(Math.random() * pixels.length);
+		centroids.push([...pixels[firstIndex]]);
+		
+		// Choose remaining centroids using k-means++ algorithm
+		for (let i = 1; i < k; i++) {
+			const distances = [];
+			let totalDist = 0;
+			
+			// Calculate distance to nearest existing centroid for each pixel
+			for (const pixel of pixels) {
+				let minDist = Infinity;
+				for (const centroid of centroids) {
+					const dist = Math.sqrt(
+						Math.pow(pixel[0] - centroid[0], 2) +
+						Math.pow(pixel[1] - centroid[1], 2) +
+						Math.pow(pixel[2] - centroid[2], 2)
+					);
+					if (dist < minDist) {
+						minDist = dist;
+					}
+				}
+				distances.push(minDist * minDist); // Square the distance
+				totalDist += distances[distances.length - 1];
+			}
+			
+			// Choose next centroid with probability proportional to squared distance
+			let random = Math.random() * totalDist;
+			for (let j = 0; j < distances.length; j++) {
+				random -= distances[j];
+				if (random <= 0) {
+					centroids.push([...pixels[j]]);
+					break;
+				}
+			}
+			
+			// Fallback if we didn't select any (shouldn't happen with proper random)
+			if (centroids.length === i) {
+				centroids.push([...pixels[Math.floor(Math.random() * pixels.length)]]);
+			}
+		}
+		
+		return centroids;
 	}
 
 	drawImageOnCanvas() {
