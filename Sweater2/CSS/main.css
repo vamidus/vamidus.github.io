@@ -112,9 +112,15 @@ body {
 
 .file-selector {
 	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.file-input-row {
+	display: flex;
 	gap: 12px;
 	align-items: center;
-	margin-bottom: 8px;
 }
 
 .file-path-input {

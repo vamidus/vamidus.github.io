@@ -34,13 +34,15 @@
 					
 					<div class="file-selector">
 						<label for="filePath" class="visually-hidden">Image file path</label>
-						<input type="text" id="filePath" class="file-path-input" placeholder="Enter or paste full path to image file" aria-describedby="pathHelp">
-						<input type="file" id="fileInput" accept="image/*" class="visually-hidden" aria-label="Select image file">
-						<button id="browseBtn" class="btn-primary" type="button" aria-label="Browse for image file">
-							Browse
-						</button>
+						<div class="file-input-row">
+							<input type="text" id="filePath" class="file-path-input" placeholder="Select an image file" aria-describedby="pathHelp">
+							<input type="file" id="fileInput" accept="image/*" class="visually-hidden" aria-label="Select image file">
+							<button id="browseBtn" class="btn-primary" type="button" aria-label="Browse for image file">
+								Browse
+							</button>
+						</div>
+						<small id="pathHelp" class="form-text">Click Browse to select an image</small>
 					</div>
-					<small id="pathHelp" class="form-text text-muted">Enter a file path or click Browse to select an image</small>
 				</div>
 				
 				<div class="tab-panel" id="tab2" role="tabpanel" aria-labelledby="tab2-btn" hidden>
@@ -52,14 +54,14 @@
 							<div class="input-group">
 								<label for="pixelWidth">Pixel Width:</label>
 								<input type="number" id="pixelWidth" class="pixel-input" value="10" min="1" aria-describedby="pixelWidthHelp">
+								<small id="pixelWidthHelp" class="form-text">Width of each pixel block</small>
 							</div>
 							<div class="input-group">
 								<label for="pixelHeight">Pixel Height:</label>
 								<input type="number" id="pixelHeight" class="pixel-input" value="10" min="1" aria-describedby="pixelHeightHelp">
+								<small id="pixelHeightHelp" class="form-text">Height of each pixel block</small>
 							</div>
 						</div>
-						<small id="pixelWidthHelp" class="form-text text-muted">Width of each pixel block</small>
-						<small id="pixelHeightHelp" class="form-text text-muted">Height of each pixel block</small>
 					</fieldset>
 					
 					<button id="downloadBtn" class="btn-primary download-btn" type="button" aria-label="Download pixelated image">
@@ -76,34 +78,34 @@
 							<div class="input-group">
 								<label for="sweaterPixelWidth">Pixel Width:</label>
 								<input type="number" id="sweaterPixelWidth" class="pixel-input" value="10" min="1" aria-describedby="sweaterPixelWidthHelp">
+								<small id="sweaterPixelWidthHelp" class="form-text">Width of each sweater stitch block</small>
 							</div>
 							<div class="input-group">
 								<label for="sweaterPixelHeight">Pixel Height:</label>
 								<input type="number" id="sweaterPixelHeight" class="pixel-input" value="10" min="1" aria-describedby="sweaterPixelHeightHelp">
+								<small id="sweaterPixelHeightHelp" class="form-text">Height of each sweater stitch block</small>
 							</div>
 							<div class="input-group">
 								<label for="sweaterGap">Gap:</label>
 								<input type="number" id="sweaterGap" class="pixel-input" value="2" min="0" step="0.5" aria-describedby="sweaterGapHelp">
+								<small id="sweaterGapHelp" class="form-text">Gap between stitches (pixels)</small>
 							</div>
 							<div class="input-group">
 								<label for="sweaterLineThickness">Line Thickness:</label>
 								<input type="number" id="sweaterLineThickness" class="pixel-input" value="2" min="1" step="0.5" aria-describedby="sweaterLineThicknessHelp">
+								<small id="sweaterLineThicknessHelp" class="form-text">Thickness of V lines (pixels)</small>
 							</div>
 							<div class="input-group">
 								<label for="sweaterOverlap">Overlap:</label>
 								<input type="number" id="sweaterOverlap" class="pixel-input" value="0" min="0" step="0.5" aria-describedby="sweaterOverlapHelp">
+								<small id="sweaterOverlapHelp" class="form-text">Overlap between rows (pixels)</small>
 							</div>
 							<div class="input-group">
 								<label for="sweaterNumColors">Number of Colors:</label>
 								<input type="number" id="sweaterNumColors" class="pixel-input" value="auto" min="2" aria-describedby="sweaterNumColorsHelp">
+								<small id="sweaterNumColorsHelp" class="form-text">Number of colors (2+ or 'auto' for original)</small>
 							</div>
 						</div>
-						<small id="sweaterPixelWidthHelp" class="form-text text-muted">Width of each sweater stitch block</small>
-						<small id="sweaterPixelHeightHelp" class="form-text text-muted">Height of each sweater stitch block</small>
-						<small id="sweaterGapHelp" class="form-text text-muted">Gap between stitches (pixels)</small>
-						<small id="sweaterLineThicknessHelp" class="form-text text-muted">Thickness of V lines (pixels)</small>
-						<small id="sweaterOverlapHelp" class="form-text text-muted">Overlap between rows (pixels)</small>
-						<small id="sweaterNumColorsHelp" class="form-text text-muted">Number of colors (2+ or 'auto' for original)</small>
 					</fieldset>
 					
 					<button id="sweaterDownloadBtn" class="btn-primary download-btn" type="button" aria-label="Download sweater pattern image">
